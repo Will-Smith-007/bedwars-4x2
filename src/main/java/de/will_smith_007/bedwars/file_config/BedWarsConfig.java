@@ -113,6 +113,14 @@ public class BedWarsConfig {
                 (float) YAML_CONFIGURATION.getDouble(sectionName + ".Pitch"));
     }
 
+    public void setLobbyWorld(@NonNull World world) {
+        final String worldName = world.getName();
+
+        YAML_CONFIGURATION.set("LobbyWorld", worldName);
+
+        saveConfig();
+    }
+
     public void setBedLocations(@NonNull Map<Team, Location> bedLocations) {
         if (bedLocations.isEmpty()) return;
 
