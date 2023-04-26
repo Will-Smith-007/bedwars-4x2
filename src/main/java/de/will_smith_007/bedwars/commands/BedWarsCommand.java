@@ -57,6 +57,26 @@ public class BedWarsCommand implements TabExecutor {
 
                 player.sendPlainMessage(Message.PREFIX + "§aYou've started the§e game setup§a, " +
                         "you can now set the game map by typing the name of world into the chat.");
+            } else if (args[0].equalsIgnoreCase("setSpectator")) {
+                if (!PLAYERS_IN_SETUP.containsKey(player)) {
+                    player.sendPlainMessage(Message.PREFIX + "§cYou're currently not in a map setup.");
+                    return true;
+                }
+
+                final BedWarsSetup bedWarsSetup = PLAYERS_IN_SETUP.get(player);
+                final BedWarsSetup.SetupAction setupAction = bedWarsSetup.getSetupAction();
+
+                if (setupAction != BedWarsSetup.SetupAction.SPECTATOR_SETUP) {
+                    player.sendPlainMessage(Message.PREFIX + "§cThis configuration is a coming step.");
+                    return true;
+                }
+
+                final Location playerLocation = player.getLocation();
+                bedWarsSetup.setSpectatorLocation(playerLocation);
+                PLAYERS_IN_SETUP.put(player, bedWarsSetup);
+
+                player.sendPlainMessage(Message.PREFIX + "§aYou've set the§e spectator spawn location§a.");
+                player.sendPlainMessage(Message.PREFIX + "§aFinish and save this setup with §e/bw setup finish");
             }
         } else if (args.length == 2) {
             final String subCommand = args[0];
@@ -128,43 +148,102 @@ public class BedWarsCommand implements TabExecutor {
                     player.sendPlainMessage(Message.PREFIX + "§aYou've set the team spawn for team §e" +
                             team.getTeamName() + "§a.");
                 }, () -> player.sendPlainMessage(Message.PREFIX + "§cThere isn't a team named §e" + teamName + "§c."));
-            } else if (subCommand.equalsIgnoreCase("setup")
-                    && args[1].equalsIgnoreCase("next")) {
-                if (!PLAYERS_IN_SETUP.containsKey(player)) {
-                    player.sendPlainMessage(Message.PREFIX + "§cYou're currently not in a map setup.");
-                    return true;
-                }
-
-                final BedWarsSetup bedWarsSetup = PLAYERS_IN_SETUP.get(player);
-                final BedWarsSetup.SetupAction setupAction = bedWarsSetup.getSetupAction();
-
-                switch (setupAction) {
-                    case BED_SETUP -> {
-                        if (bedWarsSetup.getBED_LOCATIONS().size() < 4) {
-                            player.sendPlainMessage(Message.PREFIX + "§cYou've not set all§e bed locations§c.");
-                            return true;
-                        }
-
-                        bedWarsSetup.setSetupAction(BedWarsSetup.SetupAction.TEAM_SPAWN_SETUP);
-                        PLAYERS_IN_SETUP.put(player, bedWarsSetup);
-
-                        player.sendPlainMessage(Message.PREFIX + "§aNow set the§e team spawn§a locations by " +
-                                "using the command §e/bw setSpawn [Team] and use the command " +
-                                "§e/bw setup next§a if you're done.");
+            } else if (subCommand.equalsIgnoreCase("setup")) {
+                if (args[1].equalsIgnoreCase("next")) {
+                    if (!PLAYERS_IN_SETUP.containsKey(player)) {
+                        player.sendPlainMessage(Message.PREFIX + "§cYou're currently not in a map setup.");
+                        return true;
                     }
 
-                    case TEAM_SPAWN_SETUP -> {
-                        if (bedWarsSetup.getTEAM_SPAWN_LOCATIONS().size() < 4) {
-                            player.sendPlainMessage(Message.PREFIX + "§cYou've not set all§e team spawn§c " +
-                                    "locations.");
-                            return true;
+                    final BedWarsSetup bedWarsSetup = PLAYERS_IN_SETUP.get(player);
+                    final BedWarsSetup.SetupAction setupAction = bedWarsSetup.getSetupAction();
+
+                    switch (setupAction) {
+                        case BED_SETUP -> {
+                            if (bedWarsSetup.getBED_LOCATIONS().size() < 4) {
+                                player.sendPlainMessage(Message.PREFIX + "§cYou've not set all§e bed locations§c.");
+                                return true;
+                            }
+
+                            bedWarsSetup.setSetupAction(BedWarsSetup.SetupAction.TEAM_SPAWN_SETUP);
+                            PLAYERS_IN_SETUP.put(player, bedWarsSetup);
+
+                            player.sendPlainMessage(Message.PREFIX + "§aNow set the§e team spawn§a locations by " +
+                                    "using the command §e/bw setSpawn [Team] and use the command " +
+                                    "§e/bw setup next§a if you're done.");
                         }
 
-                        bedWarsSetup.setSetupAction(BedWarsSetup.SetupAction.BRONZE_SPAWNER_SETUP);
-                        PLAYERS_IN_SETUP.put(player, bedWarsSetup);
+                        case TEAM_SPAWN_SETUP -> {
+                            if (bedWarsSetup.getTEAM_SPAWN_LOCATIONS().size() < 4) {
+                                player.sendPlainMessage(Message.PREFIX + "§cYou've not set all§e team spawn§c " +
+                                        "locations.");
+                                return true;
+                            }
 
-                        player.sendPlainMessage(Message.PREFIX + "§aNow set the§e bronze spawners ");
+                            bedWarsSetup.setSetupAction(BedWarsSetup.SetupAction.BRONZE_SPAWNER_SETUP);
+                            PLAYERS_IN_SETUP.put(player, bedWarsSetup);
+
+                            player.sendPlainMessage(Message.PREFIX + "§aNow set the§e bronze spawners by right " +
+                                    "clicking a block and use the command §e/bw setup next§a if you're done.");
+                        }
+
+                        case BRONZE_SPAWNER_SETUP, IRON_SPAWNER_SETUP, GOLD_SPAWNER_SETUP -> {
+                            if (bedWarsSetup.getSPAWNER_LOCATIONS().isEmpty()) {
+                                player.sendPlainMessage(Message.PREFIX + "§cYou haven't set a single spawner.");
+                                return true;
+                            }
+
+                            BedWarsSetup.SetupAction nextSetupAction;
+                            String nextSetupStep = null;
+                            if (setupAction == BedWarsSetup.SetupAction.BRONZE_SPAWNER_SETUP) {
+                                nextSetupAction = BedWarsSetup.SetupAction.IRON_SPAWNER_SETUP;
+                                nextSetupStep = "iron";
+                            } else if (setupAction == BedWarsSetup.SetupAction.IRON_SPAWNER_SETUP) {
+                                nextSetupAction = BedWarsSetup.SetupAction.GOLD_SPAWNER_SETUP;
+                                nextSetupStep = "gold";
+                            } else {
+                                nextSetupAction = BedWarsSetup.SetupAction.SPECTATOR_SETUP;
+                            }
+
+                            bedWarsSetup.setSetupAction(nextSetupAction);
+                            PLAYERS_IN_SETUP.put(player, bedWarsSetup);
+
+                            if (nextSetupStep != null) {
+                                player.sendPlainMessage(Message.PREFIX + "§aNow set the§e" + nextSetupStep + " spawners by right " +
+                                        "clicking a block and use the command §e/bw setup next§a if you're done.");
+                            } else {
+                                player.sendPlainMessage(Message.PREFIX + "§aFinally set the§e spectator spawn " +
+                                        "location§a by using the command §e/bw setSpectator");
+                            }
+                        }
+
+                        default ->
+                                player.sendPlainMessage(Message.PREFIX + "§cYou currently can't go to the next step.");
                     }
+                } else if (args[1].equalsIgnoreCase("finish")) {
+                    if (!PLAYERS_IN_SETUP.containsKey(player)) {
+                        player.sendPlainMessage(Message.PREFIX + "§cYou're currently not in a map setup.");
+                        return true;
+                    }
+
+                    final BedWarsSetup bedWarsSetup = PLAYERS_IN_SETUP.get(player);
+                    final BedWarsSetup.SetupAction setupAction = bedWarsSetup.getSetupAction();
+
+                    if (setupAction != BedWarsSetup.SetupAction.SPECTATOR_SETUP) {
+                        player.sendPlainMessage(Message.PREFIX + "§cYou can't finish and save the setup until " +
+                                "you have completed the setup.");
+                        return true;
+                    }
+
+                    if (bedWarsSetup.getSpectatorLocation() == null) {
+                        player.sendPlainMessage(Message.PREFIX + "§cYou haven't set the§e spectator spawn location§c.");
+                        return true;
+                    }
+
+                    bedWarsSetup.saveSetup();
+                    PLAYERS_IN_SETUP.remove(player);
+
+                    player.sendPlainMessage(Message.PREFIX + "§aYou've successfully§e finished and saved §athe setup.");
                 }
             }
         }
