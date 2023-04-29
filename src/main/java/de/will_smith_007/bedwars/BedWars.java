@@ -1,6 +1,11 @@
 package de.will_smith_007.bedwars;
 
+import de.will_smith_007.bedwars.commands.BedWarsCommand;
 import de.will_smith_007.bedwars.file_config.BedWarsConfig;
+import de.will_smith_007.bedwars.listeners.setup.BedWarsSpawnerSetupListener;
+import de.will_smith_007.bedwars.listeners.setup.BedWarsWorldSetupListener;
+import de.will_smith_007.bedwars.team_parser.TeamParser;
+import de.will_smith_007.bedwars.teams.helper.TeamHelper;
 import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandExecutor;
@@ -14,6 +19,15 @@ public class BedWars extends JavaPlugin {
     @Override
     public void onEnable() {
         final BedWarsConfig bedWarsConfig = new BedWarsConfig(this);
+        final TeamParser teamParser = new TeamParser();
+        final TeamHelper teamHelper = new TeamHelper();
+
+        registerCommand("bedwars", new BedWarsCommand(teamParser));
+
+        registerListeners(
+                new BedWarsSpawnerSetupListener(),
+                new BedWarsWorldSetupListener()
+        );
 
         getLogger().info("BedWars was started.");
     }

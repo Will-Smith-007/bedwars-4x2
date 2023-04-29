@@ -1,4 +1,4 @@
-package de.will_smith_007.bedwars.listeners;
+package de.will_smith_007.bedwars.listeners.setup;
 
 import de.will_smith_007.bedwars.commands.BedWarsCommand;
 import de.will_smith_007.bedwars.enums.Message;
