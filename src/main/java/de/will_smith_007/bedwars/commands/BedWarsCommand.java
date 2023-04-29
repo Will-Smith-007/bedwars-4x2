@@ -3,7 +3,7 @@ package de.will_smith_007.bedwars.commands;
 import de.will_smith_007.bedwars.enums.Message;
 import de.will_smith_007.bedwars.file_config.BedWarsConfig;
 import de.will_smith_007.bedwars.setup.BedWarsSetup;
-import de.will_smith_007.bedwars.team_parser.TeamParser;
+import de.will_smith_007.bedwars.teams.parser.TeamParser;
 import lombok.Getter;
 import lombok.NonNull;
 import org.bukkit.*;

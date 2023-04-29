@@ -4,7 +4,7 @@ import de.will_smith_007.bedwars.commands.BedWarsCommand;
 import de.will_smith_007.bedwars.file_config.BedWarsConfig;
 import de.will_smith_007.bedwars.listeners.setup.BedWarsSpawnerSetupListener;
 import de.will_smith_007.bedwars.listeners.setup.BedWarsWorldSetupListener;
-import de.will_smith_007.bedwars.team_parser.TeamParser;
+import de.will_smith_007.bedwars.teams.parser.TeamParser;
 import de.will_smith_007.bedwars.teams.helper.TeamHelper;
 import lombok.NonNull;
 import org.bukkit.Bukkit;

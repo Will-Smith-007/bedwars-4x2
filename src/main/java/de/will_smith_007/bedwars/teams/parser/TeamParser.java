@@ -1,4 +1,4 @@
-package de.will_smith_007.bedwars.team_parser;
+package de.will_smith_007.bedwars.teams.parser;
 
 import de.will_smith_007.bedwars.enums.Team;
 import lombok.NonNull;
