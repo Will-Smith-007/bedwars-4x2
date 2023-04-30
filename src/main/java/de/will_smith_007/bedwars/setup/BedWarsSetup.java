@@ -1,6 +1,6 @@
 package de.will_smith_007.bedwars.setup;
 
-import de.will_smith_007.bedwars.enums.Team;
+import de.will_smith_007.bedwars.teams.enums.Team;
 import de.will_smith_007.bedwars.file_config.BedWarsConfig;
 import lombok.Getter;
 import lombok.NonNull;

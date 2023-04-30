@@ -1,6 +1,7 @@
 package de.will_smith_007.bedwars.listeners;
 
 import de.will_smith_007.bedwars.enums.GameState;
+import de.will_smith_007.bedwars.enums.Message;
 import de.will_smith_007.bedwars.game_assets.GameAssets;
 import lombok.NonNull;
 import net.kyori.adventure.text.Component;
@@ -26,7 +27,7 @@ public class PlayerConnectionListener implements Listener {
 
         switch (gameState) {
             case LOBBY -> {
-                playerJoinEvent.joinMessage(Component.text("§e" + player.getName() +
+                playerJoinEvent.joinMessage(Component.text(Message.PREFIX + "§e" + player.getName() +
                         "§7 joined the game!"));
                 player.setGameMode(GameMode.ADVENTURE);
             }
@@ -44,7 +45,7 @@ public class PlayerConnectionListener implements Listener {
 
         switch (gameState) {
             case LOBBY -> {
-                playerQuitEvent.quitMessage(Component.text("§e" + player.getName() +
+                playerQuitEvent.quitMessage(Component.text(Message.PREFIX + "§e" + player.getName() +
                         "§7 left the game."));
             }
             case PROTECTION, INGAME, ENDING -> {

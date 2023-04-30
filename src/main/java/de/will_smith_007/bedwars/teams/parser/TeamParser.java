@@ -1,6 +1,6 @@
 package de.will_smith_007.bedwars.teams.parser;
 
-import de.will_smith_007.bedwars.enums.Team;
+import de.will_smith_007.bedwars.teams.enums.Team;
 import lombok.NonNull;
 
 import java.util.Optional;

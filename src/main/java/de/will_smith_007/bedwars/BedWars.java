@@ -3,6 +3,7 @@ package de.will_smith_007.bedwars;
 import de.will_smith_007.bedwars.commands.BedWarsCommand;
 import de.will_smith_007.bedwars.file_config.BedWarsConfig;
 import de.will_smith_007.bedwars.game_assets.GameAssets;
+import de.will_smith_007.bedwars.listeners.PlayerConnectionListener;
 import de.will_smith_007.bedwars.listeners.setup.BedWarsSpawnerSetupListener;
 import de.will_smith_007.bedwars.listeners.setup.BedWarsWorldSetupListener;
 import de.will_smith_007.bedwars.schedulers.EndingCountdownScheduler;
@@ -39,6 +40,7 @@ public class BedWars extends JavaPlugin {
         registerCommand("bedwars", new BedWarsCommand(teamParser));
 
         registerListeners(
+                new PlayerConnectionListener(gameAssets),
                 new BedWarsSpawnerSetupListener(),
                 new BedWarsWorldSetupListener()
         );

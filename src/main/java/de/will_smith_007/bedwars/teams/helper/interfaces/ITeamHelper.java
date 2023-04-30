@@ -1,6 +1,6 @@
 package de.will_smith_007.bedwars.teams.helper.interfaces;
 
-import de.will_smith_007.bedwars.enums.Team;
+import de.will_smith_007.bedwars.teams.enums.Team;
 import de.will_smith_007.bedwars.teams.interfaces.ITeam;
 import lombok.NonNull;
 import org.bukkit.entity.Player;

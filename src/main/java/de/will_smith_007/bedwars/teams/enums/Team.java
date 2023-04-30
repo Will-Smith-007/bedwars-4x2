@@ -1,4 +1,4 @@
-package de.will_smith_007.bedwars.enums;
+package de.will_smith_007.bedwars.teams.enums;
 
 import de.will_smith_007.bedwars.teams.*;
 import de.will_smith_007.bedwars.teams.interfaces.ITeam;
