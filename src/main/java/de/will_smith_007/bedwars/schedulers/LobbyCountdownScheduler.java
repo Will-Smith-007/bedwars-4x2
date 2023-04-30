@@ -14,7 +14,10 @@ import lombok.NonNull;
 import lombok.Setter;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Villager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -92,7 +95,7 @@ public class LobbyCountdownScheduler implements IScheduler, ICountdownOptions {
                         return;
                     }
 
-                    setGamerules(gameWorld);
+                    setGamerulesAndFreezeVillagers(gameWorld);
 
                     for (Player player : players) {
                         final Optional<ITeam> optionalITeam = TEAM_HELPER.getTeam(player);
@@ -132,9 +135,17 @@ public class LobbyCountdownScheduler implements IScheduler, ICountdownOptions {
         return isRunning;
     }
 
-    private void setGamerules(@NonNull World gameWorld) {
+    private void setGamerulesAndFreezeVillagers(@NonNull World gameWorld) {
         gameWorld.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false);
         gameWorld.setGameRule(GameRule.DO_WEATHER_CYCLE, false);
         gameWorld.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
+
+        final Collection<Villager> villagerCollection = gameWorld.getEntitiesByClass(Villager.class);
+        for (Villager villager : villagerCollection) {
+            villager.addPotionEffect(
+                    new PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE,
+                            10, false, false)
+            );
+        }
     }
 }
