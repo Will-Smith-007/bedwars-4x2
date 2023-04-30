@@ -245,6 +245,18 @@ public class BedWarsCommand implements TabExecutor {
 
                     player.sendPlainMessage(Message.PREFIX + "§aYou've successfully§e finished and saved §athe setup.");
                 }
+            } else if (subCommand.equalsIgnoreCase("tp")
+                    || subCommand.equalsIgnoreCase("teleport")) {
+                final String worldName = args[1];
+                final World world = Bukkit.createWorld(new WorldCreator(worldName));
+
+                if (world == null) {
+                    player.sendPlainMessage(Message.PREFIX + "§cWorld §e" + worldName + "§c couldn't be found.");
+                    return true;
+                }
+
+                player.teleport(world.getSpawnLocation());
+                player.sendPlainMessage(Message.PREFIX + "§aYou've been teleported to §e" + worldName + "§a.");
             }
         }
         return false;

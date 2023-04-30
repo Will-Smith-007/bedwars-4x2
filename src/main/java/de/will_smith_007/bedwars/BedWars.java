@@ -1,18 +1,20 @@
 package de.will_smith_007.bedwars;
 
 import de.will_smith_007.bedwars.commands.BedWarsCommand;
+import de.will_smith_007.bedwars.commands.StartCommand;
 import de.will_smith_007.bedwars.file_config.BedWarsConfig;
 import de.will_smith_007.bedwars.game_assets.GameAssets;
 import de.will_smith_007.bedwars.listeners.PlayerConnectionListener;
 import de.will_smith_007.bedwars.listeners.setup.BedWarsSpawnerSetupListener;
 import de.will_smith_007.bedwars.listeners.setup.BedWarsWorldSetupListener;
+import de.will_smith_007.bedwars.lobby_countdown.LobbyCountdownHelper;
 import de.will_smith_007.bedwars.schedulers.EndingCountdownScheduler;
 import de.will_smith_007.bedwars.schedulers.LobbyCountdownScheduler;
 import de.will_smith_007.bedwars.schedulers.ProtectionCountdownScheduler;
 import de.will_smith_007.bedwars.schedulers.SpawnerScheduler;
 import de.will_smith_007.bedwars.spawner.provider.SpawnerProvider;
-import de.will_smith_007.bedwars.teams.parser.TeamParser;
 import de.will_smith_007.bedwars.teams.helper.TeamHelper;
+import de.will_smith_007.bedwars.teams.parser.TeamParser;
 import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandExecutor;
@@ -37,7 +39,10 @@ public class BedWars extends JavaPlugin {
         final SpawnerScheduler spawnerScheduler = new SpawnerScheduler(this, spawnerProvider);
         final EndingCountdownScheduler endingCountdownScheduler = new EndingCountdownScheduler(this);
 
+        final LobbyCountdownHelper lobbyCountdownHelper = new LobbyCountdownHelper(lobbyCountdownScheduler);
+
         registerCommand("bedwars", new BedWarsCommand(teamParser));
+        registerCommand("start", new StartCommand(lobbyCountdownHelper));
 
         registerListeners(
                 new PlayerConnectionListener(gameAssets),

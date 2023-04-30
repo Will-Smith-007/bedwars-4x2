@@ -3,7 +3,9 @@ package de.will_smith_007.bedwars.schedulers;
 import de.will_smith_007.bedwars.enums.Message;
 import de.will_smith_007.bedwars.schedulers.interfaces.ICountdownOptions;
 import de.will_smith_007.bedwars.schedulers.interfaces.IScheduler;
+import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -13,7 +15,10 @@ import java.util.Collection;
 
 public class LobbyCountdownScheduler implements IScheduler, ICountdownOptions {
 
-    private int taskID, countdown;
+    private int taskID;
+    @Setter
+    @Getter
+    private int countdown;
     private boolean isRunning = false;
     private final JavaPlugin JAVA_PLUGIN;
 
