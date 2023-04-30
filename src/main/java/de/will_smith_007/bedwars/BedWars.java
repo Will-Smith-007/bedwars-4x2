@@ -52,7 +52,7 @@ public class BedWars extends JavaPlugin {
         registerCommand("start", new StartCommand(lobbyCountdownHelper));
 
         registerListeners(
-                new PlayerConnectionListener(gameAssets),
+                new PlayerConnectionListener(gameAssets, lobbyCountdownHelper),
                 new BedWarsSpawnerSetupListener(),
                 new BedWarsWorldSetupListener(),
                 new BlockBuildingListener(gameAssets)

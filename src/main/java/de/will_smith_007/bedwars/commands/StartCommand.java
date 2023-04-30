@@ -34,11 +34,11 @@ public class StartCommand implements CommandExecutor {
             return true;
         }
 
-        final boolean canShortenCountdown = LOBBY_COUNTDOWN_HELPER.shortenCountdownIfEnoughPlayers();
+        final boolean canShortenCountdown = LOBBY_COUNTDOWN_HELPER.shortenCountdown();
 
         if (!canShortenCountdown) {
             player.sendPlainMessage(Message.PREFIX + "§cYou can't shorten the§e lobby countdown§c.");
-            player.sendPlainMessage(Message.PREFIX + "§cThere aren't enough players to start or the countdown " +
+            player.sendPlainMessage(Message.PREFIX + "§cThere aren't enough players to shorten or the countdown " +
                     "is already running at less than§e 10 seconds§c.");
             return true;
         }
