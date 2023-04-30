@@ -47,6 +47,6 @@ public class BedWarsWorldSetupListener implements Listener {
 
         player.sendPlainMessage(Message.PREFIX + "§aYou've successfully added the map §e" + message + "§a!");
         player.sendPlainMessage(Message.PREFIX + "§aNow set the team beds by using the command §e/bw setBed " +
-                "[Team]§a and look at the bed block and use the command §e/bw setup next§a if you're done.");
+                "[BedWarsTeam]§a and look at the bed block and use the command §e/bw setup next§a if you're done.");
     }
 }

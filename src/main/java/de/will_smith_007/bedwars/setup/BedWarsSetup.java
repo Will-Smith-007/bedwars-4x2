@@ -1,6 +1,6 @@
 package de.will_smith_007.bedwars.setup;
 
-import de.will_smith_007.bedwars.teams.enums.Team;
+import de.will_smith_007.bedwars.teams.enums.BedWarsTeam;
 import de.will_smith_007.bedwars.file_config.BedWarsConfig;
 import lombok.Getter;
 import lombok.NonNull;
@@ -20,19 +20,19 @@ public class BedWarsSetup {
     @Setter
     private SetupAction setupAction;
 
-    private final Map<Team, Location> BED_LOCATIONS = new HashMap<>();
-    private final Map<Team, Location> TEAM_SPAWN_LOCATIONS = new HashMap<>();
+    private final Map<BedWarsTeam, Location> BED_LOCATIONS = new HashMap<>();
+    private final Map<BedWarsTeam, Location> TEAM_SPAWN_LOCATIONS = new HashMap<>();
     private final Map<Location, SpawnerType> SPAWNER_LOCATIONS = new HashMap<>();
 
     @Setter
     private Location spectatorLocation = null;
 
-    public void setBedLocation(@NonNull Team team, @NonNull Location bedLocation) {
-        BED_LOCATIONS.put(team, bedLocation);
+    public void setBedLocation(@NonNull BedWarsTeam bedWarsTeam, @NonNull Location bedLocation) {
+        BED_LOCATIONS.put(bedWarsTeam, bedLocation);
     }
 
-    public void setTeamSpawnLocation(@NonNull Team team, @NonNull Location teamSpawnLocation) {
-        TEAM_SPAWN_LOCATIONS.put(team, teamSpawnLocation);
+    public void setTeamSpawnLocation(@NonNull BedWarsTeam bedWarsTeam, @NonNull Location teamSpawnLocation) {
+        TEAM_SPAWN_LOCATIONS.put(bedWarsTeam, teamSpawnLocation);
     }
 
     public void addSpawner(@NonNull SpawnerType spawnerType, @NonNull Location spawnerLocation) {

@@ -35,9 +35,15 @@ public class BedWars extends JavaPlugin {
 
         final SpawnerProvider spawnerProvider = new SpawnerProvider(gameAssets);
 
-        final LobbyCountdownScheduler lobbyCountdownScheduler = new LobbyCountdownScheduler(this);
         final ProtectionCountdownScheduler protectionCountdownScheduler = new ProtectionCountdownScheduler(this);
         final SpawnerScheduler spawnerScheduler = new SpawnerScheduler(this, spawnerProvider);
+        final LobbyCountdownScheduler lobbyCountdownScheduler = new LobbyCountdownScheduler(
+                this,
+                teamHelper,
+                gameAssets,
+                protectionCountdownScheduler,
+                spawnerScheduler
+        );
         final EndingCountdownScheduler endingCountdownScheduler = new EndingCountdownScheduler(this);
 
         final LobbyCountdownHelper lobbyCountdownHelper = new LobbyCountdownHelper(lobbyCountdownScheduler);

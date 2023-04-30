@@ -1,6 +1,6 @@
 package de.will_smith_007.bedwars.file_config;
 
-import de.will_smith_007.bedwars.teams.enums.Team;
+import de.will_smith_007.bedwars.teams.enums.BedWarsTeam;
 import de.will_smith_007.bedwars.setup.BedWarsSetup;
 import lombok.NonNull;
 import org.bukkit.Location;
@@ -11,9 +11,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Logger;
 
 public class BedWarsConfig {
@@ -49,18 +47,18 @@ public class BedWarsConfig {
         YAML_CONFIGURATION = YamlConfiguration.loadConfiguration(BEDWARS_CONFIG);
     }
 
-    public @NonNull Set<String> getGameWorlds() {
+    public @NonNull List<String> getGameWorlds() {
         final ConfigurationSection configurationSection = YAML_CONFIGURATION.getConfigurationSection("Maps");
-        return (configurationSection == null ? new HashSet<>() : configurationSection.getKeys(false));
+        return (configurationSection == null ? new LinkedList<>() : configurationSection.getKeys(false).stream().toList());
     }
 
     public String getLobbyWorld() {
         return YAML_CONFIGURATION.getString("LobbyWorld");
     }
 
-    public Location getBedLocation(@NonNull Team team, @NonNull World world) {
+    public Location getBedLocation(@NonNull BedWarsTeam bedWarsTeam, @NonNull World world) {
         final String worldName = world.getName();
-        final String sectionName = "Maps." + worldName + "." + team.getTeamName() + ".Bed";
+        final String sectionName = "Maps." + worldName + "." + bedWarsTeam.getTeamName() + ".Bed";
 
         return new Location(world,
                 YAML_CONFIGURATION.getInt(sectionName + ".X"),
@@ -68,9 +66,9 @@ public class BedWarsConfig {
                 YAML_CONFIGURATION.getInt(sectionName + ".Z"));
     }
 
-    public Location getTeamSpawnLocation(@NonNull Team team, @NonNull World world) {
+    public Location getTeamSpawnLocation(@NonNull BedWarsTeam bedWarsTeam, @NonNull World world) {
         final String worldName = world.getName();
-        final String sectionName = "Maps." + worldName + "." + team.getTeamName() + ".Spawn";
+        final String sectionName = "Maps." + worldName + "." + bedWarsTeam.getTeamName() + ".Spawn";
 
         return new Location(world,
                 YAML_CONFIGURATION.getInt(sectionName + ".X"),
@@ -121,7 +119,7 @@ public class BedWarsConfig {
         saveConfig();
     }
 
-    public void setBedLocations(@NonNull Map<Team, Location> bedLocations) {
+    public void setBedLocations(@NonNull Map<BedWarsTeam, Location> bedLocations) {
         if (bedLocations.isEmpty()) return;
 
         bedLocations.forEach((team, location) -> {
@@ -136,7 +134,7 @@ public class BedWarsConfig {
         saveConfig();
     }
 
-    public void setTeamSpawnLocations(@NonNull Map<Team, Location> teamSpawnLocations) {
+    public void setTeamSpawnLocations(@NonNull Map<BedWarsTeam, Location> teamSpawnLocations) {
         if (teamSpawnLocations.isEmpty()) return;
 
         teamSpawnLocations.forEach((team, location) -> {

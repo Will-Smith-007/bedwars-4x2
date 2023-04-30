@@ -7,12 +7,12 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum Team {
+public enum BedWarsTeam {
 
-    BLUE("Team Blue", TeamBlue.getInstance()),
-    RED("Team Red", TeamRed.getInstance()),
-    YELLOW("Team Yellow", TeamYellow.getInstance()),
-    GREEN("Team Green", TeamGreen.getInstance());
+    BLUE("BedWarsTeam Blue", TeamBlue.getInstance()),
+    RED("BedWarsTeam Red", TeamRed.getInstance()),
+    YELLOW("BedWarsTeam Yellow", TeamYellow.getInstance()),
+    GREEN("BedWarsTeam Green", TeamGreen.getInstance());
 
     private final String teamName;
     private final ITeam team;

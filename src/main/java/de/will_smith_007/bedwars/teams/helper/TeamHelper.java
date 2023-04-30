@@ -1,6 +1,6 @@
 package de.will_smith_007.bedwars.teams.helper;
 
-import de.will_smith_007.bedwars.teams.enums.Team;
+import de.will_smith_007.bedwars.teams.enums.BedWarsTeam;
 import de.will_smith_007.bedwars.teams.helper.interfaces.ITeamHelper;
 import de.will_smith_007.bedwars.teams.interfaces.ITeam;
 import lombok.NonNull;
@@ -11,7 +11,7 @@ import java.util.*;
 
 public class TeamHelper implements ITeamHelper {
 
-    private final Team[] TEAMS = Team.values();
+    private final BedWarsTeam[] TEAMS = BedWarsTeam.values();
 
     @Override
     public void removeBedWarsTeam(@NonNull Player player) {
@@ -19,35 +19,38 @@ public class TeamHelper implements ITeamHelper {
     }
 
     @Override
-    public void selectBedWarsTeam(@NonNull Player player) {
+    public ITeam selectBedWarsTeam(@NonNull Player player) {
         final Optional<ITeam> optionalMinITeam = Arrays.stream(TEAMS)
-                .map(Team::getTeam)
+                .map(BedWarsTeam::getTeam)
                 .filter(iTeam -> iTeam.getPlayers().size() < 2)
                 .min(Comparator.comparingInt(iTeam -> iTeam.getPlayers().size()));
 
-        for (Team team : TEAMS) {
-            final ITeam iTeam = team.getTeam();
+        for (BedWarsTeam bedWarsTeam : TEAMS) {
+            final ITeam iTeam = bedWarsTeam.getTeam();
             final Set<Player> teamPlayers = iTeam.getPlayers();
 
             if (teamPlayers.isEmpty()) {
                 iTeam.addPlayer(player);
-                return;
+                return iTeam;
             }
         }
 
         optionalMinITeam.ifPresent(iTeam -> iTeam.addPlayer(player));
+        return (optionalMinITeam.orElse(null));
     }
 
     @Override
-    public boolean setBedWarsTeam(@NonNull Player player, @NonNull Team team) {
-        if (!canTeamJoined(team)) return false;
-        final ITeam iTeam = team.getTeam();
+    public boolean setBedWarsTeam(@NonNull Player player, @NonNull BedWarsTeam bedWarsTeam) {
+        if (!canTeamJoined(bedWarsTeam)) return false;
+
+        final ITeam iTeam = bedWarsTeam.getTeam();
         iTeam.addPlayer(player);
+
         return true;
     }
 
     @Override
-    public boolean canTeamJoined(@NonNull Team team) {
+    public boolean canTeamJoined(@NonNull BedWarsTeam team) {
         final ITeam iTeam = team.getTeam();
         final Collection<? extends Player> players = Bukkit.getOnlinePlayers();
         final int minPlayersPerTeam = (players.size() / TEAMS.length);
@@ -61,7 +64,7 @@ public class TeamHelper implements ITeamHelper {
     @Override
     public Optional<ITeam> getTeam(@NonNull Player player) {
         return Arrays.stream(TEAMS)
-                .map(Team::getTeam)
+                .map(BedWarsTeam::getTeam)
                 .filter(iTeam -> iTeam.getPlayers().contains(player))
                 .findAny();
     }
