@@ -3,7 +3,7 @@ package de.will_smith_007.bedwars.schedulers;
 import de.will_smith_007.bedwars.schedulers.interfaces.IScheduler;
 import de.will_smith_007.bedwars.setup.BedWarsSetup;
 import de.will_smith_007.bedwars.spawner.Spawner;
-import de.will_smith_007.bedwars.spawner.provider.SpawnerProvider;
+import de.will_smith_007.bedwars.spawner.provider.interfaces.ISpawnerProvider;
 import lombok.NonNull;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -14,10 +14,10 @@ public class SpawnerScheduler implements IScheduler {
     private int taskID, ironCountdown, goldCountdown;
     private boolean isRunning = false;
     private final JavaPlugin JAVA_PLUGIN;
-    private final SpawnerProvider SPAWNER_PROVIDER;
+    private final ISpawnerProvider SPAWNER_PROVIDER;
 
     public SpawnerScheduler(@NonNull JavaPlugin javaPlugin,
-                            @NonNull SpawnerProvider spawnerProvider) {
+                            @NonNull ISpawnerProvider spawnerProvider) {
         JAVA_PLUGIN = javaPlugin;
         SPAWNER_PROVIDER = spawnerProvider;
     }
