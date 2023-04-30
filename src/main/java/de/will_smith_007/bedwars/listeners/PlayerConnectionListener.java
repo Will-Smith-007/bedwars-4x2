@@ -3,7 +3,7 @@ package de.will_smith_007.bedwars.listeners;
 import de.will_smith_007.bedwars.enums.GameState;
 import de.will_smith_007.bedwars.enums.Message;
 import de.will_smith_007.bedwars.game_assets.GameAssets;
-import de.will_smith_007.bedwars.lobby_countdown.LobbyCountdownHelper;
+import de.will_smith_007.bedwars.lobby_countdown.interfaces.ILobbyCountdownHelper;
 import lombok.NonNull;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
@@ -19,10 +19,10 @@ import java.util.Collection;
 public class PlayerConnectionListener implements Listener {
 
     private final GameAssets GAME_ASSETS;
-    private final LobbyCountdownHelper LOBBY_COUNTDOWN_HELPER;
+    private final ILobbyCountdownHelper LOBBY_COUNTDOWN_HELPER;
 
     public PlayerConnectionListener(@NonNull GameAssets gameAssets,
-                                    @NonNull LobbyCountdownHelper lobbyCountdownHelper) {
+                                    @NonNull ILobbyCountdownHelper lobbyCountdownHelper) {
         GAME_ASSETS = gameAssets;
         LOBBY_COUNTDOWN_HELPER = lobbyCountdownHelper;
     }

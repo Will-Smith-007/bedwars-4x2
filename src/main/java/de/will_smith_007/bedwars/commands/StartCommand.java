@@ -1,7 +1,7 @@
 package de.will_smith_007.bedwars.commands;
 
 import de.will_smith_007.bedwars.enums.Message;
-import de.will_smith_007.bedwars.lobby_countdown.LobbyCountdownHelper;
+import de.will_smith_007.bedwars.lobby_countdown.interfaces.ILobbyCountdownHelper;
 import lombok.NonNull;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -11,9 +11,9 @@ import org.jetbrains.annotations.NotNull;
 
 public class StartCommand implements CommandExecutor {
 
-    private final LobbyCountdownHelper LOBBY_COUNTDOWN_HELPER;
+    private final ILobbyCountdownHelper LOBBY_COUNTDOWN_HELPER;
 
-    public StartCommand(@NonNull LobbyCountdownHelper lobbyCountdownHelper) {
+    public StartCommand(@NonNull ILobbyCountdownHelper lobbyCountdownHelper) {
         LOBBY_COUNTDOWN_HELPER = lobbyCountdownHelper;
     }
 

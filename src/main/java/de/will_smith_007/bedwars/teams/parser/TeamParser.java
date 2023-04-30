@@ -9,7 +9,7 @@ public class TeamParser {
 
     public Optional<BedWarsTeam> parseTeam(@NonNull String teamName) {
         for (BedWarsTeam bedWarsTeam : BedWarsTeam.values()) {
-            final String shortenTeamName = bedWarsTeam.getTeamName().replace("BedWarsTeam ", "");
+            final String shortenTeamName = bedWarsTeam.getTeamName().replace("Team ", "");
             if (!shortenTeamName.equalsIgnoreCase(teamName)) return Optional.empty();
             return Optional.of(bedWarsTeam);
         }

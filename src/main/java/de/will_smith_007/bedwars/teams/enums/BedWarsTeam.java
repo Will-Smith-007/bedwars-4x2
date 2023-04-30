@@ -9,10 +9,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum BedWarsTeam {
 
-    BLUE("BedWarsTeam Blue", TeamBlue.getInstance()),
-    RED("BedWarsTeam Red", TeamRed.getInstance()),
-    YELLOW("BedWarsTeam Yellow", TeamYellow.getInstance()),
-    GREEN("BedWarsTeam Green", TeamGreen.getInstance());
+    BLUE("Team Blue", TeamBlue.getInstance()),
+    RED("Team Red", TeamRed.getInstance()),
+    YELLOW("Team Yellow", TeamYellow.getInstance()),
+    GREEN("Team Green", TeamGreen.getInstance());
 
     private final String teamName;
     private final ITeam team;
