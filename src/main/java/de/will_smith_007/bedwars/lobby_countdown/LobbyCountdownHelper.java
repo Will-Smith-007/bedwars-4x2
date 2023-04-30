@@ -17,17 +17,15 @@ public class LobbyCountdownHelper implements ILobbyCountdownHelper {
     }
 
     @Override
-    public boolean startCountdownIfEnoughPlayers() {
-        if (LOBBY_COUNTDOWN_SCHEDULER.isRunning()) return false;
+    public void startCountdownIfEnoughPlayers() {
+        if (LOBBY_COUNTDOWN_SCHEDULER.isRunning()) return;
 
         final Collection<? extends Player> players = Bukkit.getOnlinePlayers();
         final int playerSize = players.size();
 
-        if (playerSize < 2) return false;
+        if (playerSize < 2) return;
 
         LOBBY_COUNTDOWN_SCHEDULER.start();
-
-        return true;
     }
 
     @Override
