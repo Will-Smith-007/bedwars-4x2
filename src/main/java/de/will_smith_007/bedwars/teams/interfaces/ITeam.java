@@ -24,5 +24,7 @@ public interface ITeam {
 
     boolean bedExists(@NonNull World world);
 
+    @NonNull String getTeamName();
+
     @NonNull Set<Player> getPlayers();
 }

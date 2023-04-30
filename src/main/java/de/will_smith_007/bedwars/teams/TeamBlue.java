@@ -54,6 +54,11 @@ public class TeamBlue implements ITeam {
     }
 
     @Override
+    public @NonNull String getTeamName() {
+        return "§9" + BEDWARS_TEAM.getTeamName();
+    }
+
+    @Override
     public @NonNull Set<Player> getPlayers() {
         return TEAM_PLAYERS;
     }

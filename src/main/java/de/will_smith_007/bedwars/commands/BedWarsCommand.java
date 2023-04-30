@@ -100,7 +100,7 @@ public class BedWarsCommand implements TabExecutor {
                 final BedWarsSetup bedWarsSetup = PLAYERS_IN_SETUP.get(player);
 
                 if (bedWarsSetup.getSetupAction() != BedWarsSetup.SetupAction.BED_SETUP) {
-                    player.sendPlainMessage(Message.PREFIX + "§cYou're already set the§e beds§c or " +
+                    player.sendPlainMessage(Message.PREFIX + "§cYou already set the§e beds§c or " +
                             "this is a coming setup step.");
                     return true;
                 }
@@ -132,7 +132,7 @@ public class BedWarsCommand implements TabExecutor {
                 final BedWarsSetup bedWarsSetup = PLAYERS_IN_SETUP.get(player);
 
                 if (bedWarsSetup.getSetupAction() != BedWarsSetup.SetupAction.TEAM_SPAWN_SETUP) {
-                    player.sendPlainMessage(Message.PREFIX + "§cYou're already set the§e team spawn§c or " +
+                    player.sendPlainMessage(Message.PREFIX + "§cYou already set the§e team spawn§c or " +
                             "this is a coming setup step.");
                     return true;
                 }

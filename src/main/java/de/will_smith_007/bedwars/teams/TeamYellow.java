@@ -54,6 +54,11 @@ public class TeamYellow implements ITeam {
     }
 
     @Override
+    public @NonNull String getTeamName() {
+        return "§e" + BEDWARS_TEAM.getTeamName();
+    }
+
+    @Override
     public @NonNull Set<Player> getPlayers() {
         return TEAM_PLAYERS;
     }
