@@ -5,6 +5,7 @@ import de.will_smith_007.bedwars.commands.StartCommand;
 import de.will_smith_007.bedwars.file_config.BedWarsConfig;
 import de.will_smith_007.bedwars.game_assets.GameAssets;
 import de.will_smith_007.bedwars.listeners.PlayerConnectionListener;
+import de.will_smith_007.bedwars.listeners.game.BlockBuildingListener;
 import de.will_smith_007.bedwars.listeners.setup.BedWarsSpawnerSetupListener;
 import de.will_smith_007.bedwars.listeners.setup.BedWarsWorldSetupListener;
 import de.will_smith_007.bedwars.lobby_countdown.LobbyCountdownHelper;
@@ -47,7 +48,8 @@ public class BedWars extends JavaPlugin {
         registerListeners(
                 new PlayerConnectionListener(gameAssets),
                 new BedWarsSpawnerSetupListener(),
-                new BedWarsWorldSetupListener()
+                new BedWarsWorldSetupListener(),
+                new BlockBuildingListener(gameAssets)
         );
 
         getLogger().info("BedWars was started.");
