@@ -61,6 +61,11 @@ public class TeamDamageListener implements Listener {
             if (damagePlayerTeam == victimPlayerTeam) {
                 entityDamageByEntityEvent.setCancelled(true);
             } else {
+                final double dealtDamage = entityDamageByEntityEvent.getDamage();
+                final double victimHealth = victimPlayer.getHealth();
+
+                if (dealtDamage < victimHealth) return;
+
                 final Component displayName = victimPlayer.displayName();
                 final Location damagePlayerLocation = damagePlayer.getLocation();
 

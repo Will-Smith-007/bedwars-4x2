@@ -41,6 +41,7 @@ public class PlayerDeathListener implements Listener {
         if (gameState == GameState.LOBBY) return;
 
         playerDeathEvent.setCancelled(true);
+        playerDeathEvent.deathMessage(null);
 
         final Player player = playerDeathEvent.getPlayer();
         final World playerWorld = player.getWorld();

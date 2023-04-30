@@ -92,6 +92,8 @@ public class LobbyCountdownScheduler implements IScheduler, ICountdownOptions {
                         return;
                     }
 
+                    setGamerules(gameWorld);
+
                     for (Player player : players) {
                         final Optional<ITeam> optionalITeam = TEAM_HELPER.getTeam(player);
                         final boolean isTeamPresent = optionalITeam.isPresent();
@@ -128,5 +130,11 @@ public class LobbyCountdownScheduler implements IScheduler, ICountdownOptions {
     @Override
     public boolean isRunning() {
         return isRunning;
+    }
+
+    private void setGamerules(@NonNull World gameWorld) {
+        gameWorld.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false);
+        gameWorld.setGameRule(GameRule.DO_WEATHER_CYCLE, false);
+        gameWorld.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
     }
 }
