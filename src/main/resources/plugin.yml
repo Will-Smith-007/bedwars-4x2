@@ -9,3 +9,5 @@ commands:
     aliases:
       - bw
     description: Setup a game map.
+  start:
+    description: Shorten the lobby start countdown.
