@@ -64,7 +64,8 @@ public class BedWars extends JavaPlugin {
                 new TeamDamageListener(gameAssets, teamHelper),
                 new PlayerDeathListener(gameAssets, teamHelper, scoreboardManager),
                 new EntitySpawnListener(),
-                new BedBreakListener(scoreboardManager)
+                new BedBreakListener(scoreboardManager),
+                new BlockSpreadListener()
         );
 
         getLogger().info("BedWars was started.");
