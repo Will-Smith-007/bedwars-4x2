@@ -50,6 +50,15 @@ public enum ShopItem {
     IRON_PICKAXE("Iron Pickaxe", Material.IRON_PICKAXE, ShopCategory.TOOLS,
             CurrencyType.GOLD, 1, 1, Enchantment.DIG_SPEED, 1),
 
+    STICK("Stick", Material.STICK, ShopCategory.WEAPONS,
+            CurrencyType.BRONZE, 8, 1, Enchantment.KNOCKBACK, 1),
+    GOLDEN_SWORD_SHARPNESS_ONE("Golden Sword", Material.GOLDEN_SWORD, ShopCategory.WEAPONS,
+            CurrencyType.IRON, 1, 1, Enchantment.DAMAGE_ALL, 1),
+    GOLDEN_SWORD_SHARPNESS_TWO("Golden Sword", Material.GOLDEN_SWORD, ShopCategory.WEAPONS,
+            CurrencyType.IRON, 3, 1),
+    IRON_SWORD_SHARPNESS_ONE("Iron Sword", Material.IRON_SWORD, ShopCategory.WEAPONS,
+            CurrencyType.GOLD, 5, 1, Enchantment.DAMAGE_ALL, 1),
+
     BOW_STRENGTH_ONE("Bow", Material.BOW, ShopCategory.BOWS,
             CurrencyType.GOLD, 3, 1, Enchantment.ARROW_DAMAGE, 1),
     BOW_STRENGTH_TWO("Bow", Material.BOW, ShopCategory.BOWS,
