@@ -4,6 +4,7 @@ import de.will_smith_007.bedwars.enums.GameState;
 import de.will_smith_007.bedwars.enums.Message;
 import de.will_smith_007.bedwars.file_config.BedWarsConfig;
 import de.will_smith_007.bedwars.game_assets.GameAssets;
+import de.will_smith_007.bedwars.scoreboard.interfaces.IScoreboardManager;
 import de.will_smith_007.bedwars.teams.helper.interfaces.ITeamHelper;
 import de.will_smith_007.bedwars.teams.interfaces.ITeam;
 import lombok.NonNull;
@@ -25,11 +26,14 @@ public class PlayerDeathListener implements Listener {
     private final GameAssets GAME_ASSETS;
     private final ITeamHelper TEAM_HELPER;
     private final BedWarsConfig BED_WARS_CONFIG = BedWarsConfig.getInstance();
+    private final IScoreboardManager SCOREBOARD_MANAGER;
 
     public PlayerDeathListener(@NonNull GameAssets gameAssets,
-                               @NonNull ITeamHelper teamHelper) {
+                               @NonNull ITeamHelper teamHelper,
+                               @NonNull IScoreboardManager scoreboardManager) {
         GAME_ASSETS = gameAssets;
         TEAM_HELPER = teamHelper;
+        SCOREBOARD_MANAGER = scoreboardManager;
     }
 
     @EventHandler
@@ -49,12 +53,6 @@ public class PlayerDeathListener implements Listener {
             final boolean bedExists = iTeam.bedExists(playerWorld);
             final Collection<? extends Player> onlinePlayers = Bukkit.getOnlinePlayers();
 
-            for (Player onlinePlayer : onlinePlayers) {
-                onlinePlayer.sendMessage(Component.text(Message.PREFIX + " ")
-                        .append(player.displayName())
-                        .append(Component.text("§7 died.")));
-            }
-
             if (bedExists) {
                 final Location teamSpawnLocation = iTeam.getTeamSpawnLocation(playerWorld);
                 player.teleport(teamSpawnLocation);
@@ -64,6 +62,15 @@ public class PlayerDeathListener implements Listener {
                 player.setGameMode(GameMode.SPECTATOR);
                 player.teleport(spectatorLocation);
                 TEAM_HELPER.handleTeamElimination(iTeam, onlinePlayers);
+                //TODO: Hide from other game players
+            }
+
+            for (Player onlinePlayer : onlinePlayers) {
+                onlinePlayer.sendMessage(Component.text(Message.PREFIX + " ")
+                        .append(player.displayName())
+                        .append(Component.text("§7 died.")));
+
+                SCOREBOARD_MANAGER.updateScoreboard(onlinePlayer);
             }
         });
     }

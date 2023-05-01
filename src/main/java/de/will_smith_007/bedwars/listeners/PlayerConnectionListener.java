@@ -2,14 +2,18 @@ package de.will_smith_007.bedwars.listeners;
 
 import de.will_smith_007.bedwars.enums.GameState;
 import de.will_smith_007.bedwars.enums.Message;
+import de.will_smith_007.bedwars.file_config.BedWarsConfig;
 import de.will_smith_007.bedwars.game_assets.GameAssets;
 import de.will_smith_007.bedwars.lobby_countdown.interfaces.ILobbyCountdownHelper;
+import de.will_smith_007.bedwars.scoreboard.interfaces.IScoreboardManager;
 import de.will_smith_007.bedwars.teams.helper.interfaces.ITeamHelper;
 import de.will_smith_007.bedwars.teams.interfaces.ITeam;
 import lombok.NonNull;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.World;
+import org.bukkit.WorldCreator;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -24,13 +28,17 @@ public class PlayerConnectionListener implements Listener {
     private final GameAssets GAME_ASSETS;
     private final ITeamHelper TEAM_HELPER;
     private final ILobbyCountdownHelper LOBBY_COUNTDOWN_HELPER;
+    private final IScoreboardManager SCOREBOARD_MANAGER;
+    private final BedWarsConfig BED_WARS_CONFIG = BedWarsConfig.getInstance();
 
     public PlayerConnectionListener(@NonNull GameAssets gameAssets,
                                     @NonNull ILobbyCountdownHelper lobbyCountdownHelper,
-                                    @NonNull ITeamHelper teamHelper) {
+                                    @NonNull ITeamHelper teamHelper,
+                                    @NonNull IScoreboardManager scoreboardManager) {
         GAME_ASSETS = gameAssets;
         LOBBY_COUNTDOWN_HELPER = lobbyCountdownHelper;
         TEAM_HELPER = teamHelper;
+        SCOREBOARD_MANAGER = scoreboardManager;
     }
 
     @EventHandler
@@ -38,11 +46,27 @@ public class PlayerConnectionListener implements Listener {
         final Player player = playerJoinEvent.getPlayer();
         final GameState gameState = GAME_ASSETS.getGameState();
 
+        SCOREBOARD_MANAGER.setScoreboardAndTablist(player);
+
+        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+            if (onlinePlayer.getName().equals(player.getName())) continue;
+
+            SCOREBOARD_MANAGER.updateScoreboard(onlinePlayer);
+            SCOREBOARD_MANAGER.setTablist(onlinePlayer);
+        }
+
         switch (gameState) {
             case LOBBY -> {
                 playerJoinEvent.joinMessage(Component.text(Message.PREFIX + "§e" + player.getName() +
                         "§7 joined the game!"));
                 player.setGameMode(GameMode.ADVENTURE);
+
+                final String lobbyWorldName = BED_WARS_CONFIG.getLobbyWorld();
+                final World world = Bukkit.createWorld(new WorldCreator(lobbyWorldName));
+
+                if (world == null) return;
+
+                player.teleport(world.getSpawnLocation());
 
                 LOBBY_COUNTDOWN_HELPER.startCountdownIfEnoughPlayers();
             }
@@ -81,6 +105,13 @@ public class PlayerConnectionListener implements Listener {
                 });
             }
             case ENDING -> playerQuitEvent.quitMessage(null);
+        }
+
+        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+            if (onlinePlayer.getName().equals(player.getName())) continue;
+
+            SCOREBOARD_MANAGER.updateScoreboard(onlinePlayer);
+            SCOREBOARD_MANAGER.setTablist(onlinePlayer);
         }
     }
 }

@@ -13,6 +13,7 @@ import de.will_smith_007.bedwars.schedulers.EndingCountdownScheduler;
 import de.will_smith_007.bedwars.schedulers.LobbyCountdownScheduler;
 import de.will_smith_007.bedwars.schedulers.ProtectionCountdownScheduler;
 import de.will_smith_007.bedwars.schedulers.SpawnerScheduler;
+import de.will_smith_007.bedwars.scoreboard.ScoreboardManager;
 import de.will_smith_007.bedwars.spawner.provider.SpawnerProvider;
 import de.will_smith_007.bedwars.teams.helper.TeamHelper;
 import de.will_smith_007.bedwars.teams.parser.TeamParser;
@@ -39,13 +40,15 @@ public class BedWars extends JavaPlugin {
         final EndingCountdownScheduler endingCountdownScheduler = new EndingCountdownScheduler(this);
 
         final TeamHelper teamHelper = new TeamHelper(gameAssets, endingCountdownScheduler);
+        final ScoreboardManager scoreboardManager = new ScoreboardManager(gameAssets, teamHelper);
 
         final LobbyCountdownScheduler lobbyCountdownScheduler = new LobbyCountdownScheduler(
                 this,
                 teamHelper,
                 gameAssets,
                 protectionCountdownScheduler,
-                spawnerScheduler
+                spawnerScheduler,
+                scoreboardManager
         );
 
         final LobbyCountdownHelper lobbyCountdownHelper = new LobbyCountdownHelper(lobbyCountdownScheduler);
@@ -54,14 +57,14 @@ public class BedWars extends JavaPlugin {
         registerCommand("start", new StartCommand(lobbyCountdownHelper));
 
         registerListeners(
-                new PlayerConnectionListener(gameAssets, lobbyCountdownHelper, teamHelper),
+                new PlayerConnectionListener(gameAssets, lobbyCountdownHelper, teamHelper, scoreboardManager),
                 new BedWarsSpawnerSetupListener(),
                 new BedWarsWorldSetupListener(),
                 new BlockBuildingListener(gameAssets),
                 new TeamDamageListener(gameAssets, teamHelper),
-                new PlayerDeathListener(gameAssets, teamHelper),
+                new PlayerDeathListener(gameAssets, teamHelper, scoreboardManager),
                 new EntitySpawnListener(),
-                new BedBreakListener()
+                new BedBreakListener(scoreboardManager)
         );
 
         getLogger().info("BedWars was started.");

@@ -7,6 +7,7 @@ import de.will_smith_007.bedwars.game_assets.GameAssets;
 import de.will_smith_007.bedwars.game_config.GameConfiguration;
 import de.will_smith_007.bedwars.schedulers.interfaces.ICountdownOptions;
 import de.will_smith_007.bedwars.schedulers.interfaces.IScheduler;
+import de.will_smith_007.bedwars.scoreboard.interfaces.IScoreboardManager;
 import de.will_smith_007.bedwars.teams.helper.interfaces.ITeamHelper;
 import de.will_smith_007.bedwars.teams.interfaces.ITeam;
 import lombok.Getter;
@@ -37,17 +38,20 @@ public class LobbyCountdownScheduler implements IScheduler, ICountdownOptions {
     private final ProtectionCountdownScheduler PROTECTION_COUNTDOWN_SCHEDULER;
     private final SpawnerScheduler SPAWNER_SCHEDULER;
     private final BedWarsConfig BEDWARS_CONFIG = BedWarsConfig.getInstance();
+    private final IScoreboardManager SCOREBOARD_MANAGER;
 
     public LobbyCountdownScheduler(@NonNull JavaPlugin javaPlugin,
                                    @NonNull ITeamHelper teamHelper,
                                    @NonNull GameAssets gameAssets,
                                    @NonNull ProtectionCountdownScheduler protectionCountdownScheduler,
-                                   @NonNull SpawnerScheduler spawnerScheduler) {
+                                   @NonNull SpawnerScheduler spawnerScheduler,
+                                   @NonNull IScoreboardManager scoreboardManager) {
         JAVA_PLUGIN = javaPlugin;
         TEAM_HELPER = teamHelper;
         GAME_ASSETS = gameAssets;
         PROTECTION_COUNTDOWN_SCHEDULER = protectionCountdownScheduler;
         SPAWNER_SCHEDULER = spawnerScheduler;
+        SCOREBOARD_MANAGER = scoreboardManager;
     }
 
     @Override
@@ -110,6 +114,9 @@ public class LobbyCountdownScheduler implements IScheduler, ICountdownOptions {
 
                         final Location teamSpawnLocation = iTeam.getTeamSpawnLocation(gameWorld);
                         player.teleport(teamSpawnLocation);
+
+                        SCOREBOARD_MANAGER.setTablist(player);
+                        SCOREBOARD_MANAGER.updateScoreboard(player);
                     }
 
                     GAME_ASSETS.setGameConfiguration(new GameConfiguration(gameWorld));

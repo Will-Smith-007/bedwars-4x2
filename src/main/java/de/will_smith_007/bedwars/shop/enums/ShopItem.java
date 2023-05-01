@@ -13,18 +13,12 @@ public enum ShopItem {
 
     SANDSTONE("Sandstone", Material.SANDSTONE, ShopCategory.BLOCKS,
             CurrencyType.BRONZE, 1, 2),
-    WOOL("Wool", Material.WHITE_WOOL, ShopCategory.BLOCKS,
-            CurrencyType.BRONZE, 2, 1),
-    CLAY("Clay", Material.CLAY, ShopCategory.BLOCKS,
-            CurrencyType.BRONZE, 4, 2),
     GLOW_STONE("Glowstone", Material.GLOWSTONE, ShopCategory.BLOCKS,
             CurrencyType.BRONZE, 15, 4),
     END_STONE("Endstone", Material.END_STONE, ShopCategory.BLOCKS,
             CurrencyType.BRONZE, 7, 1),
     GLASS("Glass", Material.GLASS, ShopCategory.BLOCKS,
             CurrencyType.BRONZE, 4, 1),
-    SANDSTONE_WALL("Sandstone Wall", Material.SANDSTONE_WALL, ShopCategory.BLOCKS,
-            CurrencyType.IRON, 1, 1),
     IRON_BLOCK("Ironblock", Material.IRON_BLOCK, ShopCategory.BLOCKS,
             CurrencyType.IRON, 3, 1),
 
