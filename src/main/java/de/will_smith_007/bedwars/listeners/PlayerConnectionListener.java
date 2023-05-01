@@ -92,6 +92,7 @@ public class PlayerConnectionListener implements Listener {
                 final int playerSize = (players.size() - 1);
 
                 LOBBY_COUNTDOWN_HELPER.cancelCountdownIfNotEnoughPlayers(playerSize);
+                LOBBY_COUNTDOWN_HELPER.cancelCountdownIfNotEnoughTeams();
             }
             case INGAME, PROTECTION -> {
                 playerQuitEvent.quitMessage(Component.text(Message.PREFIX.toString())
