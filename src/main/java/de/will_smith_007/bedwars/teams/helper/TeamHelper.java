@@ -1,17 +1,30 @@
 package de.will_smith_007.bedwars.teams.helper;
 
+import de.will_smith_007.bedwars.enums.GameState;
+import de.will_smith_007.bedwars.enums.Message;
+import de.will_smith_007.bedwars.game_assets.GameAssets;
+import de.will_smith_007.bedwars.schedulers.EndingCountdownScheduler;
 import de.will_smith_007.bedwars.teams.enums.BedWarsTeam;
 import de.will_smith_007.bedwars.teams.helper.interfaces.ITeamHelper;
 import de.will_smith_007.bedwars.teams.interfaces.ITeam;
 import lombok.NonNull;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
 import java.util.*;
 
 public class TeamHelper implements ITeamHelper {
 
-    private final BedWarsTeam[] TEAMS = BedWarsTeam.values();
+    private final GameAssets GAME_ASSETS;
+    private final EndingCountdownScheduler ENDING_COUNTDOWN_SCHEDULER;
+
+    public TeamHelper(@NonNull GameAssets gameAssets,
+                      @NonNull EndingCountdownScheduler endingCountdownScheduler) {
+        GAME_ASSETS = gameAssets;
+        ENDING_COUNTDOWN_SCHEDULER = endingCountdownScheduler;
+    }
 
     @Override
     public void removeBedWarsTeam(@NonNull Player player) {
@@ -19,13 +32,43 @@ public class TeamHelper implements ITeamHelper {
     }
 
     @Override
+    public void handleTeamElimination(@NonNull ITeam team, @NonNull Collection<? extends Player> players) {
+        final Set<Player> teamPlayers = team.getPlayers();
+
+        if (teamPlayers.size() > 0) return;
+
+        for (Player player : players) {
+            player.sendPlainMessage(Message.PREFIX + team.getTeamName() + "§c was§4 eliminated§c!");
+        }
+
+        final List<ITeam> aliveTeams = Arrays.stream(BED_WARS_TEAMS)
+                .map(BedWarsTeam::getTeam)
+                .filter(iTeam -> iTeam.getPlayers().size() > 0)
+                .toList();
+
+        if (aliveTeams.size() == 1) {
+            final ITeam winningTeam = aliveTeams.get(0);
+            final String winningTeamName = winningTeam.getTeamName();
+
+            for (Player player : players) {
+                player.sendPlainMessage(Message.PREFIX + winningTeamName + "§a has won the game!");
+                final Location playerLocation = player.getLocation();
+                player.playSound(playerLocation, Sound.ENTITY_FIREWORK_ROCKET_LARGE_BLAST, 1.0f, 1.0f);
+            }
+
+            GAME_ASSETS.setGameState(GameState.ENDING);
+            ENDING_COUNTDOWN_SCHEDULER.start();
+        }
+    }
+
+    @Override
     public ITeam selectBedWarsTeam(@NonNull Player player) {
-        final Optional<ITeam> optionalMinITeam = Arrays.stream(TEAMS)
+        final Optional<ITeam> optionalMinITeam = Arrays.stream(BED_WARS_TEAMS)
                 .map(BedWarsTeam::getTeam)
                 .filter(iTeam -> iTeam.getPlayers().size() < 2)
                 .min(Comparator.comparingInt(iTeam -> iTeam.getPlayers().size()));
 
-        for (BedWarsTeam bedWarsTeam : TEAMS) {
+        for (BedWarsTeam bedWarsTeam : BED_WARS_TEAMS) {
             final ITeam iTeam = bedWarsTeam.getTeam();
             final Set<Player> teamPlayers = iTeam.getPlayers();
 
@@ -53,7 +96,7 @@ public class TeamHelper implements ITeamHelper {
     public boolean canTeamJoined(@NonNull BedWarsTeam team) {
         final ITeam iTeam = team.getTeam();
         final Collection<? extends Player> players = Bukkit.getOnlinePlayers();
-        final int minPlayersPerTeam = (players.size() / TEAMS.length);
+        final int minPlayersPerTeam = (players.size() / BED_WARS_TEAMS.length);
         final Set<Player> teamPlayers = iTeam.getPlayers();
 
         if (teamPlayers.isEmpty()) return true;
@@ -63,7 +106,7 @@ public class TeamHelper implements ITeamHelper {
 
     @Override
     public Optional<ITeam> getTeam(@NonNull Player player) {
-        return Arrays.stream(TEAMS)
+        return Arrays.stream(BED_WARS_TEAMS)
                 .map(BedWarsTeam::getTeam)
                 .filter(iTeam -> iTeam.getPlayers().contains(player))
                 .findAny();

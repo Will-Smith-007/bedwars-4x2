@@ -18,7 +18,7 @@ public class TeamYellow implements ITeam {
 
     private static TeamYellow instance;
     private final Set<Player> TEAM_PLAYERS = new HashSet<>();
-    private final BedWarsTeam BEDWARS_TEAM = BedWarsTeam.YELLOW;
+    private final BedWarsTeam BED_WARS_TEAM = BedWarsTeam.YELLOW;
 
     @Override
     public void addPlayer(@NonNull Player player) {
@@ -42,12 +42,12 @@ public class TeamYellow implements ITeam {
 
     @Override
     public Location getTeamSpawnLocation(@NonNull World world) {
-        return BED_WARS_CONFIG.getTeamSpawnLocation(BEDWARS_TEAM, world);
+        return BED_WARS_CONFIG.getTeamSpawnLocation(BED_WARS_TEAM, world);
     }
 
     @Override
     public boolean bedExists(@NonNull World world) {
-        final Location bedLocation = BED_WARS_CONFIG.getBedLocation(BEDWARS_TEAM, world);
+        final Location bedLocation = BED_WARS_CONFIG.getBedLocation(BED_WARS_TEAM, world);
         if (bedLocation == null) return false;
         final Block block = bedLocation.getBlock();
         return (block.getType().toString().endsWith("BED"));
@@ -55,7 +55,7 @@ public class TeamYellow implements ITeam {
 
     @Override
     public @NonNull String getTeamName() {
-        return "§e" + BEDWARS_TEAM.getTeamName();
+        return "§e" + BED_WARS_TEAM.getTeamName();
     }
 
     @Override

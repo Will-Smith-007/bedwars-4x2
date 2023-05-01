@@ -23,7 +23,7 @@ public class BedWarsCommand implements TabExecutor {
 
     @Getter
     private static final Map<Player, BedWarsSetup> PLAYERS_IN_SETUP = new HashMap<>();
-    private final BedWarsConfig BEDWARS_CONFIG = BedWarsConfig.getInstance();
+    private final BedWarsConfig BED_WARS_CONFIG = BedWarsConfig.getInstance();
     private final TeamParser TEAM_PARSER;
 
     public BedWarsCommand(@NonNull TeamParser teamParser) {
@@ -89,7 +89,7 @@ public class BedWarsCommand implements TabExecutor {
                     return true;
                 }
 
-                BEDWARS_CONFIG.setLobbyWorld(world);
+                BED_WARS_CONFIG.setLobbyWorld(world);
                 player.sendPlainMessage(Message.PREFIX + "§aYou've set the lobby world to §e" + worldName + "a.");
             } else if (subCommand.equalsIgnoreCase("setBed")) {
                 if (!PLAYERS_IN_SETUP.containsKey(player)) {

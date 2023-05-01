@@ -18,33 +18,32 @@ public class BedWarsConfig {
 
     private static BedWarsConfig instance;
 
-    private final Logger LOGGER;
-    private final File BEDWARS_CONFIG;
+    private final File BED_WARS_CONFIG;
     private final YamlConfiguration YAML_CONFIGURATION;
 
     public BedWarsConfig(@NonNull JavaPlugin javaPlugin) {
         instance = this;
-        LOGGER = javaPlugin.getLogger();
+        final Logger logger = javaPlugin.getLogger();
 
         final File bedWarsConfigDirectory = new File(javaPlugin.getDataFolder().getPath());
         final String configName = "config.yml";
-        BEDWARS_CONFIG = new File(bedWarsConfigDirectory + "/" + configName);
+        BED_WARS_CONFIG = new File(bedWarsConfigDirectory + "/" + configName);
 
         if (bedWarsConfigDirectory.mkdirs()) {
-            LOGGER.info("BedWars configuration directory was created.");
+            logger.info("BedWars configuration directory was created.");
         }
 
-        if (!BEDWARS_CONFIG.exists()) {
+        if (!BED_WARS_CONFIG.exists()) {
             try {
-                if (BEDWARS_CONFIG.createNewFile()) {
-                    LOGGER.info("BedWars configuration file was created.");
+                if (BED_WARS_CONFIG.createNewFile()) {
+                    logger.info("BedWars configuration file was created.");
                 }
             } catch (IOException ioException) {
                 ioException.printStackTrace();
             }
         }
 
-        YAML_CONFIGURATION = YamlConfiguration.loadConfiguration(BEDWARS_CONFIG);
+        YAML_CONFIGURATION = YamlConfiguration.loadConfiguration(BED_WARS_CONFIG);
     }
 
     public @NonNull List<String> getGameWorlds() {
@@ -189,7 +188,7 @@ public class BedWarsConfig {
 
     private void saveConfig() {
         try {
-            YAML_CONFIGURATION.save(BEDWARS_CONFIG);
+            YAML_CONFIGURATION.save(BED_WARS_CONFIG);
         } catch (IOException ioException) {
             ioException.printStackTrace();
         }

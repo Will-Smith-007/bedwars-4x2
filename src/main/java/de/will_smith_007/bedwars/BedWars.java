@@ -31,12 +31,15 @@ public class BedWars extends JavaPlugin {
         final BedWarsConfig bedWarsConfig = new BedWarsConfig(this);
         final GameAssets gameAssets = new GameAssets();
         final TeamParser teamParser = new TeamParser();
-        final TeamHelper teamHelper = new TeamHelper();
 
         final SpawnerProvider spawnerProvider = new SpawnerProvider(gameAssets);
 
         final ProtectionCountdownScheduler protectionCountdownScheduler = new ProtectionCountdownScheduler(this);
         final SpawnerScheduler spawnerScheduler = new SpawnerScheduler(this, spawnerProvider);
+        final EndingCountdownScheduler endingCountdownScheduler = new EndingCountdownScheduler(this);
+
+        final TeamHelper teamHelper = new TeamHelper(gameAssets, endingCountdownScheduler);
+
         final LobbyCountdownScheduler lobbyCountdownScheduler = new LobbyCountdownScheduler(
                 this,
                 teamHelper,
@@ -44,7 +47,6 @@ public class BedWars extends JavaPlugin {
                 protectionCountdownScheduler,
                 spawnerScheduler
         );
-        final EndingCountdownScheduler endingCountdownScheduler = new EndingCountdownScheduler(this);
 
         final LobbyCountdownHelper lobbyCountdownHelper = new LobbyCountdownHelper(lobbyCountdownScheduler);
 
@@ -52,12 +54,12 @@ public class BedWars extends JavaPlugin {
         registerCommand("start", new StartCommand(lobbyCountdownHelper));
 
         registerListeners(
-                new PlayerConnectionListener(gameAssets, lobbyCountdownHelper),
+                new PlayerConnectionListener(gameAssets, lobbyCountdownHelper, teamHelper),
                 new BedWarsSpawnerSetupListener(),
                 new BedWarsWorldSetupListener(),
                 new BlockBuildingListener(gameAssets),
                 new TeamDamageListener(gameAssets, teamHelper),
-                new PlayerDeathListener(gameAssets, teamHelper, endingCountdownScheduler),
+                new PlayerDeathListener(gameAssets, teamHelper),
                 new EntitySpawnListener(),
                 new BedBreakListener()
         );

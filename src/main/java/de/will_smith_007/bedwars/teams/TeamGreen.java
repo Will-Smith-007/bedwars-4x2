@@ -18,7 +18,7 @@ public class TeamGreen implements ITeam {
 
     private static TeamGreen instance;
     private final Set<Player> TEAM_PLAYERS = new HashSet<>();
-    private final BedWarsTeam BEDWARS_TEAM = BedWarsTeam.GREEN;
+    private final BedWarsTeam BED_WARS_TEAM = BedWarsTeam.GREEN;
 
     @Override
     public void addPlayer(@NonNull Player player) {
@@ -42,12 +42,12 @@ public class TeamGreen implements ITeam {
 
     @Override
     public Location getTeamSpawnLocation(@NonNull World world) {
-        return BED_WARS_CONFIG.getTeamSpawnLocation(BEDWARS_TEAM, world);
+        return BED_WARS_CONFIG.getTeamSpawnLocation(BED_WARS_TEAM, world);
     }
 
     @Override
     public boolean bedExists(@NonNull World world) {
-        final Location bedLocation = BED_WARS_CONFIG.getBedLocation(BEDWARS_TEAM, world);
+        final Location bedLocation = BED_WARS_CONFIG.getBedLocation(BED_WARS_TEAM, world);
         if (bedLocation == null) return false;
         final Block block = bedLocation.getBlock();
         return (block.getType().toString().endsWith("BED"));
@@ -55,7 +55,7 @@ public class TeamGreen implements ITeam {
 
     @Override
     public @NonNull String getTeamName() {
-        return "§a" + BEDWARS_TEAM.getTeamName();
+        return "§a" + BED_WARS_TEAM.getTeamName();
     }
 
     @Override

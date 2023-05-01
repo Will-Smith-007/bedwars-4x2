@@ -21,8 +21,8 @@ public class BedBreakEvent extends Event {
     private final Location BED_LOCATION;
     @Getter
     private final Player PLAYER;
-    private final BedWarsConfig BEDWARS_CONFIG = BedWarsConfig.getInstance();
-    private final BedWarsTeam[] BEDWARS_TEAMS = BedWarsTeam.values();
+    private final BedWarsConfig BED_WARS_CONFIG = BedWarsConfig.getInstance();
+    private final BedWarsTeam[] BED_WARS_TEAMS = BedWarsTeam.values();
 
     public BedBreakEvent(@NonNull Player player, @NonNull Location bedLocation) {
         BED_LOCATION = bedLocation;
@@ -32,8 +32,8 @@ public class BedBreakEvent extends Event {
     public Optional<ITeam> getTeamFromBed() {
         final World playerWorld = PLAYER.getWorld();
 
-        for (BedWarsTeam bedwarsTeam : BEDWARS_TEAMS) {
-            final Location configuredBedLocation = BEDWARS_CONFIG.getBedLocation(bedwarsTeam, playerWorld);
+        for (BedWarsTeam bedwarsTeam : BED_WARS_TEAMS) {
+            final Location configuredBedLocation = BED_WARS_CONFIG.getBedLocation(bedwarsTeam, playerWorld);
             if (configuredBedLocation.distance(BED_LOCATION) > 1) continue;
             return Optional.of(bedwarsTeam.getTeam());
         }
