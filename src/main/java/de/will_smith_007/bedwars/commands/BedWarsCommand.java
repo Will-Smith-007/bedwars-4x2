@@ -90,7 +90,7 @@ public class BedWarsCommand implements TabExecutor {
                 }
 
                 BED_WARS_CONFIG.setLobbyWorld(world);
-                player.sendPlainMessage(Message.PREFIX + "§aYou've set the lobby world to §e" + worldName + "a.");
+                player.sendPlainMessage(Message.PREFIX + "§aYou've set the lobby world to §e" + worldName + "§a.");
             } else if (subCommand.equalsIgnoreCase("setBed")) {
                 if (!PLAYERS_IN_SETUP.containsKey(player)) {
                     player.sendPlainMessage(Message.PREFIX + "§cYou're currently not in a map setup.");
@@ -169,7 +169,7 @@ public class BedWarsCommand implements TabExecutor {
                             PLAYERS_IN_SETUP.put(player, bedWarsSetup);
 
                             player.sendPlainMessage(Message.PREFIX + "§aNow set the§e team spawn§a locations by " +
-                                    "using the command §e/bw setSpawn [Team] and use the command " +
+                                    "using the command §e/bw setSpawn [Team]§a and use the command " +
                                     "§e/bw setup next§a if you're done.");
                         }
 
@@ -183,7 +183,7 @@ public class BedWarsCommand implements TabExecutor {
                             bedWarsSetup.setSetupAction(BedWarsSetup.SetupAction.BRONZE_SPAWNER_SETUP);
                             PLAYERS_IN_SETUP.put(player, bedWarsSetup);
 
-                            player.sendPlainMessage(Message.PREFIX + "§aNow set the§e bronze spawners by right " +
+                            player.sendPlainMessage(Message.PREFIX + "§aNow set the§e bronze spawners§a by right " +
                                     "clicking a block and use the command §e/bw setup next§a if you're done.");
                         }
 
@@ -209,7 +209,7 @@ public class BedWarsCommand implements TabExecutor {
                             PLAYERS_IN_SETUP.put(player, bedWarsSetup);
 
                             if (nextSetupStep != null) {
-                                player.sendPlainMessage(Message.PREFIX + "§aNow set the§e" + nextSetupStep + " spawners by right " +
+                                player.sendPlainMessage(Message.PREFIX + "§aNow set the§e " + nextSetupStep + " spawners§a by right " +
                                         "clicking a block and use the command §e/bw setup next§a if you're done.");
                             } else {
                                 player.sendPlainMessage(Message.PREFIX + "§aFinally set the§e spectator spawn " +
@@ -256,6 +256,7 @@ public class BedWarsCommand implements TabExecutor {
                 }
 
                 player.teleport(world.getSpawnLocation());
+                player.setGameMode(GameMode.CREATIVE);
                 player.sendPlainMessage(Message.PREFIX + "§aYou've been teleported to §e" + worldName + "§a.");
             }
         }

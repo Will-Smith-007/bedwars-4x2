@@ -62,6 +62,7 @@ public class ProtectionCountdownScheduler implements IScheduler, ICountdownOptio
     @Override
     public void stop() {
         if (!isRunning) return;
+        isRunning = false;
         BUKKIT_SCHEDULER.cancelTask(taskID);
     }
 

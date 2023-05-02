@@ -1,18 +1,13 @@
 package de.will_smith_007.bedwars.events;
 
-import de.will_smith_007.bedwars.file_config.BedWarsConfig;
-import de.will_smith_007.bedwars.teams.enums.BedWarsTeam;
 import de.will_smith_007.bedwars.teams.interfaces.ITeam;
 import lombok.Getter;
 import lombok.NonNull;
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Optional;
 
 public class BedBreakEvent extends Event {
 
@@ -21,24 +16,13 @@ public class BedBreakEvent extends Event {
     private final Location BED_LOCATION;
     @Getter
     private final Player PLAYER;
-    private final BedWarsConfig BED_WARS_CONFIG = BedWarsConfig.getInstance();
-    private final BedWarsTeam[] BED_WARS_TEAMS = BedWarsTeam.values();
+    @Getter
+    private final ITeam BED_TEAM;
 
-    public BedBreakEvent(@NonNull Player player, @NonNull Location bedLocation) {
+    public BedBreakEvent(@NonNull Player player, @NonNull Location bedLocation, @NonNull ITeam bedTeam) {
         BED_LOCATION = bedLocation;
         PLAYER = player;
-    }
-
-    public Optional<ITeam> getTeamFromBed() {
-        final World playerWorld = PLAYER.getWorld();
-
-        for (BedWarsTeam bedwarsTeam : BED_WARS_TEAMS) {
-            final Location configuredBedLocation = BED_WARS_CONFIG.getBedLocation(bedwarsTeam, playerWorld);
-            if (configuredBedLocation.distance(BED_LOCATION) > 1) continue;
-            return Optional.of(bedwarsTeam.getTeam());
-        }
-
-        return Optional.empty();
+        BED_TEAM = bedTeam;
     }
 
     @Override

@@ -6,7 +6,6 @@ import lombok.NonNull;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
@@ -18,7 +17,7 @@ public class TeamYellow implements ITeam {
 
     private static TeamYellow instance;
     private final Set<Player> TEAM_PLAYERS = new HashSet<>();
-    private final BedWarsTeam BED_WARS_TEAM = BedWarsTeam.YELLOW;
+    private boolean bedExists = true;
 
     @Override
     public void addPlayer(@NonNull Player player) {
@@ -28,6 +27,11 @@ public class TeamYellow implements ITeam {
     @Override
     public void removePlayer(@NonNull Player player) {
         TEAM_PLAYERS.remove(player);
+    }
+
+    @Override
+    public void setBedExists(boolean bedExists) {
+        this.bedExists = bedExists;
     }
 
     @Override
@@ -42,20 +46,17 @@ public class TeamYellow implements ITeam {
 
     @Override
     public Location getTeamSpawnLocation(@NonNull World world) {
-        return BED_WARS_CONFIG.getTeamSpawnLocation(BED_WARS_TEAM, world);
+        return BED_WARS_CONFIG.getTeamSpawnLocation(BedWarsTeam.YELLOW, world);
     }
 
     @Override
-    public boolean bedExists(@NonNull World world) {
-        final Location bedLocation = BED_WARS_CONFIG.getBedLocation(BED_WARS_TEAM, world);
-        if (bedLocation == null) return false;
-        final Block block = bedLocation.getBlock();
-        return (block.getType().toString().endsWith("BED"));
+    public boolean bedExists() {
+        return bedExists;
     }
 
     @Override
     public @NonNull String getTeamName() {
-        return "§e" + BED_WARS_TEAM.getTeamName();
+        return "§e" + BedWarsTeam.YELLOW.getTeamName();
     }
 
     @Override

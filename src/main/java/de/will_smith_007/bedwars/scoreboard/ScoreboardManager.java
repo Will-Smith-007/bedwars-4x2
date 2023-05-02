@@ -15,7 +15,6 @@ import lombok.NonNull;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
-import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.*;
 
@@ -38,7 +37,6 @@ public class ScoreboardManager implements IScoreboardManager {
         final Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
         final Objective objective = scoreboard.registerNewObjective("aaa", Criteria.DUMMY,
                 Component.text("BEDWARS", NamedTextColor.WHITE));
-        final World playerWorld = player.getWorld();
 
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
         objective.displayName(Component.text("BEDWARS", NamedTextColor.WHITE));
@@ -100,7 +98,7 @@ public class ScoreboardManager implements IScoreboardManager {
             case PROTECTION, INGAME, ENDING -> {
                 {
                     final ITeam iTeam = TeamBlue.getInstance();
-                    final String bedExistsSymbol = (iTeam.bedExists(playerWorld) ? "§aHaken" : "§cKreuz");
+                    final String bedExistsSymbol = (iTeam.bedExists() ? "§a✔ " : "§c✘ ");
                     final String teamName = iTeam.getTeamName().replace("Team ", "");
                     final int playerSize = iTeam.getPlayers().size();
                     final Team team = scoreboard.registerNewTeam("x10");
@@ -113,7 +111,7 @@ public class ScoreboardManager implements IScoreboardManager {
 
                 {
                     final ITeam iTeam = TeamRed.getInstance();
-                    final String bedExistsSymbol = (iTeam.bedExists(playerWorld) ? "§aHaken" : "§cKreuz");
+                    final String bedExistsSymbol = (iTeam.bedExists() ? "§a✔ " : "§c✘ ");
                     final String teamName = iTeam.getTeamName().replace("Team ", "");
                     final int playerSize = iTeam.getPlayers().size();
                     final Team team = scoreboard.registerNewTeam("x9");
@@ -126,7 +124,7 @@ public class ScoreboardManager implements IScoreboardManager {
 
                 {
                     final ITeam iTeam = TeamGreen.getInstance();
-                    final String bedExistsSymbol = (iTeam.bedExists(playerWorld) ? "§aHaken" : "§cKreuz");
+                    final String bedExistsSymbol = (iTeam.bedExists() ? "§a✔ " : "§c✘ ");
                     final String teamName = iTeam.getTeamName().replace("Team ", "");
                     final int playerSize = iTeam.getPlayers().size();
                     final Team team = scoreboard.registerNewTeam("x8");
@@ -139,7 +137,7 @@ public class ScoreboardManager implements IScoreboardManager {
 
                 {
                     final ITeam iTeam = TeamYellow.getInstance();
-                    final String bedExistsSymbol = (iTeam.bedExists(playerWorld) ? "§aHaken" : "§cKreuz");
+                    final String bedExistsSymbol = (iTeam.bedExists() ? "§a✔ " : "§c✘ ");
                     final String teamName = iTeam.getTeamName().replace("Team ", "");
                     final int playerSize = iTeam.getPlayers().size();
                     final Team team = scoreboard.registerNewTeam("x7");
@@ -159,7 +157,7 @@ public class ScoreboardManager implements IScoreboardManager {
     public void updateScoreboard(@NonNull Player player) {
         final Scoreboard scoreboard = player.getScoreboard();
         final GameConfiguration gameConfiguration = GAME_ASSETS.getGameConfiguration();
-        final World playerWorld = player.getWorld();
+        final GameState gameState = GAME_ASSETS.getGameState();
 
         if (scoreboard.getObjective(DisplaySlot.SIDEBAR) == null) createScoreboard(player);
 
@@ -174,9 +172,11 @@ public class ScoreboardManager implements IScoreboardManager {
             mapTeam.suffix(Component.text(mapName, NamedTextColor.YELLOW));
         }
 
+        if (gameState == GameState.LOBBY) return;
+
         for (BedWarsTeam bedWarsTeam : BED_WARS_TEAM) {
             final ITeam iTeam = bedWarsTeam.getTeam();
-            final String bedExistsSymbol = (iTeam.bedExists(playerWorld) ? "§aHaken" : "§cKreuz");
+            final String bedExistsSymbol = (iTeam.bedExists() ? "§a✔ " : "§c✘ ");
             final String teamName = iTeam.getTeamName().replace("Team ", "");
             final int playerSize = iTeam.getPlayers().size();
 

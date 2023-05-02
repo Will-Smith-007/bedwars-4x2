@@ -18,11 +18,13 @@ public interface ITeam {
 
     void removePlayer(@NonNull Player player);
 
+    void setBedExists(boolean bedExists);
+
     @NonNull Team getTeam(@NonNull Scoreboard scoreboard);
 
     Location getTeamSpawnLocation(@NonNull World world);
 
-    boolean bedExists(@NonNull World world);
+    boolean bedExists();
 
     @NonNull String getTeamName();
 

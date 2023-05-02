@@ -13,7 +13,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 import java.util.Collection;
-import java.util.Optional;
 
 public class BedBreakListener implements Listener {
 
@@ -25,18 +24,17 @@ public class BedBreakListener implements Listener {
 
     @EventHandler
     public void onBedBreak(@NonNull BedBreakEvent bedBreakEvent) {
-        final Optional<ITeam> optionalITeam = bedBreakEvent.getTeamFromBed();
         final Collection<? extends Player> players = Bukkit.getOnlinePlayers();
+        final ITeam iTeam = bedBreakEvent.getBED_TEAM();
+        final String teamName = iTeam.getTeamName();
 
-        optionalITeam.ifPresent(iTeam -> {
-            final String teamName = iTeam.getTeamName();
+        iTeam.setBedExists(false);
 
-            for (Player player : players) {
-                player.sendPlainMessage(Message.PREFIX + "§cThe bed from " + teamName + "§c was §4destroyed§c!");
-                final Location playerLocation = player.getLocation();
-                player.playSound(playerLocation, Sound.ENTITY_ENDER_DRAGON_DEATH, 1.0f, 1.0f);
-                SCOREBOARD_MANAGER.updateScoreboard(player);
-            }
-        });
+        for (Player player : players) {
+            player.sendPlainMessage(Message.PREFIX + "§cThe bed from " + teamName + "§c was §4destroyed§c!");
+            final Location playerLocation = player.getLocation();
+            player.playSound(playerLocation, Sound.ENTITY_ENDER_DRAGON_GROWL, 1.0f, 1.0f);
+            SCOREBOARD_MANAGER.updateScoreboard(player);
+        }
     }
 }

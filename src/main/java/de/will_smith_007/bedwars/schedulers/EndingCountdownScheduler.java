@@ -59,6 +59,7 @@ public class EndingCountdownScheduler implements IScheduler, ICountdownOptions {
     @Override
     public void stop() {
         if (!isRunning) return;
+        isRunning = false;
         BUKKIT_SCHEDULER.cancelTask(taskID);
     }
 

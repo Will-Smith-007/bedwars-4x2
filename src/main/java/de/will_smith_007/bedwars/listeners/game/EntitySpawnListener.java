@@ -14,6 +14,7 @@ public class EntitySpawnListener implements Listener {
         final Entity spawnedEntity = entitySpawnEvent.getEntity();
         final EntityType entityType = spawnedEntity.getType();
 
-        if (entityType != EntityType.VILLAGER) entitySpawnEvent.setCancelled(true);
+        if (entityType != EntityType.VILLAGER
+                && entityType != EntityType.DROPPED_ITEM) entitySpawnEvent.setCancelled(true);
     }
 }

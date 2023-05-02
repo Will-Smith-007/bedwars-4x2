@@ -10,6 +10,7 @@ import de.will_smith_007.bedwars.teams.helper.interfaces.ITeamHelper;
 import de.will_smith_007.bedwars.teams.interfaces.ITeam;
 import lombok.NonNull;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.World;
@@ -19,6 +20,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.Team;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -62,8 +65,8 @@ public class PlayerConnectionListener implements Listener {
                 player.setGameMode(GameMode.ADVENTURE);
 
                 final String lobbyWorldName = BED_WARS_CONFIG.getLobbyWorld();
+                if (lobbyWorldName == null) return;
                 final World world = Bukkit.createWorld(new WorldCreator(lobbyWorldName));
-
                 if (world == null) return;
 
                 player.teleport(world.getSpawnLocation());
@@ -95,8 +98,17 @@ public class PlayerConnectionListener implements Listener {
                 LOBBY_COUNTDOWN_HELPER.cancelCountdownIfNotEnoughTeams();
             }
             case INGAME, PROTECTION -> {
-                playerQuitEvent.quitMessage(Component.text(Message.PREFIX.toString())
-                        .append(player.displayName())
+                final Scoreboard scoreboard = player.getScoreboard();
+                final Team playerTeam = scoreboard.getPlayerTeam(player);
+
+                if (playerTeam == null) return;
+
+                final TextColor textColor = playerTeam.color();
+                final String playerName = player.getName();
+                final String prefix = Message.PREFIX.toString();
+
+                playerQuitEvent.quitMessage(Component.text(prefix)
+                        .append(Component.text(playerName).color(textColor))
                         .append(Component.text("§7 left the game")));
 
                 final Optional<ITeam> optionalITeam = TEAM_HELPER.getTeam(player);

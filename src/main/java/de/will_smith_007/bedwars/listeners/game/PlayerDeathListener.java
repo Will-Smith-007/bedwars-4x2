@@ -2,21 +2,20 @@ package de.will_smith_007.bedwars.listeners.game;
 
 import de.will_smith_007.bedwars.enums.GameState;
 import de.will_smith_007.bedwars.enums.Message;
-import de.will_smith_007.bedwars.file_config.BedWarsConfig;
 import de.will_smith_007.bedwars.game_assets.GameAssets;
 import de.will_smith_007.bedwars.scoreboard.interfaces.IScoreboardManager;
 import de.will_smith_007.bedwars.teams.helper.interfaces.ITeamHelper;
 import de.will_smith_007.bedwars.teams.interfaces.ITeam;
 import lombok.NonNull;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.Team;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -25,7 +24,6 @@ public class PlayerDeathListener implements Listener {
 
     private final GameAssets GAME_ASSETS;
     private final ITeamHelper TEAM_HELPER;
-    private final BedWarsConfig BED_WARS_CONFIG = BedWarsConfig.getInstance();
     private final IScoreboardManager SCOREBOARD_MANAGER;
 
     public PlayerDeathListener(@NonNull GameAssets gameAssets,
@@ -46,31 +44,24 @@ public class PlayerDeathListener implements Listener {
         playerDeathEvent.deathMessage(null);
 
         final Player player = playerDeathEvent.getPlayer();
-        final World playerWorld = player.getWorld();
         final Optional<ITeam> optionalITeam = TEAM_HELPER.getTeam(player);
 
         optionalITeam.ifPresent(iTeam -> {
-            final boolean bedExists = iTeam.bedExists(playerWorld);
             final Collection<? extends Player> onlinePlayers = Bukkit.getOnlinePlayers();
 
-            if (bedExists) {
-                final Location teamSpawnLocation = iTeam.getTeamSpawnLocation(playerWorld);
-                player.teleport(teamSpawnLocation);
-            } else {
-                iTeam.removePlayer(player);
-                final Location spectatorLocation = BED_WARS_CONFIG.getSpectatorLocation(playerWorld);
-                player.setGameMode(GameMode.SPECTATOR);
-                player.teleport(spectatorLocation);
-                TEAM_HELPER.handleTeamElimination(iTeam, onlinePlayers);
-                //TODO: Hide from other game players
-            }
+            final Scoreboard scoreboard = player.getScoreboard();
+            final Team playerTeam = scoreboard.getPlayerTeam(player);
+
+            if (playerTeam == null) return;
+
+            final TextColor textColor = playerTeam.color();
+            final String playerName = player.getName();
+            final String prefix = Message.PREFIX.toString();
 
             for (Player onlinePlayer : onlinePlayers) {
-                onlinePlayer.sendMessage(Component.text(Message.PREFIX + " ")
-                        .append(player.displayName())
+                onlinePlayer.sendMessage(Component.text(prefix)
+                        .append(Component.text(playerName).color(textColor))
                         .append(Component.text("§7 died.")));
-
-                SCOREBOARD_MANAGER.updateScoreboard(onlinePlayer);
             }
         });
     }

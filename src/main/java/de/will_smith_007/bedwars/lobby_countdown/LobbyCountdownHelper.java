@@ -8,9 +8,7 @@ import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 
 public class LobbyCountdownHelper implements ILobbyCountdownHelper {
 
@@ -28,15 +26,18 @@ public class LobbyCountdownHelper implements ILobbyCountdownHelper {
         final Collection<? extends Player> players = Bukkit.getOnlinePlayers();
         final int playerSize = players.size();
 
-        final List<ITeam> iTeams = Arrays.stream(BED_WARS_TEAMS)
-                .map(BedWarsTeam::getTeam)
-                .filter(team -> team.getPlayers().size() > 0)
-                .toList();
+        int validTeams = 0;
+        int playersWithoutTeam = playerSize;
 
-        if (playerSize < 2) return;
-        if (iTeams.size() < 2) return;
+        for (BedWarsTeam bedWarsTeam : BED_WARS_TEAMS) {
+            final ITeam iTeam = bedWarsTeam.getTeam();
+            final int teamPlayers = iTeam.getPlayers().size();
+            if (teamPlayers > 0) validTeams++;
+            playersWithoutTeam -= teamPlayers;
+        }
 
-        LOBBY_COUNTDOWN_SCHEDULER.start();
+        if (validTeams > 1 || playerSize >= 2 && playersWithoutTeam >= 1)
+            LOBBY_COUNTDOWN_SCHEDULER.start();
     }
 
     @Override
@@ -62,12 +63,20 @@ public class LobbyCountdownHelper implements ILobbyCountdownHelper {
     public void cancelCountdownIfNotEnoughTeams() {
         if (!LOBBY_COUNTDOWN_SCHEDULER.isRunning()) return;
 
-        final List<ITeam> iTeams = Arrays.stream(BED_WARS_TEAMS)
-                .map(BedWarsTeam::getTeam)
-                .filter(team -> team.getPlayers().size() > 0)
-                .toList();
+        final Collection<? extends Player> players = Bukkit.getOnlinePlayers();
+        final int playerSize = players.size();
 
-        if (iTeams.size() > 1) return;
+        int validTeams = 0;
+        int playersWithoutTeam = playerSize;
+
+        for (BedWarsTeam bedWarsTeam : BED_WARS_TEAMS) {
+            final ITeam iTeam = bedWarsTeam.getTeam();
+            final int teamPlayers = iTeam.getPlayers().size();
+            if (teamPlayers > 0) validTeams++;
+            playersWithoutTeam -= teamPlayers;
+        }
+
+        if (validTeams > 1 || playerSize >= 2 && playersWithoutTeam >= 1) return;
 
         LOBBY_COUNTDOWN_SCHEDULER.stop();
     }

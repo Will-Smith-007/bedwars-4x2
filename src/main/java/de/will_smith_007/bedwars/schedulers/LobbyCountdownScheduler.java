@@ -74,6 +74,8 @@ public class LobbyCountdownScheduler implements IScheduler, ICountdownOptions {
         taskID = BUKKIT_SCHEDULER.scheduleSyncRepeatingTask(JAVA_PLUGIN, () -> {
             final Collection<? extends Player> players = Bukkit.getOnlinePlayers();
 
+            players.forEach(player -> player.setLevel(countdown));
+
             switch (countdown) {
                 case 60, 30, 10, 5, 3, 2, 1 -> {
                     for (Player player : players) {
@@ -114,12 +116,15 @@ public class LobbyCountdownScheduler implements IScheduler, ICountdownOptions {
 
                         final Location teamSpawnLocation = iTeam.getTeamSpawnLocation(gameWorld);
                         player.teleport(teamSpawnLocation);
-
-                        SCOREBOARD_MANAGER.setTablist(player);
-                        SCOREBOARD_MANAGER.updateScoreboard(player);
+                        player.setGameMode(GameMode.SURVIVAL);
                     }
 
                     GAME_ASSETS.setGameConfiguration(new GameConfiguration(gameWorld));
+
+                    for (Player player : players) {
+                        SCOREBOARD_MANAGER.setTablist(player);
+                        SCOREBOARD_MANAGER.updateScoreboard(player);
+                    }
 
                     PROTECTION_COUNTDOWN_SCHEDULER.start();
                     SPAWNER_SCHEDULER.start();
@@ -134,7 +139,9 @@ public class LobbyCountdownScheduler implements IScheduler, ICountdownOptions {
     @Override
     public void stop() {
         if (!isRunning) return;
+        isRunning = false;
         BUKKIT_SCHEDULER.cancelTask(taskID);
+        Bukkit.getOnlinePlayers().forEach(player -> player.setLevel(0));
     }
 
     @Override

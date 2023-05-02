@@ -61,6 +61,7 @@ public class SpawnerScheduler implements IScheduler {
     @Override
     public void stop() {
         if (!isRunning) return;
+        isRunning = false;
         BUKKIT_SCHEDULER.cancelTask(taskID);
     }
 
