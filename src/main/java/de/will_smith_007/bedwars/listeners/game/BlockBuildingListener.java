@@ -86,6 +86,8 @@ public class BlockBuildingListener implements Listener {
                                 blockBreakEvent.setCancelled(true);
                                 return;
                             }
+
+                            blockBreakEvent.setDropItems(false);
                             PLUGIN_MANAGER.callEvent(new BedBreakEvent(player, blockLocation, bedTeam));
                         }
                     });

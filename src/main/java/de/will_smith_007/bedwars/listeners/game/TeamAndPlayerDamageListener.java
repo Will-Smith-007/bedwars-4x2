@@ -4,6 +4,7 @@ import de.will_smith_007.bedwars.enums.GameState;
 import de.will_smith_007.bedwars.enums.Message;
 import de.will_smith_007.bedwars.file_config.BedWarsConfig;
 import de.will_smith_007.bedwars.game_assets.GameAssets;
+import de.will_smith_007.bedwars.listeners.game.interfaces.IDeathHandler;
 import de.will_smith_007.bedwars.scoreboard.interfaces.IScoreboardManager;
 import de.will_smith_007.bedwars.teams.helper.interfaces.ITeamHelper;
 import de.will_smith_007.bedwars.teams.interfaces.ITeam;
@@ -11,6 +12,7 @@ import lombok.NonNull;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.*;
+import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -22,16 +24,17 @@ import org.bukkit.scoreboard.Team;
 import java.util.Collection;
 import java.util.Optional;
 
-public class TeamDamageListener implements Listener {
+public class TeamAndPlayerDamageListener implements Listener, IDeathHandler {
 
     private final GameAssets GAME_ASSETS;
     private final ITeamHelper TEAM_HELPER;
-    private final IScoreboardManager SCOREBOARD_MANAGER;
     private final BedWarsConfig BED_WARS_CONFIG = BedWarsConfig.getInstance();
+    private final IScoreboardManager SCOREBOARD_MANAGER;
+    private final String PREFIX = Message.PREFIX.toString();
 
-    public TeamDamageListener(@NonNull GameAssets gameAssets,
-                              @NonNull ITeamHelper teamHelper,
-                              @NonNull IScoreboardManager scoreboardManager) {
+    public TeamAndPlayerDamageListener(@NonNull GameAssets gameAssets,
+                                       @NonNull ITeamHelper teamHelper,
+                                       @NonNull IScoreboardManager scoreboardManager) {
         GAME_ASSETS = gameAssets;
         TEAM_HELPER = teamHelper;
         SCOREBOARD_MANAGER = scoreboardManager;
@@ -63,10 +66,10 @@ public class TeamDamageListener implements Listener {
             if (optionalDamagePlayerTeam.isEmpty()) return;
             if (optionalVictimPlayerTeam.isEmpty()) return;
 
-            final ITeam damagePlayerTeam = optionalDamagePlayerTeam.get();
-            final ITeam victimPlayerTeam = optionalVictimPlayerTeam.get();
+            final ITeam damagePlayerITeam = optionalDamagePlayerTeam.get();
+            final ITeam victimPlayerITeam = optionalVictimPlayerTeam.get();
 
-            if (damagePlayerTeam == victimPlayerTeam) {
+            if (damagePlayerITeam == victimPlayerITeam) {
                 entityDamageByEntityEvent.setCancelled(true);
             } else {
                 final double dealtDamage = entityDamageByEntityEvent.getDamage();
@@ -74,28 +77,43 @@ public class TeamDamageListener implements Listener {
 
                 if (dealtDamage < victimHealth) return;
 
-                handlePlayerDeath(victimPlayer, victimPlayerTeam);
+                entityDamageByEntityEvent.setDamage(0.00d);
+                handlePlayerDeath(victimPlayer, victimPlayerITeam);
 
                 final Location damagePlayerLocation = damagePlayer.getLocation();
                 final Scoreboard scoreboard = victimPlayer.getScoreboard();
-                final Team playerTeam = scoreboard.getPlayerTeam(victimPlayer);
+                final Team victimPlayerTeam = scoreboard.getPlayerTeam(victimPlayer);
+                final Team damagePlayerTeam = scoreboard.getPlayerTeam(damagePlayer);
 
-                if (playerTeam == null) return;
+                if (victimPlayerTeam == null || damagePlayerTeam == null) return;
 
-                final TextColor textColor = playerTeam.color();
+                final TextColor victimTextColor = victimPlayerTeam.color();
+                final TextColor damageTextColor = damagePlayerTeam.color();
                 final String victimPlayerName = victimPlayer.getName();
+                final String damagePlayerName = damagePlayer.getName();
 
                 damagePlayer.sendMessage(Component.text(Message.PREFIX + "§aYou killed ")
-                        .append(Component.text(victimPlayerName).color(textColor))
+                        .append(Component.text(victimPlayerName).color(victimTextColor))
                         .append(Component.text("§a.")));
                 damagePlayer.playSound(damagePlayerLocation, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 1.0f);
+
+                for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+                    onlinePlayer.sendMessage(Component.text(PREFIX)
+                            .append(Component.text(victimPlayerName).color(victimTextColor))
+                            .append(Component.text(" §7was killed by "))
+                            .append(Component.text(damagePlayerName).color(damageTextColor)));
+                }
             }
         } else {
+            if (damageEntity instanceof Arrow) return;
+            //TODO: Arrow damage handling, set health and food to 20 and send death message
+            // if damage was above player health
             entityDamageByEntityEvent.setCancelled(true);
         }
     }
 
-    private void handlePlayerDeath(@NonNull Player player, @NonNull ITeam iTeam) {
+    @Override
+    public void handlePlayerDeath(@NonNull Player player, @NonNull ITeam iTeam) {
         final World playerWorld = player.getWorld();
         final boolean bedExists = iTeam.bedExists();
         final Collection<? extends Player> players = Bukkit.getOnlinePlayers();
@@ -103,6 +121,8 @@ public class TeamDamageListener implements Listener {
         player.getInventory().clear();
 
         if (bedExists) {
+            player.setHealth(20.0d);
+            player.setFoodLevel(20);
             final Location teamSpawnLocation = iTeam.getTeamSpawnLocation(playerWorld);
             player.teleport(teamSpawnLocation);
         } else {

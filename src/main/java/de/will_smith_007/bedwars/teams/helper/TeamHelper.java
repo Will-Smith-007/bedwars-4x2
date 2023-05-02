@@ -2,15 +2,14 @@ package de.will_smith_007.bedwars.teams.helper;
 
 import de.will_smith_007.bedwars.enums.GameState;
 import de.will_smith_007.bedwars.enums.Message;
+import de.will_smith_007.bedwars.file_config.BedWarsConfig;
 import de.will_smith_007.bedwars.game_assets.GameAssets;
 import de.will_smith_007.bedwars.schedulers.EndingCountdownScheduler;
 import de.will_smith_007.bedwars.teams.enums.BedWarsTeam;
 import de.will_smith_007.bedwars.teams.helper.interfaces.ITeamHelper;
 import de.will_smith_007.bedwars.teams.interfaces.ITeam;
 import lombok.NonNull;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Sound;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 
 import java.util.*;
@@ -19,6 +18,7 @@ public class TeamHelper implements ITeamHelper {
 
     private final GameAssets GAME_ASSETS;
     private final EndingCountdownScheduler ENDING_COUNTDOWN_SCHEDULER;
+    private final BedWarsConfig BED_WARS_CONFIG = BedWarsConfig.getInstance();
 
     public TeamHelper(@NonNull GameAssets gameAssets,
                       @NonNull EndingCountdownScheduler endingCountdownScheduler) {
@@ -49,14 +49,27 @@ public class TeamHelper implements ITeamHelper {
         if (aliveTeams.size() == 1) {
             final ITeam winningTeam = aliveTeams.get(0);
             final String winningTeamName = winningTeam.getTeamName();
+            final String lobbyWorldName = BED_WARS_CONFIG.getLobbyWorld();
+
+            if (lobbyWorldName == null) return;
+
+            final World lobbyWorld = Bukkit.getWorld(lobbyWorldName);
+
+            if (lobbyWorld == null) return;
+
+            final Location lobbySpawnLocation = lobbyWorld.getSpawnLocation();
+            GAME_ASSETS.setGameState(GameState.ENDING);
 
             for (Player player : players) {
+                player.teleport(lobbySpawnLocation);
+                player.setGameMode(GameMode.ADVENTURE);
+                player.setHealth(20.00d);
+                player.setFoodLevel(20);
                 player.sendPlainMessage(Message.PREFIX + winningTeamName + "§a has won the game!");
                 final Location playerLocation = player.getLocation();
                 player.playSound(playerLocation, Sound.ENTITY_FIREWORK_ROCKET_LARGE_BLAST, 1.0f, 1.0f);
             }
 
-            GAME_ASSETS.setGameState(GameState.ENDING);
             ENDING_COUNTDOWN_SCHEDULER.start();
         }
     }
