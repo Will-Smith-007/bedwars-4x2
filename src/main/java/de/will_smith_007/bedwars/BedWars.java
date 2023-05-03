@@ -29,7 +29,7 @@ public class BedWars extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        final BedWarsConfig bedWarsConfig = new BedWarsConfig(this);
+        new BedWarsConfig(this);
         final GameAssets gameAssets = new GameAssets();
         final TeamParser teamParser = new TeamParser();
 

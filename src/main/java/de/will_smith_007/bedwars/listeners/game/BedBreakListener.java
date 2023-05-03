@@ -36,12 +36,12 @@ public class BedBreakListener implements Listener {
         final Scoreboard scoreboard = bedBreakPlayer.getScoreboard();
         final Team team = scoreboard.getPlayerTeam(bedBreakPlayer);
 
+        iTeam.setBedExists(false);
+
         if (team == null) return;
 
         final TextColor textColor = team.color();
         final String playerName = bedBreakPlayer.getName();
-
-        iTeam.setBedExists(false);
 
         for (Player player : players) {
             player.sendMessage(Component.text(PREFIX)

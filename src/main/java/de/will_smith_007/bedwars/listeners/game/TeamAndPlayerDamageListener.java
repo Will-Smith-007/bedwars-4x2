@@ -18,6 +18,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
@@ -63,8 +64,7 @@ public class TeamAndPlayerDamageListener implements Listener, IDeathHandler {
             final Optional<ITeam> optionalDamagePlayerTeam = TEAM_HELPER.getTeam(damagePlayer);
             final Optional<ITeam> optionalVictimPlayerTeam = TEAM_HELPER.getTeam(victimPlayer);
 
-            if (optionalDamagePlayerTeam.isEmpty()) return;
-            if (optionalVictimPlayerTeam.isEmpty()) return;
+            if (optionalDamagePlayerTeam.isEmpty() || optionalVictimPlayerTeam.isEmpty()) return;
 
             final ITeam damagePlayerITeam = optionalDamagePlayerTeam.get();
             final ITeam victimPlayerITeam = optionalVictimPlayerTeam.get();
@@ -103,11 +103,63 @@ public class TeamAndPlayerDamageListener implements Listener, IDeathHandler {
                             .append(Component.text(" §7was killed by "))
                             .append(Component.text(damagePlayerName).color(damageTextColor)));
                 }
+
+                entityDamageByEntityEvent.setCancelled(true);
             }
-        } else {
-            if (damageEntity instanceof Arrow) return;
-            //TODO: Arrow damage handling, set health and food to 20 and send death message
-            // if damage was above player health
+        } else if (damageEntity instanceof final Arrow arrow) {
+            final ProjectileSource projectileSource = arrow.getShooter();
+
+            if (!(projectileSource instanceof final Player damagePlayer)) return;
+            if (!(victimEntity instanceof final Player victimPlayer)) {
+                entityDamageByEntityEvent.setCancelled(true);
+                return;
+            }
+
+            final double dealtDamage = entityDamageByEntityEvent.getDamage();
+            final double victimHealth = victimPlayer.getHealth();
+
+            if (dealtDamage < victimHealth) return;
+
+            final Optional<ITeam> optionalDamagePlayerTeam = TEAM_HELPER.getTeam(damagePlayer);
+            final Optional<ITeam> optionalVictimPlayerTeam = TEAM_HELPER.getTeam(victimPlayer);
+
+            if (optionalDamagePlayerTeam.isEmpty() || optionalVictimPlayerTeam.isEmpty()) return;
+
+            final ITeam damagePlayerITeam = optionalDamagePlayerTeam.get();
+            final ITeam victimPlayerITeam = optionalVictimPlayerTeam.get();
+
+            if (damagePlayerITeam == victimPlayerITeam) {
+                entityDamageByEntityEvent.setCancelled(true);
+                return;
+            }
+
+            entityDamageByEntityEvent.setDamage(0.00d);
+            handlePlayerDeath(victimPlayer, victimPlayerITeam);
+
+            final Location damagePlayerLocation = damagePlayer.getLocation();
+            final Scoreboard scoreboard = victimPlayer.getScoreboard();
+            final Team victimPlayerTeam = scoreboard.getPlayerTeam(victimPlayer);
+            final Team damagePlayerTeam = scoreboard.getPlayerTeam(damagePlayer);
+
+            if (victimPlayerTeam == null || damagePlayerTeam == null) return;
+
+            final TextColor victimTextColor = victimPlayerTeam.color();
+            final TextColor damageTextColor = damagePlayerTeam.color();
+            final String victimPlayerName = victimPlayer.getName();
+            final String damagePlayerName = damagePlayer.getName();
+
+            damagePlayer.sendMessage(Component.text(Message.PREFIX + "§aYou killed ")
+                    .append(Component.text(victimPlayerName).color(victimTextColor))
+                    .append(Component.text("§a.")));
+            damagePlayer.playSound(damagePlayerLocation, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 1.0f);
+
+            for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+                onlinePlayer.sendMessage(Component.text(PREFIX)
+                        .append(Component.text(victimPlayerName).color(victimTextColor))
+                        .append(Component.text(" §7was killed by "))
+                        .append(Component.text(damagePlayerName).color(damageTextColor)));
+            }
+
             entityDamageByEntityEvent.setCancelled(true);
         }
     }
