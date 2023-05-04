@@ -15,6 +15,7 @@ import de.will_smith_007.bedwars.schedulers.LobbyCountdownScheduler;
 import de.will_smith_007.bedwars.schedulers.ProtectionCountdownScheduler;
 import de.will_smith_007.bedwars.schedulers.SpawnerScheduler;
 import de.will_smith_007.bedwars.scoreboard.ScoreboardManager;
+import de.will_smith_007.bedwars.shop.parser.ShopParser;
 import de.will_smith_007.bedwars.spawner.provider.SpawnerProvider;
 import de.will_smith_007.bedwars.teams.helper.TeamHelper;
 import de.will_smith_007.bedwars.teams.parser.TeamParser;
@@ -33,6 +34,7 @@ public class BedWars extends JavaPlugin {
         new BedWarsConfig(this);
         final GameAssets gameAssets = new GameAssets();
         final TeamParser teamParser = new TeamParser();
+        final ShopParser shopParser = new ShopParser();
 
         final SpawnerProvider spawnerProvider = new SpawnerProvider(gameAssets);
 
@@ -70,7 +72,7 @@ public class BedWars extends JavaPlugin {
                 new ExplosionPrimeListener(),
                 new FoodLevelChangeListener(gameAssets),
                 new EntityDamageAndDeathListener(gameAssets, teamHelper, scoreboardManager),
-                new ShopListener(bedWarsShopInventory)
+                new ShopListener(bedWarsShopInventory, shopParser)
         );
 
         getLogger().info("BedWars was started.");

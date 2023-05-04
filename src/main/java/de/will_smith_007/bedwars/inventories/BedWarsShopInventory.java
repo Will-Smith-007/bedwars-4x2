@@ -53,7 +53,6 @@ public class BedWarsShopInventory implements IBedWarsInventory {
             final ShopItem.CurrencyType currencyType = shopItem.getCurrencyType();
             final String currencyTypeName = currencyType.getCurrencyName();
             final int price = shopItem.getPrice();
-            final int defaultItems = shopItem.getDefaultItems();
             final ItemStack itemStack = shopItem.toItem()
                     .setLore(
                             "",
@@ -61,7 +60,6 @@ public class BedWarsShopInventory implements IBedWarsInventory {
                             ""
                     ).buildItem();
 
-            itemStack.setAmount(defaultItems);
             inventory.setItem(currentSlot, itemStack);
             currentSlot++;
         }

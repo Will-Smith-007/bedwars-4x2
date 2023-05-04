@@ -154,6 +154,7 @@ public enum ShopItem {
             itemMeta.addEnchant(enchantment, enchantmentStrength, true);
         }
 
+        itemStack.setAmount(defaultItems);
         itemStack.setItemMeta(itemMeta);
         return itemStack;
     }
