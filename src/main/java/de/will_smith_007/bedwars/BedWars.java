@@ -4,6 +4,7 @@ import de.will_smith_007.bedwars.commands.BedWarsCommand;
 import de.will_smith_007.bedwars.commands.StartCommand;
 import de.will_smith_007.bedwars.file_config.BedWarsConfig;
 import de.will_smith_007.bedwars.game_assets.GameAssets;
+import de.will_smith_007.bedwars.inventories.BedWarsShopInventory;
 import de.will_smith_007.bedwars.listeners.PlayerConnectionListener;
 import de.will_smith_007.bedwars.listeners.game.*;
 import de.will_smith_007.bedwars.listeners.setup.BedWarsSpawnerSetupListener;
@@ -52,6 +53,7 @@ public class BedWars extends JavaPlugin {
         );
 
         final LobbyCountdownHelper lobbyCountdownHelper = new LobbyCountdownHelper(lobbyCountdownScheduler);
+        final BedWarsShopInventory bedWarsShopInventory = new BedWarsShopInventory();
 
         registerCommand("bedwars", new BedWarsCommand(teamParser));
         registerCommand("start", new StartCommand(lobbyCountdownHelper));
@@ -67,7 +69,8 @@ public class BedWars extends JavaPlugin {
                 new BlockSpreadListener(),
                 new ExplosionPrimeListener(),
                 new FoodLevelChangeListener(gameAssets),
-                new EntityDamageAndDeathListener(gameAssets, teamHelper, scoreboardManager)
+                new EntityDamageAndDeathListener(gameAssets, teamHelper, scoreboardManager),
+                new ShopListener(bedWarsShopInventory)
         );
 
         getLogger().info("BedWars was started.");

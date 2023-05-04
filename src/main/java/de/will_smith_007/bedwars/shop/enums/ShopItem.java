@@ -1,14 +1,20 @@
 package de.will_smith_007.bedwars.shop.enums;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
-@AllArgsConstructor
-@RequiredArgsConstructor
 public enum ShopItem {
 
     SANDSTONE("Sandstone", Material.SANDSTONE, ShopCategory.BLOCKS,
@@ -87,6 +93,29 @@ public enum ShopItem {
     ENDER_PEARL("Enderpearl", Material.ENDER_PEARL, ShopCategory.SPECIALS,
             CurrencyType.GOLD, 13, 1);
 
+    ShopItem(@NonNull String displayName, @NonNull Material material, @NonNull ShopCategory shopCategory,
+             @NonNull CurrencyType currencyType, int price, int defaultItems) {
+        this.displayName = displayName;
+        this.material = material;
+        this.shopCategory = shopCategory;
+        this.currencyType = currencyType;
+        this.price = price;
+        this.defaultItems = defaultItems;
+    }
+
+    ShopItem(@NonNull String displayName, @NonNull Material material, @NonNull ShopCategory shopCategory,
+             @NonNull CurrencyType currencyType, int price, int defaultItems,
+             @NonNull Enchantment enchantment, int enchantmentStrength) {
+        this.displayName = displayName;
+        this.material = material;
+        this.shopCategory = shopCategory;
+        this.currencyType = currencyType;
+        this.price = price;
+        this.defaultItems = defaultItems;
+        this.enchantment = enchantment;
+        this.enchantmentStrength = enchantmentStrength;
+    }
+
     private final String displayName;
     private final Material material;
     private final ShopCategory shopCategory;
@@ -95,6 +124,57 @@ public enum ShopItem {
 
     private Enchantment enchantment;
     private int enchantmentStrength;
+
+    private ItemStack itemStack;
+    private ItemMeta itemMeta;
+
+    public ShopItem toItem() {
+        itemStack = new ItemStack(material);
+        itemMeta = itemStack.getItemMeta();
+        return this;
+    }
+
+    public ShopItem setLore(String @NonNull ... lore) {
+        final List<Component> components = new ArrayList<>();
+        for (String loreLine : lore) {
+            components.add(Component.text(loreLine));
+        }
+        itemMeta.lore(components);
+        return this;
+    }
+
+    public ItemStack buildItem() {
+        if (itemStack == null) itemStack = new ItemStack(material);
+        if (itemMeta == null) itemMeta = itemStack.getItemMeta();
+
+        itemMeta.displayName(Component.text(displayName, NamedTextColor.YELLOW)
+                .decoration(TextDecoration.ITALIC, false));
+
+        if (enchantment != null) {
+            itemMeta.addEnchant(enchantment, enchantmentStrength, true);
+        }
+
+        itemStack.setItemMeta(itemMeta);
+        return itemStack;
+    }
+
+    public ItemStack getItemStack() {
+        if (itemStack == null) itemStack = new ItemStack(material);
+
+        itemMeta = itemStack.getItemMeta();
+
+        if (itemMeta.displayName() == null) {
+            itemMeta.displayName(Component.text(displayName, NamedTextColor.YELLOW)
+                    .decoration(TextDecoration.ITALIC, false));
+        }
+
+        if (enchantment != null) {
+            itemMeta.addEnchant(enchantment, enchantmentStrength, true);
+        }
+
+        itemStack.setItemMeta(itemMeta);
+        return itemStack;
+    }
 
     @Getter
     @RequiredArgsConstructor
