@@ -1,4 +1,4 @@
-package de.will_smith_007.bedwars.inventories;
+package de.will_smith_007.bedwars.inventories.game;
 
 import de.will_smith_007.bedwars.inventories.interfaces.IBedWarsInventory;
 import de.will_smith_007.bedwars.shop.enums.ShopItem;

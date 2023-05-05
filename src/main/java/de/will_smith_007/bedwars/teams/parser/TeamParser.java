@@ -8,8 +8,15 @@ import java.util.Optional;
 public class TeamParser {
 
     public Optional<BedWarsTeam> parseTeam(@NonNull String teamName) {
+        if (teamName.startsWith("§")) teamName = teamName.substring(2);
+
         for (BedWarsTeam bedWarsTeam : BedWarsTeam.values()) {
-            final String shortenTeamName = bedWarsTeam.getTeamName().replace("Team ", "");
+            final String bedWarsTeamName = bedWarsTeam.getTeamName();
+
+            if (bedWarsTeamName.equalsIgnoreCase(teamName)) return Optional.of(bedWarsTeam);
+
+            final String shortenTeamName = bedWarsTeamName.replace("Team ", "");
+
             if (shortenTeamName.equalsIgnoreCase(teamName)) return Optional.of(bedWarsTeam);
         }
         return Optional.empty();

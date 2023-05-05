@@ -117,6 +117,8 @@ public class LobbyCountdownScheduler implements IScheduler, ICountdownOptions {
                         final Location teamSpawnLocation = iTeam.getTeamSpawnLocation(gameWorld);
                         player.teleport(teamSpawnLocation);
                         player.setGameMode(GameMode.SURVIVAL);
+
+                        player.getInventory().clear();
                     }
 
                     GAME_ASSETS.setGameConfiguration(new GameConfiguration(gameWorld));

@@ -91,11 +91,12 @@ public class ShopListener implements Listener {
                     final int resultItems = (defaultItems * itemsThatCanBuy);
                     final int itemsActuallyBuy = Math.min((freeSpace + currencyItemAmount), resultItems);
 
-                    //TODO: if resultItems higher than space than idk. This method isn't working
-                    if (resultItems > (freeSpace + currencyItemAmount)) {
+                    player.sendPlainMessage("items: " + itemsActuallyBuy);
+
+                    /*if (itemsActuallyBuy < resultItems) {
                         player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_PLACE, 1.0f, 1.0f);
                         return;
-                    }
+                    }*/
 
                     final ItemStack currencyItemStack = new ItemStack(currencyMaterial);
                     currencyItemStack.setAmount((itemsActuallyBuy * pricePerItem));

@@ -4,6 +4,7 @@ import de.will_smith_007.bedwars.enums.GameState;
 import de.will_smith_007.bedwars.enums.Message;
 import de.will_smith_007.bedwars.file_config.BedWarsConfig;
 import de.will_smith_007.bedwars.game_assets.GameAssets;
+import de.will_smith_007.bedwars.lobby.enums.LobbyItem;
 import de.will_smith_007.bedwars.lobby_countdown.interfaces.ILobbyCountdownHelper;
 import de.will_smith_007.bedwars.scoreboard.interfaces.IScoreboardManager;
 import de.will_smith_007.bedwars.teams.helper.interfaces.ITeamHelper;
@@ -20,6 +21,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
@@ -71,6 +73,9 @@ public class PlayerConnectionListener implements Listener {
 
                 player.teleport(world.getSpawnLocation());
 
+                final ItemStack teamSelectorItem = LobbyItem.TEAM_SELECTOR.buildItem();
+                player.getInventory().setItem(0, teamSelectorItem);
+
                 LOBBY_COUNTDOWN_HELPER.startCountdownIfEnoughPlayers();
             }
             case PROTECTION, INGAME, ENDING -> {
@@ -96,6 +101,9 @@ public class PlayerConnectionListener implements Listener {
 
                 LOBBY_COUNTDOWN_HELPER.cancelCountdownIfNotEnoughPlayers(playerSize);
                 LOBBY_COUNTDOWN_HELPER.cancelCountdownIfNotEnoughTeams();
+
+                final Optional<ITeam> optionalITeam = TEAM_HELPER.getTeam(player);
+                optionalITeam.ifPresent(team -> team.removePlayer(player));
             }
             case INGAME, PROTECTION -> {
                 final Scoreboard scoreboard = player.getScoreboard();

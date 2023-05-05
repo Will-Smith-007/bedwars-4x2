@@ -4,9 +4,13 @@ import de.will_smith_007.bedwars.commands.BedWarsCommand;
 import de.will_smith_007.bedwars.commands.StartCommand;
 import de.will_smith_007.bedwars.file_config.BedWarsConfig;
 import de.will_smith_007.bedwars.game_assets.GameAssets;
-import de.will_smith_007.bedwars.inventories.BedWarsShopInventory;
+import de.will_smith_007.bedwars.inventories.game.BedWarsShopInventory;
+import de.will_smith_007.bedwars.inventories.lobby.TeamSelectorInventory;
 import de.will_smith_007.bedwars.listeners.PlayerConnectionListener;
 import de.will_smith_007.bedwars.listeners.game.*;
+import de.will_smith_007.bedwars.listeners.lobby.InteractWithLobbyItemListener;
+import de.will_smith_007.bedwars.listeners.lobby.LobbyInventoryClickListener;
+import de.will_smith_007.bedwars.listeners.lobby.PlayerDropItemListener;
 import de.will_smith_007.bedwars.listeners.setup.BedWarsSpawnerSetupListener;
 import de.will_smith_007.bedwars.listeners.setup.BedWarsWorldSetupListener;
 import de.will_smith_007.bedwars.lobby_countdown.LobbyCountdownHelper;
@@ -56,6 +60,7 @@ public class BedWars extends JavaPlugin {
 
         final LobbyCountdownHelper lobbyCountdownHelper = new LobbyCountdownHelper(lobbyCountdownScheduler);
         final BedWarsShopInventory bedWarsShopInventory = new BedWarsShopInventory();
+        final TeamSelectorInventory teamSelectorInventory = new TeamSelectorInventory();
 
         registerCommand("bedwars", new BedWarsCommand(teamParser));
         registerCommand("start", new StartCommand(lobbyCountdownHelper));
@@ -72,7 +77,10 @@ public class BedWars extends JavaPlugin {
                 new ExplosionPrimeListener(),
                 new FoodLevelChangeListener(gameAssets),
                 new EntityDamageAndDeathListener(gameAssets, teamHelper, scoreboardManager),
-                new ShopListener(bedWarsShopInventory, shopParser)
+                new ShopListener(bedWarsShopInventory, shopParser),
+                new PlayerDropItemListener(),
+                new InteractWithLobbyItemListener(teamSelectorInventory),
+                new LobbyInventoryClickListener(gameAssets, teamParser, teamSelectorInventory, scoreboardManager, teamHelper)
         );
 
         getLogger().info("BedWars was started.");

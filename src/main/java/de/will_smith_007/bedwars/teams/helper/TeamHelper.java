@@ -109,7 +109,7 @@ public class TeamHelper implements ITeamHelper {
     public boolean canTeamJoined(@NonNull BedWarsTeam team) {
         final ITeam iTeam = team.getTeam();
         final Collection<? extends Player> players = Bukkit.getOnlinePlayers();
-        final int minPlayersPerTeam = (players.size() / BED_WARS_TEAMS.length);
+        final int minPlayersPerTeam = (int) Math.ceil((double) players.size() / BED_WARS_TEAMS.length);
         final Set<Player> teamPlayers = iTeam.getPlayers();
 
         if (teamPlayers.isEmpty()) return true;
