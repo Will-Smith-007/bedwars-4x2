@@ -10,6 +10,9 @@ import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.potion.PotionData;
+import org.bukkit.potion.PotionType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,6 +85,19 @@ public enum ShopItem {
     TEAM_CHEST("Team Chest", Material.ENDER_CHEST, ShopCategory.CHESTS,
             CurrencyType.GOLD, 1, 1),
 
+    INSTANT_HEAL("Instant heal", Material.POTION, ShopCategory.POTIONS,
+            CurrencyType.IRON, 3, 1, PotionType.INSTANT_HEAL, false, false),
+    INSTANT_HEAL_TWO("Instant heal", Material.POTION, ShopCategory.POTIONS,
+            CurrencyType.IRON, 5, 1, PotionType.INSTANT_HEAL, false, true),
+    REGENERATION("Regeneration", Material.POTION, ShopCategory.POTIONS,
+            CurrencyType.IRON, 7, 1, PotionType.REGEN, false, false),
+    JUMP("Jump", Material.POTION, ShopCategory.POTIONS,
+            CurrencyType.IRON, 7, 1, PotionType.JUMP, false, false),
+    REGENERATION_TWO("Regeneration", Material.POTION, ShopCategory.POTIONS,
+            CurrencyType.IRON, 36, 1, PotionType.REGEN, false, true),
+    REGENERATION_LONG_DURATION("Regeneration", Material.POTION, ShopCategory.POTIONS,
+            CurrencyType.GOLD, 7, 1, PotionType.REGEN, true, false),
+
     LADDER("Ladder", Material.LADDER, ShopCategory.SPECIALS,
             CurrencyType.BRONZE, 1, 1),
     COBWEB("Cobweb", Material.COBWEB, ShopCategory.SPECIALS,
@@ -116,6 +132,20 @@ public enum ShopItem {
         this.enchantmentStrength = enchantmentStrength;
     }
 
+    ShopItem(@NonNull String displayName, @NonNull Material material, @NonNull ShopCategory shopCategory,
+             @NonNull CurrencyType currencyType, int price, int defaultItems,
+             @NonNull PotionType potionType, boolean isExtended, boolean isUpgraded) {
+        this.displayName = displayName;
+        this.material = material;
+        this.shopCategory = shopCategory;
+        this.currencyType = currencyType;
+        this.price = price;
+        this.defaultItems = defaultItems;
+        this.potionType = potionType;
+        this.isExtended = isExtended;
+        this.isUpgraded = isUpgraded;
+    }
+
     private final String displayName;
     private final Material material;
     private final ShopCategory shopCategory;
@@ -124,6 +154,9 @@ public enum ShopItem {
 
     private Enchantment enchantment;
     private int enchantmentStrength;
+
+    private PotionType potionType;
+    private boolean isExtended, isUpgraded;
 
     private ItemStack itemStack;
     private ItemMeta itemMeta;
@@ -152,6 +185,12 @@ public enum ShopItem {
 
         if (enchantment != null) {
             itemMeta.addEnchant(enchantment, enchantmentStrength, true);
+        }
+
+        if (potionType != null) {
+            final PotionMeta potionMeta = (PotionMeta) itemMeta;
+            final PotionData potionData = new PotionData(potionType, isExtended, isUpgraded);
+            potionMeta.setBasePotionData(potionData);
         }
 
         itemStack.setAmount(defaultItems);
