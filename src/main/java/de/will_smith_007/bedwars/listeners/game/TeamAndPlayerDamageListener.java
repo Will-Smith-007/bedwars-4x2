@@ -14,6 +14,7 @@ import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.*;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -52,6 +53,11 @@ public class TeamAndPlayerDamageListener implements Listener, IDeathHandler {
 
         final Entity damageEntity = entityDamageByEntityEvent.getDamager();
         final Entity victimEntity = entityDamageByEntityEvent.getEntity();
+
+        if (victimEntity.getType() == EntityType.VILLAGER) {
+            entityDamageByEntityEvent.setCancelled(true);
+            return;
+        }
 
         if (damageEntity instanceof final Player damagePlayer &&
                 victimEntity instanceof final Player victimPlayer) {

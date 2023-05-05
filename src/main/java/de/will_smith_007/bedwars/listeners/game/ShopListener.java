@@ -87,8 +87,8 @@ public class ShopListener implements Listener {
                     final int currencyItemAmount = getCurrencyItems(player, currencyMaterial);
                     final int defaultItems = shopItem.getDefaultItems();
                     final int pricePerItem = shopItem.getPrice();
-                    final int itemsThatCanBuy = (currencyItemAmount / pricePerItem);
-                    final int resultItems = (defaultItems * itemsThatCanBuy);
+                    final int howOftenPlayerCanBuyItem = (currencyItemAmount / pricePerItem);
+                    final int resultItems = (defaultItems * howOftenPlayerCanBuyItem);
                     final int itemsActuallyBuy = Math.min((freeSpace + currencyItemAmount), resultItems);
 
                     player.sendPlainMessage("items: " + itemsActuallyBuy);

@@ -14,6 +14,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -91,6 +92,7 @@ public class LobbyInventoryClickListener implements Listener {
 
                 if (teamPlayers >= maxPlayersPerTeam) {
                     player.sendPlainMessage(Message.PREFIX + "§cYou can't join " + teamName + "§c, because it is full.");
+                    player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_PLACE, 1.0f, 1.0f);
                     return;
                 }
 
@@ -99,6 +101,7 @@ public class LobbyInventoryClickListener implements Listener {
 
                 iTeam.addPlayer(player);
                 player.sendPlainMessage(Message.PREFIX + "§aYou joined " + teamName + "§a.");
+                player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 0.0f);
 
                 player.closeInventory();
 

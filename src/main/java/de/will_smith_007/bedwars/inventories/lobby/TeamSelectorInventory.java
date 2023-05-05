@@ -18,7 +18,7 @@ import java.util.Collection;
 
 public class TeamSelectorInventory implements IBedWarsInventory {
 
-    private final String INVENTORY_NAME = "Teamauswahl";
+    private final String INVENTORY_NAME = "Team selection";
     private final BedWarsTeam[] BED_WARS_TEAM = BedWarsTeam.values();
 
     @Override

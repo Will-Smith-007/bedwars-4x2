@@ -13,7 +13,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 @RequiredArgsConstructor
 public enum LobbyItem {
 
-    TEAM_SELECTOR("Team auswählen", Material.RED_BED);
+    TEAM_SELECTOR("Select Team", Material.RED_BED);
 
     private final String displayName;
     private final Material material;
