@@ -73,7 +73,7 @@ public class BedWars extends JavaPlugin {
                 new TeamAndPlayerDamageListener(gameAssets, teamHelper, scoreboardManager),
                 new EntitySpawnListener(),
                 new BedBreakListener(scoreboardManager),
-                new BlockSpreadListener(),
+                new BlockSpreadAndBurnListener(),
                 new ExplosionPrimeListener(),
                 new FoodLevelChangeListener(gameAssets),
                 new EntityDamageAndDeathListener(gameAssets, teamHelper, scoreboardManager),

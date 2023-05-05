@@ -68,6 +68,7 @@ public class ShopListener implements Listener {
             if (itemStack == null) return;
             if (!itemStack.hasItemMeta()) return;
 
+            // Check if the clicked ItemStack is a shop item
             SHOP_PARSER.parseShopItem(itemStack).ifPresentOrElse(shopItem -> {
                 final ShopItem.CurrencyType currencyType = shopItem.getCurrencyType();
                 final String currencyTypeName = currencyType.getCurrencyName();
@@ -75,19 +76,27 @@ public class ShopListener implements Listener {
 
                 final Material currencyMaterial;
 
+                // Check which currency is needed for this shop item
                 switch (currencyType) {
                     case IRON -> currencyMaterial = Material.IRON_INGOT;
                     case GOLD -> currencyMaterial = Material.GOLD_INGOT;
                     default -> currencyMaterial = Material.BRICK;
                 }
 
+                // If player makes a shift click then the player buys so many items how he can buy
                 if (inventoryClickEvent.isShiftClick()) {
                     final ItemStack shopItemStack = shopItem.buildItem();
+                    // Available free space in the player inventory
                     final int freeSpace = getFreeInventorySpace(player, shopItemStack);
+                    // How many bricks, iron ingots or gold ingots the player have in their own inventory
                     final int currencyItemAmount = getCurrencyItems(player, currencyMaterial);
+                    // Amount of shop items that should be added by default per transaction
                     final int defaultItems = shopItem.getDefaultItems();
+                    // How many bricks, iron ingots or gold ingots the shop item costs
                     final int pricePerItem = shopItem.getPrice();
+                    // How often the player can make this transaction
                     final int howOftenPlayerCanBuyItem = (currencyItemAmount / pricePerItem);
+                    // Amount of items that would be added to the player inventory after transaction
                     final int resultItems = (defaultItems * howOftenPlayerCanBuyItem);
                     final int itemsActuallyBuy = Math.min((freeSpace + currencyItemAmount), resultItems);
 

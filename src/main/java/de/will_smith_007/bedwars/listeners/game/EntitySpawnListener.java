@@ -16,6 +16,8 @@ public class EntitySpawnListener implements Listener {
 
         if (entityType != EntityType.VILLAGER
                 && entityType != EntityType.DROPPED_ITEM
-                && entityType != EntityType.ARROW) entitySpawnEvent.setCancelled(true);
+                && entityType != EntityType.ARROW
+                && entityType != EntityType.ENDER_PEARL
+                && entityType != EntityType.FISHING_HOOK) entitySpawnEvent.setCancelled(true);
     }
 }
