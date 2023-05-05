@@ -80,6 +80,7 @@ public class BedWars extends JavaPlugin {
                 new ShopListener(bedWarsShopInventory, shopParser),
                 new PlayerDropItemListener(),
                 new InteractWithLobbyItemListener(teamSelectorInventory),
+                new GameChatListener(gameAssets, teamHelper),
                 new LobbyInventoryClickListener(gameAssets, teamParser, teamSelectorInventory, scoreboardManager, teamHelper)
         );
 
