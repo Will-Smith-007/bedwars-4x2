@@ -43,7 +43,7 @@ public class ShopListener implements Listener {
     }
 
     @EventHandler
-    public void onInventoryClick(@NonNull InventoryClickEvent inventoryClickEvent) {
+    public void onShopInventoryClick(@NonNull InventoryClickEvent inventoryClickEvent) {
         final Inventory clickedInventory = inventoryClickEvent.getClickedInventory();
 
         if (clickedInventory == null) return;
@@ -102,6 +102,7 @@ public class ShopListener implements Listener {
                     currencyItemStack.setAmount((itemsActuallyBuy * pricePerItem));
 
                     shopItemStack.setAmount(itemsActuallyBuy);
+                    shopItemStack.editMeta(itemMeta -> itemMeta.lore(null));
 
                     playerInventory.removeItem(currencyItemStack);
                     playerInventory.addItem(shopItemStack);

@@ -65,6 +65,7 @@ public class TeamHelper implements ITeamHelper {
                 player.setGameMode(GameMode.ADVENTURE);
                 player.setHealth(20.00d);
                 player.setFoodLevel(20);
+                player.getInventory().clear();
                 player.sendPlainMessage(Message.PREFIX + winningTeamName + "§a has won the game!");
                 final Location playerLocation = player.getLocation();
                 player.playSound(playerLocation, Sound.ENTITY_FIREWORK_ROCKET_LARGE_BLAST, 1.0f, 1.0f);

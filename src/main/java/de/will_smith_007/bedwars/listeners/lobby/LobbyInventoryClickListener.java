@@ -48,7 +48,7 @@ public class LobbyInventoryClickListener implements Listener {
     }
 
     @EventHandler
-    public void onInventoryClick(@NonNull InventoryClickEvent inventoryClickEvent) {
+    public void onLobbyInventoryClick(@NonNull InventoryClickEvent inventoryClickEvent) {
         final GameState gameState = GAME_ASSETS.getGameState();
         if (gameState != GameState.LOBBY) return;
 

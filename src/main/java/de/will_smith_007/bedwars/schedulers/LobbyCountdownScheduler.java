@@ -124,8 +124,7 @@ public class LobbyCountdownScheduler implements IScheduler, ICountdownOptions {
                     GAME_ASSETS.setGameConfiguration(new GameConfiguration(gameWorld));
 
                     for (Player player : players) {
-                        SCOREBOARD_MANAGER.setTablist(player);
-                        SCOREBOARD_MANAGER.updateScoreboard(player);
+                        SCOREBOARD_MANAGER.setScoreboardAndTablist(player);
                     }
 
                     PROTECTION_COUNTDOWN_SCHEDULER.start();

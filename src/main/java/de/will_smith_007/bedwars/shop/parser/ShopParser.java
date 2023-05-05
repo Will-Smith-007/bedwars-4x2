@@ -18,7 +18,7 @@ public class ShopParser implements IShopParser {
     @Override
     public Optional<ShopItem> parseShopItem(@NonNull ItemStack itemStack) {
         for (ShopItem shopItem : SHOP_ITEMS) {
-            final ItemStack shopItemStack = shopItem.getItemStack();
+            final ItemStack shopItemStack = shopItem.buildItem();
             if (itemStack.equals(shopItemStack)) return Optional.of(shopItem);
         }
         return Optional.empty();
