@@ -76,6 +76,8 @@ public class BedWarsCommand implements TabExecutor {
 
                 player.sendPlainMessage(Message.PREFIX + "§aYou've set the§e spectator spawn location§a.");
                 player.sendPlainMessage(Message.PREFIX + "§aFinish and save this setup with §e/bw setup finish");
+            } else {
+                sendHelpDescription(player);
             }
         } else if (args.length == 2) {
             final String subCommand = args[0];
@@ -216,8 +218,7 @@ public class BedWarsCommand implements TabExecutor {
                             }
                         }
 
-                        default ->
-                                player.sendPlainMessage(Message.PREFIX + "§cYou currently can't go to the next step.");
+                        default -> player.sendPlainMessage(Message.PREFIX + "§cYou currently can't go to the next step.");
                     }
                 } else if (args[1].equalsIgnoreCase("finish")) {
                     if (!PLAYERS_IN_SETUP.containsKey(player)) {
@@ -243,6 +244,8 @@ public class BedWarsCommand implements TabExecutor {
                     PLAYERS_IN_SETUP.remove(player);
 
                     player.sendPlainMessage(Message.PREFIX + "§aYou've successfully§e finished and saved §athe setup.");
+                } else {
+                    sendHelpDescription(player);
                 }
             } else if (subCommand.equalsIgnoreCase("tp")
                     || subCommand.equalsIgnoreCase("teleport")) {
@@ -257,7 +260,11 @@ public class BedWarsCommand implements TabExecutor {
                 player.teleport(world.getSpawnLocation());
                 player.setGameMode(GameMode.CREATIVE);
                 player.sendPlainMessage(Message.PREFIX + "§aYou've been teleported to §e" + worldName + "§a.");
+            } else {
+                sendHelpDescription(player);
             }
+        } else {
+            sendHelpDescription(player);
         }
         return false;
     }
@@ -287,5 +294,18 @@ public class BedWarsCommand implements TabExecutor {
         }
 
         return subCommands;
+    }
+
+    private void sendHelpDescription(@NonNull Player player) {
+        final String prefix = Message.PREFIX.toString();
+
+        player.sendPlainMessage(prefix + "§e/bw setup §8- §7Starts/Stops the map setup");
+        player.sendPlainMessage(prefix + "§e/bw setSpectator §8- §7Sets the spectator location at your position");
+        player.sendPlainMessage(prefix + "§e/bw setup next §8- §7Go to the next setup step if you're done with previous");
+        player.sendPlainMessage(prefix + "§e/bw setup finish §8- §7Finish your map setup and save it into the config");
+        player.sendPlainMessage(prefix + "§e/bw tp [WorldName] §8- §7Teleports you into a world");
+        player.sendPlainMessage(prefix + "§e/bw setLobby [WorldName] §8- §7Sets the waiting lobby");
+        player.sendPlainMessage(prefix + "§e/bw setBed [Team] §8- §7Sets a bed for a team at position you're looking");
+        player.sendPlainMessage(prefix + "§e/bw setSpawn [Team] §8- §7Sets the spawn for a team at your position");
     }
 }
