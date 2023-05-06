@@ -38,10 +38,10 @@ public class TeamSelectorInventory implements IBedWarsInventory {
 
             final Material teamMaterial;
             switch (bedWarsTeam) {
-                case BLUE -> teamMaterial = Material.BLUE_WOOL;
-                case RED -> teamMaterial = Material.RED_WOOL;
-                case GREEN -> teamMaterial = Material.GREEN_WOOL;
-                default -> teamMaterial = Material.YELLOW_WOOL;
+                case BLUE -> teamMaterial = Material.BLUE_CONCRETE;
+                case RED -> teamMaterial = Material.RED_CONCRETE;
+                case GREEN -> teamMaterial = Material.LIME_CONCRETE;
+                default -> teamMaterial = Material.YELLOW_CONCRETE;
             }
 
             final ItemStack itemStack = new ItemStack(teamMaterial);

@@ -3,6 +3,7 @@ package de.will_smith_007.bedwars.commands;
 import de.will_smith_007.bedwars.enums.Message;
 import de.will_smith_007.bedwars.file_config.BedWarsConfig;
 import de.will_smith_007.bedwars.setup.BedWarsSetup;
+import de.will_smith_007.bedwars.teams.enums.BedWarsTeam;
 import de.will_smith_007.bedwars.teams.parser.TeamParser;
 import lombok.Getter;
 import lombok.NonNull;
@@ -15,9 +16,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class BedWarsCommand implements TabExecutor {
 
@@ -265,6 +264,28 @@ public class BedWarsCommand implements TabExecutor {
 
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
-        return null;
+        if (!sender.hasPermission("bedwars.setup")) return null;
+
+        final List<String> subCommands = new ArrayList<>();
+
+        if (args.length == 1) {
+            return Arrays.asList("tp", "teleport", "setup", "setBed", "setSpectator", "setSpawn", "setLobby");
+        } else if (args.length == 2) {
+            if (args[0].equalsIgnoreCase("tp")
+                    || args[0].equalsIgnoreCase("setLobby")) {
+                subCommands.add("WorldName");
+            } else if (args[0].equalsIgnoreCase("setBed")
+                    || args[0].equalsIgnoreCase("setSpawn")) {
+                return Arrays.stream(BedWarsTeam.values())
+                        .map(BedWarsTeam::getTeamName)
+                        .map(teamName -> teamName.replace("Team ", ""))
+                        .toList();
+            } else if (args[0].equalsIgnoreCase("setup")) {
+                subCommands.add("next");
+                subCommands.add("finish");
+            }
+        }
+
+        return subCommands;
     }
 }

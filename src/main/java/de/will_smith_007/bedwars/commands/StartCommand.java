@@ -3,6 +3,7 @@ package de.will_smith_007.bedwars.commands;
 import de.will_smith_007.bedwars.enums.Message;
 import de.will_smith_007.bedwars.lobby_countdown.interfaces.ILobbyCountdownHelper;
 import lombok.NonNull;
+import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -44,6 +45,7 @@ public class StartCommand implements CommandExecutor {
         }
 
         player.sendPlainMessage(Message.PREFIX + "§aYou've set the countdown to§e 10 seconds§a.");
+        player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 0.0f);
 
         return false;
     }
