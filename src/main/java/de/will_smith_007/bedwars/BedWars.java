@@ -62,9 +62,11 @@ public class BedWars extends JavaPlugin {
         final BedWarsShopInventory bedWarsShopInventory = new BedWarsShopInventory();
         final TeamSelectorInventory teamSelectorInventory = new TeamSelectorInventory();
 
+        // Command registration
         registerCommand("bedwars", new BedWarsCommand(teamParser));
         registerCommand("start", new StartCommand(lobbyCountdownHelper));
 
+        // Listener registration
         registerListeners(
                 new PlayerConnectionListener(gameAssets, lobbyCountdownHelper, teamHelper, scoreboardManager),
                 new BedWarsSpawnerSetupListener(),
@@ -92,6 +94,11 @@ public class BedWars extends JavaPlugin {
         getLogger().info("BedWars was stopped.");
     }
 
+    /**
+     * Registers all listeners in the specified {@link Listener} array.
+     *
+     * @param listeners Classes which implements the {@link Listener} interface.
+     */
     private void registerListeners(Listener @NonNull ... listeners) {
         final PluginManager pluginManager = Bukkit.getPluginManager();
         for (Listener listener : listeners) {
@@ -99,6 +106,12 @@ public class BedWars extends JavaPlugin {
         }
     }
 
+    /**
+     * Registers a specified {@link CommandExecutor} with the name of command as a {@link String}.
+     *
+     * @param command         Name of command which can be executed ingame or per console.
+     * @param commandExecutor Class of the command which implements the {@link CommandExecutor} interface.
+     */
     private void registerCommand(@NonNull String command, @NonNull CommandExecutor commandExecutor) {
         final PluginCommand pluginCommand = getCommand(command);
         if (pluginCommand == null) return;

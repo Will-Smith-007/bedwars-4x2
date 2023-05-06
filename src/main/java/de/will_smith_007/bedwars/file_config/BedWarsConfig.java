@@ -1,7 +1,7 @@
 package de.will_smith_007.bedwars.file_config;
 
-import de.will_smith_007.bedwars.teams.enums.BedWarsTeam;
 import de.will_smith_007.bedwars.setup.BedWarsSetup;
+import de.will_smith_007.bedwars.teams.enums.BedWarsTeam;
 import lombok.NonNull;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -46,15 +46,32 @@ public class BedWarsConfig {
         YAML_CONFIGURATION = YamlConfiguration.loadConfiguration(BED_WARS_CONFIG);
     }
 
+    /**
+     * Gets all configured game worlds.
+     *
+     * @return A {@link List} which holds all configured world names.
+     */
     public @NonNull List<String> getGameWorlds() {
         final ConfigurationSection configurationSection = YAML_CONFIGURATION.getConfigurationSection("Maps");
         return (configurationSection == null ? new LinkedList<>() : configurationSection.getKeys(false).stream().toList());
     }
 
+    /**
+     * Gets the name of the configured lobby world.
+     *
+     * @return Name of configured waiting lobby world.
+     */
     public String getLobbyWorld() {
         return YAML_CONFIGURATION.getString("LobbyWorld");
     }
 
+    /**
+     * Gets the location of the configured team bed.
+     *
+     * @param bedWarsTeam Team from which you need the bed location.
+     * @param world       World in which you need the bed location.
+     * @return The {@link Location} from the {@link BedWarsTeam} in a specified {@link World}.
+     */
     public Location getBedLocation(@NonNull BedWarsTeam bedWarsTeam, @NonNull World world) {
         final String worldName = world.getName();
         final String sectionName = "Maps." + worldName + "." + bedWarsTeam.getTeamName() + ".Bed";
@@ -65,6 +82,13 @@ public class BedWarsConfig {
                 YAML_CONFIGURATION.getInt(sectionName + ".Z"));
     }
 
+    /**
+     * Gets the location of the configured team spawn.
+     *
+     * @param bedWarsTeam Team from which you need the spawn location.
+     * @param world       World in which you need the spawn location.
+     * @return The {@link Location} of the team spawn from the {@link BedWarsTeam} in a specified {@link World}
+     */
     public Location getTeamSpawnLocation(@NonNull BedWarsTeam bedWarsTeam, @NonNull World world) {
         final String worldName = world.getName();
         final String sectionName = "Maps." + worldName + "." + bedWarsTeam.getTeamName() + ".Spawn";
@@ -77,6 +101,14 @@ public class BedWarsConfig {
                 (float) YAML_CONFIGURATION.getDouble(sectionName + ".Pitch"));
     }
 
+    /**
+     * Gets all configured spawners with the specified {@link de.will_smith_007.bedwars.setup.BedWarsSetup.SpawnerType}.
+     *
+     * @param spawnerType Type of spawner which you want to get.
+     * @param world       World in which you need the spawner locations.
+     * @return A {@link Set} which holds the {@link Location} of all spawners from the specified
+     * {@link de.will_smith_007.bedwars.setup.BedWarsSetup.SpawnerType} in the specified {@link World}.
+     */
     public Set<Location> getSpawners(@NonNull BedWarsSetup.SpawnerType spawnerType,
                                      @NonNull World world) {
         final String worldName = world.getName();
@@ -98,6 +130,12 @@ public class BedWarsConfig {
         return spawnerLocations;
     }
 
+    /**
+     * Gets the configured spectator location where the players should be teleported to when they are eliminated.
+     *
+     * @param world World in which you need the spectator location.
+     * @return A {@link Location} from the spectator spawn in a specified {@link World}.
+     */
     public Location getSpectatorLocation(@NonNull World world) {
         final String worldName = world.getName();
         final String sectionName = "Maps." + worldName + ".Spectator";
@@ -110,6 +148,11 @@ public class BedWarsConfig {
                 (float) YAML_CONFIGURATION.getDouble(sectionName + ".Pitch"));
     }
 
+    /**
+     * Sets the waiting lobby world in which the players should wait for game start or when the game ends.
+     *
+     * @param world World which should be the lobby world.
+     */
     public void setLobbyWorld(@NonNull World world) {
         final String worldName = world.getName();
 
@@ -118,6 +161,11 @@ public class BedWarsConfig {
         saveConfig();
     }
 
+    /**
+     * Sets the bed locations of all teams in the specified {@link Map}.
+     *
+     * @param bedLocations Map of all configured bed locations.
+     */
     public void setBedLocations(@NonNull Map<BedWarsTeam, Location> bedLocations) {
         if (bedLocations.isEmpty()) return;
 
@@ -133,6 +181,11 @@ public class BedWarsConfig {
         saveConfig();
     }
 
+    /**
+     * Sets the spawn locations of all teams in the specified {@link Map}.
+     *
+     * @param teamSpawnLocations Map of all configured team spawn locations.
+     */
     public void setTeamSpawnLocations(@NonNull Map<BedWarsTeam, Location> teamSpawnLocations) {
         if (teamSpawnLocations.isEmpty()) return;
 
@@ -150,6 +203,11 @@ public class BedWarsConfig {
         saveConfig();
     }
 
+    /**
+     * Sets the spawner locations of all spawner types in the specified {@link Map}.
+     *
+     * @param spawnerLocations Map of all configured spawner locations.
+     */
     public void setSpawnerLocations(@NonNull Map<Location, BedWarsSetup.SpawnerType> spawnerLocations) {
         if (spawnerLocations.isEmpty()) return;
 
@@ -173,6 +231,11 @@ public class BedWarsConfig {
         saveConfig();
     }
 
+    /**
+     * Sets the spectator location to which the eliminated players should be teleported to.
+     *
+     * @param location Location of the spectator spawn.
+     */
     public void setSpectatorLocation(@NonNull Location location) {
         final String worldName = location.getWorld().getName();
         final String sectionName = "Maps." + worldName + ".Spectator";
@@ -186,6 +249,9 @@ public class BedWarsConfig {
         saveConfig();
     }
 
+    /**
+     * Saves the BedWars configuration file.
+     */
     private void saveConfig() {
         try {
             YAML_CONFIGURATION.save(BED_WARS_CONFIG);
@@ -194,6 +260,12 @@ public class BedWarsConfig {
         }
     }
 
+    /**
+     * Gets the instance of the {@link BedWarsConfig}.
+     * It should be only one instance of this class.
+     *
+     * @return The instance of {@link BedWarsConfig}.
+     */
     public static @NonNull BedWarsConfig getInstance() {
         return instance;
     }
