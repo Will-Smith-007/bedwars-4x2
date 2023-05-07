@@ -20,18 +20,18 @@ import java.util.Set;
 
 public class GameChatListener implements Listener {
 
-    private final GameAssets GAME_ASSETS;
-    private final ITeamHelper TEAM_HELPER;
+    private final GameAssets gameAssets;
+    private final ITeamHelper teamHelper;
 
     public GameChatListener(@NonNull GameAssets gameAssets,
                             @NonNull ITeamHelper teamHelper) {
-        GAME_ASSETS = gameAssets;
-        TEAM_HELPER = teamHelper;
+        this.gameAssets = gameAssets;
+        this.teamHelper = teamHelper;
     }
 
     @EventHandler
     public void onGameChat(@NonNull AsyncChatEvent asyncChatEvent) {
-        final GameState gameState = GAME_ASSETS.getGameState();
+        final GameState gameState = gameAssets.getGameState();
         final Player player = asyncChatEvent.getPlayer();
         final Scoreboard scoreboard = player.getScoreboard();
         final Team team = scoreboard.getPlayerTeam(player);
@@ -62,7 +62,7 @@ public class GameChatListener implements Listener {
                     return;
                 }
 
-                TEAM_HELPER.getTeam(player).ifPresent(iTeam -> {
+                teamHelper.getTeam(player).ifPresent(iTeam -> {
                     final Set<Player> teamPlayers = iTeam.getPlayers();
 
                     for (Player teamPlayer : teamPlayers) {

@@ -28,23 +28,23 @@ import java.util.Optional;
 
 public class TeamAndPlayerDamageListener implements Listener, IDeathHandler {
 
-    private final GameAssets GAME_ASSETS;
-    private final ITeamHelper TEAM_HELPER;
-    private final BedWarsConfig BED_WARS_CONFIG = BedWarsConfig.getInstance();
-    private final IScoreboardManager SCOREBOARD_MANAGER;
-    private final String PREFIX = Message.PREFIX.toString();
+    private final GameAssets gameAssets;
+    private final ITeamHelper teamHelper;
+    private final BedWarsConfig bedWarsConfig = BedWarsConfig.getInstance();
+    private final IScoreboardManager scoreboardManager;
+    private final String prefix = Message.PREFIX.toString();
 
     public TeamAndPlayerDamageListener(@NonNull GameAssets gameAssets,
                                        @NonNull ITeamHelper teamHelper,
                                        @NonNull IScoreboardManager scoreboardManager) {
-        GAME_ASSETS = gameAssets;
-        TEAM_HELPER = teamHelper;
-        SCOREBOARD_MANAGER = scoreboardManager;
+        this.gameAssets = gameAssets;
+        this.teamHelper = teamHelper;
+        this.scoreboardManager = scoreboardManager;
     }
 
     @EventHandler
     public void onTeamDamage(@NonNull EntityDamageByEntityEvent entityDamageByEntityEvent) {
-        final GameState gameState = GAME_ASSETS.getGameState();
+        final GameState gameState = gameAssets.getGameState();
 
         if (gameState == GameState.LOBBY) {
             entityDamageByEntityEvent.setCancelled(true);
@@ -67,8 +67,8 @@ public class TeamAndPlayerDamageListener implements Listener, IDeathHandler {
                 return;
             }
 
-            final Optional<ITeam> optionalDamagePlayerTeam = TEAM_HELPER.getTeam(damagePlayer);
-            final Optional<ITeam> optionalVictimPlayerTeam = TEAM_HELPER.getTeam(victimPlayer);
+            final Optional<ITeam> optionalDamagePlayerTeam = teamHelper.getTeam(damagePlayer);
+            final Optional<ITeam> optionalVictimPlayerTeam = teamHelper.getTeam(victimPlayer);
 
             if (optionalDamagePlayerTeam.isEmpty() || optionalVictimPlayerTeam.isEmpty()) return;
 
@@ -104,7 +104,7 @@ public class TeamAndPlayerDamageListener implements Listener, IDeathHandler {
                 damagePlayer.playSound(damagePlayerLocation, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 1.0f);
 
                 for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                    onlinePlayer.sendMessage(Component.text(PREFIX)
+                    onlinePlayer.sendMessage(Component.text(prefix)
                             .append(Component.text(victimPlayerName).color(victimTextColor))
                             .append(Component.text(" §7was killed by "))
                             .append(Component.text(damagePlayerName).color(damageTextColor)));
@@ -132,12 +132,12 @@ public class TeamAndPlayerDamageListener implements Listener, IDeathHandler {
             player.teleport(teamSpawnLocation);
         } else {
             iTeam.removePlayer(player);
-            final Location spectatorLocation = BED_WARS_CONFIG.getSpectatorLocation(playerWorld);
+            final Location spectatorLocation = bedWarsConfig.getSpectatorLocation(playerWorld);
             player.setGameMode(GameMode.SPECTATOR);
             player.teleport(spectatorLocation);
-            TEAM_HELPER.handleTeamElimination(iTeam, players);
+            teamHelper.handleTeamElimination(iTeam, players);
 
-            players.forEach(SCOREBOARD_MANAGER::updateScoreboard);
+            players.forEach(scoreboardManager::updateScoreboard);
             //TODO: Hide from other game players
         }
     }
@@ -158,8 +158,8 @@ public class TeamAndPlayerDamageListener implements Listener, IDeathHandler {
 
         if (dealtDamage < victimHealth) return;
 
-        final Optional<ITeam> optionalDamagePlayerTeam = TEAM_HELPER.getTeam(damagePlayer);
-        final Optional<ITeam> optionalVictimPlayerTeam = TEAM_HELPER.getTeam(victimPlayer);
+        final Optional<ITeam> optionalDamagePlayerTeam = teamHelper.getTeam(damagePlayer);
+        final Optional<ITeam> optionalVictimPlayerTeam = teamHelper.getTeam(victimPlayer);
 
         if (optionalDamagePlayerTeam.isEmpty() || optionalVictimPlayerTeam.isEmpty()) return;
 
@@ -192,7 +192,7 @@ public class TeamAndPlayerDamageListener implements Listener, IDeathHandler {
         damagePlayer.playSound(damagePlayerLocation, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 1.0f);
 
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-            onlinePlayer.sendMessage(Component.text(PREFIX)
+            onlinePlayer.sendMessage(Component.text(prefix)
                     .append(Component.text(victimPlayerName).color(victimTextColor))
                     .append(Component.text(" §7was killed by "))
                     .append(Component.text(damagePlayerName).color(damageTextColor)));

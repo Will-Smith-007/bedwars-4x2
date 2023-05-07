@@ -20,19 +20,19 @@ import java.util.Collection;
 
 public class BedBreakListener implements Listener {
 
-    private final IScoreboardManager SCOREBOARD_MANAGER;
-    private final String PREFIX = Message.PREFIX.toString();
+    private final IScoreboardManager scoreboardManager;
+    private final String prefix = Message.PREFIX.toString();
 
     public BedBreakListener(@NonNull IScoreboardManager scoreboardManager) {
-        SCOREBOARD_MANAGER = scoreboardManager;
+        this.scoreboardManager = scoreboardManager;
     }
 
     @EventHandler
     public void onBedBreak(@NonNull BedBreakEvent bedBreakEvent) {
         final Collection<? extends Player> players = Bukkit.getOnlinePlayers();
-        final ITeam iTeam = bedBreakEvent.getBED_TEAM();
+        final ITeam iTeam = bedBreakEvent.getBedTeam();
         final String teamName = iTeam.getTeamName();
-        final Player bedBreakPlayer = bedBreakEvent.getPLAYER();
+        final Player bedBreakPlayer = bedBreakEvent.getPlayer();
         final Scoreboard scoreboard = bedBreakPlayer.getScoreboard();
         final Team team = scoreboard.getPlayerTeam(bedBreakPlayer);
 
@@ -44,13 +44,13 @@ public class BedBreakListener implements Listener {
         final String playerName = bedBreakPlayer.getName();
 
         for (Player player : players) {
-            player.sendMessage(Component.text(PREFIX)
+            player.sendMessage(Component.text(prefix)
                     .append(Component.text("§4The bed from " + teamName + "§4 was destroyed by "))
                     .append(Component.text(playerName).color(textColor))
                     .append(Component.text("§c!")));
             final Location playerLocation = player.getLocation();
             player.playSound(playerLocation, Sound.ENTITY_ENDER_DRAGON_GROWL, 1.0f, 1.0f);
-            SCOREBOARD_MANAGER.updateScoreboard(player);
+            scoreboardManager.updateScoreboard(player);
         }
     }
 }

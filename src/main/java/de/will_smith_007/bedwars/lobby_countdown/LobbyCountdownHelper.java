@@ -12,16 +12,16 @@ import java.util.Collection;
 
 public class LobbyCountdownHelper implements ILobbyCountdownHelper {
 
-    private final LobbyCountdownScheduler LOBBY_COUNTDOWN_SCHEDULER;
-    private final BedWarsTeam[] BED_WARS_TEAMS = BedWarsTeam.values();
+    private final LobbyCountdownScheduler lobbyCountdownScheduler;
+    private final BedWarsTeam[] bedWarsTeams = BedWarsTeam.values();
 
     public LobbyCountdownHelper(@NonNull LobbyCountdownScheduler lobbyCountdownScheduler) {
-        LOBBY_COUNTDOWN_SCHEDULER = lobbyCountdownScheduler;
+        this.lobbyCountdownScheduler = lobbyCountdownScheduler;
     }
 
     @Override
     public void startCountdownIfEnoughPlayers() {
-        if (LOBBY_COUNTDOWN_SCHEDULER.isRunning()) return;
+        if (lobbyCountdownScheduler.isRunning()) return;
 
         final Collection<? extends Player> players = Bukkit.getOnlinePlayers();
         final int playerSize = players.size();
@@ -29,7 +29,7 @@ public class LobbyCountdownHelper implements ILobbyCountdownHelper {
         int validTeams = 0;
         int playersWithoutTeam = playerSize;
 
-        for (BedWarsTeam bedWarsTeam : BED_WARS_TEAMS) {
+        for (BedWarsTeam bedWarsTeam : bedWarsTeams) {
             final ITeam iTeam = bedWarsTeam.getTeam();
             final int teamPlayers = iTeam.getPlayers().size();
             if (teamPlayers > 0) validTeams++;
@@ -37,31 +37,31 @@ public class LobbyCountdownHelper implements ILobbyCountdownHelper {
         }
 
         if (validTeams > 1 || playerSize >= 2 && playersWithoutTeam >= 1)
-            LOBBY_COUNTDOWN_SCHEDULER.start();
+            lobbyCountdownScheduler.start();
     }
 
     @Override
     public boolean shortenCountdown() {
-        if (!LOBBY_COUNTDOWN_SCHEDULER.isRunning()) return false;
-        if (LOBBY_COUNTDOWN_SCHEDULER.getCountdown() <= 10) return false;
+        if (!lobbyCountdownScheduler.isRunning()) return false;
+        if (lobbyCountdownScheduler.getCountdown() <= 10) return false;
 
-        LOBBY_COUNTDOWN_SCHEDULER.setCountdown(10);
+        lobbyCountdownScheduler.setCountdown(10);
 
         return true;
     }
 
     @Override
     public void cancelCountdownIfNotEnoughPlayers(int players) {
-        if (!LOBBY_COUNTDOWN_SCHEDULER.isRunning()) return;
+        if (!lobbyCountdownScheduler.isRunning()) return;
 
         if (players >= 2) return;
 
-        LOBBY_COUNTDOWN_SCHEDULER.stop();
+        lobbyCountdownScheduler.stop();
     }
 
     @Override
     public void cancelCountdownIfNotEnoughTeams() {
-        if (!LOBBY_COUNTDOWN_SCHEDULER.isRunning()) return;
+        if (!lobbyCountdownScheduler.isRunning()) return;
 
         final Collection<? extends Player> players = Bukkit.getOnlinePlayers();
         final int playerSize = players.size();
@@ -69,7 +69,7 @@ public class LobbyCountdownHelper implements ILobbyCountdownHelper {
         int validTeams = 0;
         int playersWithoutTeam = playerSize;
 
-        for (BedWarsTeam bedWarsTeam : BED_WARS_TEAMS) {
+        for (BedWarsTeam bedWarsTeam : bedWarsTeams) {
             final ITeam iTeam = bedWarsTeam.getTeam();
             final int teamPlayers = iTeam.getPlayers().size();
             if (teamPlayers > 0) validTeams++;
@@ -78,6 +78,6 @@ public class LobbyCountdownHelper implements ILobbyCountdownHelper {
 
         if (validTeams > 1 || playerSize >= 2 && playersWithoutTeam >= 1) return;
 
-        LOBBY_COUNTDOWN_SCHEDULER.stop();
+        lobbyCountdownScheduler.stop();
     }
 }

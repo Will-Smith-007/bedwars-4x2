@@ -26,29 +26,29 @@ import java.util.Set;
 
 public class BlockBuildingListener implements Listener {
 
-    private final GameAssets GAME_ASSETS;
-    private final Set<Block> BUILDING_BLOCKS;
-    private final PluginManager PLUGIN_MANAGER = Bukkit.getPluginManager();
-    private final ITeamHelper TEAM_HELPER;
-    private final BedWarsTeam[] BED_WARS_TEAMS = BedWarsTeam.values();
-    private final BedWarsConfig BED_WARS_CONFIG = BedWarsConfig.getInstance();
+    private final GameAssets gameAssets;
+    private final Set<Block> builtBlocks;
+    private final PluginManager pluginManager = Bukkit.getPluginManager();
+    private final ITeamHelper teamHelper;
+    private final BedWarsTeam[] bedWarsTeams = BedWarsTeam.values();
+    private final BedWarsConfig bedWarsConfig = BedWarsConfig.getInstance();
 
     public BlockBuildingListener(@NonNull GameAssets gameAssets,
                                  @NonNull ITeamHelper teamHelper) {
-        GAME_ASSETS = gameAssets;
-        BUILDING_BLOCKS = gameAssets.getBUILDING_BLOCKS();
-        TEAM_HELPER = teamHelper;
+        this.gameAssets = gameAssets;
+        this.builtBlocks = gameAssets.getBuiltBlocks();
+        this.teamHelper = teamHelper;
     }
 
     @EventHandler
     public void onBlockPlace(@NonNull BlockPlaceEvent blockPlaceEvent) {
-        final GameState gameState = GAME_ASSETS.getGameState();
+        final GameState gameState = gameAssets.getGameState();
         final Player player = blockPlaceEvent.getPlayer();
 
         switch (gameState) {
             case INGAME, PROTECTION -> {
                 final Block block = blockPlaceEvent.getBlockPlaced();
-                BUILDING_BLOCKS.add(block);
+                builtBlocks.add(block);
             }
             default -> {
                 if (player.isOp()) return;
@@ -59,7 +59,7 @@ public class BlockBuildingListener implements Listener {
 
     @EventHandler
     public void onBlockBreak(@NonNull BlockBreakEvent blockBreakEvent) {
-        final GameState gameState = GAME_ASSETS.getGameState();
+        final GameState gameState = gameAssets.getGameState();
         final Player player = blockBreakEvent.getPlayer();
 
         switch (gameState) {
@@ -73,10 +73,10 @@ public class BlockBuildingListener implements Listener {
                     final Location blockLocation = block.getLocation();
                     final World playerWorld = player.getWorld();
 
-                    final Optional<ITeam> optionalITeam = TEAM_HELPER.getTeam(player);
+                    final Optional<ITeam> optionalITeam = teamHelper.getTeam(player);
                     optionalITeam.ifPresent(team -> {
-                        for (BedWarsTeam bedwarsTeam : BED_WARS_TEAMS) {
-                            final Location configuredBedLocation = BED_WARS_CONFIG.getBedLocation(bedwarsTeam, playerWorld);
+                        for (BedWarsTeam bedwarsTeam : bedWarsTeams) {
+                            final Location configuredBedLocation = bedWarsConfig.getBedLocation(bedwarsTeam, playerWorld);
 
                             if (configuredBedLocation.distance(blockLocation) > 1) continue;
 
@@ -88,20 +88,20 @@ public class BlockBuildingListener implements Listener {
                             }
 
                             blockBreakEvent.setDropItems(false);
-                            PLUGIN_MANAGER.callEvent(new BedBreakEvent(player, blockLocation, bedTeam));
+                            pluginManager.callEvent(new BedBreakEvent(player, blockLocation, bedTeam));
                         }
                     });
                     return;
                 }
 
-                if (!BUILDING_BLOCKS.contains(block)) {
+                if (!builtBlocks.contains(block)) {
                     blockBreakEvent.setCancelled(true);
                     return;
                 }
 
                 blockBreakEvent.setCancelled(false);
 
-                BUILDING_BLOCKS.remove(block);
+                builtBlocks.remove(block);
             }
             default -> {
                 if (!player.isOp()) blockBreakEvent.setCancelled(true);

@@ -13,16 +13,16 @@ public class BedBreakEvent extends Event {
 
     private static final HandlerList HANDLER_LIST = new HandlerList();
     @Getter
-    private final Location BED_LOCATION;
+    private final Location bedLocation;
     @Getter
-    private final Player PLAYER;
+    private final Player player;
     @Getter
-    private final ITeam BED_TEAM;
+    private final ITeam bedTeam;
 
     public BedBreakEvent(@NonNull Player player, @NonNull Location bedLocation, @NonNull ITeam bedTeam) {
-        BED_LOCATION = bedLocation;
-        PLAYER = player;
-        BED_TEAM = bedTeam;
+        this.bedLocation = bedLocation;
+        this.player = player;
+        this.bedTeam = bedTeam;
     }
 
     @Override

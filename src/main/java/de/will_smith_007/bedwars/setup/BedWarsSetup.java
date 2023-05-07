@@ -1,7 +1,7 @@
 package de.will_smith_007.bedwars.setup;
 
-import de.will_smith_007.bedwars.teams.enums.BedWarsTeam;
 import de.will_smith_007.bedwars.file_config.BedWarsConfig;
+import de.will_smith_007.bedwars.teams.enums.BedWarsTeam;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -20,32 +20,32 @@ public class BedWarsSetup {
     @Setter
     private SetupAction setupAction;
 
-    private final Map<BedWarsTeam, Location> BED_LOCATIONS = new HashMap<>();
-    private final Map<BedWarsTeam, Location> TEAM_SPAWN_LOCATIONS = new HashMap<>();
-    private final Map<Location, SpawnerType> SPAWNER_LOCATIONS = new HashMap<>();
+    private final Map<BedWarsTeam, Location> bedLocations = new HashMap<>();
+    private final Map<BedWarsTeam, Location> teamSpawnLocations = new HashMap<>();
+    private final Map<Location, SpawnerType> spawnerLocations = new HashMap<>();
 
     @Setter
     private Location spectatorLocation = null;
 
     public void setBedLocation(@NonNull BedWarsTeam bedWarsTeam, @NonNull Location bedLocation) {
-        BED_LOCATIONS.put(bedWarsTeam, bedLocation);
+        bedLocations.put(bedWarsTeam, bedLocation);
     }
 
     public void setTeamSpawnLocation(@NonNull BedWarsTeam bedWarsTeam, @NonNull Location teamSpawnLocation) {
-        TEAM_SPAWN_LOCATIONS.put(bedWarsTeam, teamSpawnLocation);
+        teamSpawnLocations.put(bedWarsTeam, teamSpawnLocation);
     }
 
     public void addSpawner(@NonNull SpawnerType spawnerType, @NonNull Location spawnerLocation) {
         final Location resultLocation = spawnerLocation.add(0.00d, 1.00d, 0.00d);
-        SPAWNER_LOCATIONS.put(resultLocation, spawnerType);
+        spawnerLocations.put(resultLocation, spawnerType);
     }
 
     public void saveSetup() {
         final BedWarsConfig bedWarsConfig = BedWarsConfig.getInstance();
 
-        bedWarsConfig.setBedLocations(BED_LOCATIONS);
-        bedWarsConfig.setTeamSpawnLocations(TEAM_SPAWN_LOCATIONS);
-        bedWarsConfig.setSpawnerLocations(SPAWNER_LOCATIONS);
+        bedWarsConfig.setBedLocations(bedLocations);
+        bedWarsConfig.setTeamSpawnLocations(teamSpawnLocations);
+        bedWarsConfig.setSpawnerLocations(spawnerLocations);
 
         if (spectatorLocation != null) {
             bedWarsConfig.setSpectatorLocation(spectatorLocation);

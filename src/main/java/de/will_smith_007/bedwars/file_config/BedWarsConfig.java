@@ -18,8 +18,8 @@ public class BedWarsConfig {
 
     private static BedWarsConfig instance;
 
-    private final File BED_WARS_CONFIG;
-    private final YamlConfiguration YAML_CONFIGURATION;
+    private final File bedWarsConfig;
+    private final YamlConfiguration yamlConfiguration;
 
     public BedWarsConfig(@NonNull JavaPlugin javaPlugin) {
         instance = this;
@@ -27,15 +27,15 @@ public class BedWarsConfig {
 
         final File bedWarsConfigDirectory = new File(javaPlugin.getDataFolder().getPath());
         final String configName = "config.yml";
-        BED_WARS_CONFIG = new File(bedWarsConfigDirectory + "/" + configName);
+        bedWarsConfig = new File(bedWarsConfigDirectory + "/" + configName);
 
         if (bedWarsConfigDirectory.mkdirs()) {
             logger.info("BedWars configuration directory was created.");
         }
 
-        if (!BED_WARS_CONFIG.exists()) {
+        if (!bedWarsConfig.exists()) {
             try {
-                if (BED_WARS_CONFIG.createNewFile()) {
+                if (bedWarsConfig.createNewFile()) {
                     logger.info("BedWars configuration file was created.");
                 }
             } catch (IOException ioException) {
@@ -43,7 +43,7 @@ public class BedWarsConfig {
             }
         }
 
-        YAML_CONFIGURATION = YamlConfiguration.loadConfiguration(BED_WARS_CONFIG);
+        yamlConfiguration = YamlConfiguration.loadConfiguration(bedWarsConfig);
     }
 
     /**
@@ -52,7 +52,7 @@ public class BedWarsConfig {
      * @return A {@link List} which holds all configured world names.
      */
     public @NonNull List<String> getGameWorlds() {
-        final ConfigurationSection configurationSection = YAML_CONFIGURATION.getConfigurationSection("Maps");
+        final ConfigurationSection configurationSection = yamlConfiguration.getConfigurationSection("Maps");
         return (configurationSection == null ? new LinkedList<>() : configurationSection.getKeys(false).stream().toList());
     }
 
@@ -62,7 +62,7 @@ public class BedWarsConfig {
      * @return Name of configured waiting lobby world.
      */
     public String getLobbyWorld() {
-        return YAML_CONFIGURATION.getString("LobbyWorld");
+        return yamlConfiguration.getString("LobbyWorld");
     }
 
     /**
@@ -77,9 +77,9 @@ public class BedWarsConfig {
         final String sectionName = "Maps." + worldName + "." + bedWarsTeam.getTeamName() + ".Bed";
 
         return new Location(world,
-                YAML_CONFIGURATION.getInt(sectionName + ".X"),
-                YAML_CONFIGURATION.getInt(sectionName + ".Y"),
-                YAML_CONFIGURATION.getInt(sectionName + ".Z"));
+                yamlConfiguration.getInt(sectionName + ".X"),
+                yamlConfiguration.getInt(sectionName + ".Y"),
+                yamlConfiguration.getInt(sectionName + ".Z"));
     }
 
     /**
@@ -94,11 +94,11 @@ public class BedWarsConfig {
         final String sectionName = "Maps." + worldName + "." + bedWarsTeam.getTeamName() + ".Spawn";
 
         return new Location(world,
-                YAML_CONFIGURATION.getInt(sectionName + ".X"),
-                YAML_CONFIGURATION.getInt(sectionName + ".Y"),
-                YAML_CONFIGURATION.getInt(sectionName + ".Z"),
-                (float) YAML_CONFIGURATION.getDouble(sectionName + ".Yaw"),
-                (float) YAML_CONFIGURATION.getDouble(sectionName + ".Pitch"));
+                yamlConfiguration.getInt(sectionName + ".X"),
+                yamlConfiguration.getInt(sectionName + ".Y"),
+                yamlConfiguration.getInt(sectionName + ".Z"),
+                (float) yamlConfiguration.getDouble(sectionName + ".Yaw"),
+                (float) yamlConfiguration.getDouble(sectionName + ".Pitch"));
     }
 
     /**
@@ -115,15 +115,15 @@ public class BedWarsConfig {
         final Set<Location> spawnerLocations = new HashSet<>();
         final String spawnerTypeName = spawnerType.getName();
         final String sectionName = "Maps." + worldName + "." + spawnerTypeName + " spawners";
-        final ConfigurationSection configurationSection = YAML_CONFIGURATION.getConfigurationSection(sectionName);
+        final ConfigurationSection configurationSection = yamlConfiguration.getConfigurationSection(sectionName);
 
         if (configurationSection == null) return spawnerLocations;
 
         for (String key : configurationSection.getKeys(false)) {
             final Location spawnerLocation = new Location(world,
-                    YAML_CONFIGURATION.getInt(sectionName + "." + key + ".X"),
-                    YAML_CONFIGURATION.getInt(sectionName + "." + key + ".Y"),
-                    YAML_CONFIGURATION.getInt(sectionName + "." + key + ".Z"));
+                    yamlConfiguration.getInt(sectionName + "." + key + ".X"),
+                    yamlConfiguration.getInt(sectionName + "." + key + ".Y"),
+                    yamlConfiguration.getInt(sectionName + "." + key + ".Z"));
             spawnerLocations.add(spawnerLocation);
         }
 
@@ -141,11 +141,11 @@ public class BedWarsConfig {
         final String sectionName = "Maps." + worldName + ".Spectator";
 
         return new Location(world,
-                YAML_CONFIGURATION.getInt(sectionName + ".X"),
-                YAML_CONFIGURATION.getInt(sectionName + ".Y"),
-                YAML_CONFIGURATION.getInt(sectionName + ".Z"),
-                (float) YAML_CONFIGURATION.getDouble(sectionName + ".Yaw"),
-                (float) YAML_CONFIGURATION.getDouble(sectionName + ".Pitch"));
+                yamlConfiguration.getInt(sectionName + ".X"),
+                yamlConfiguration.getInt(sectionName + ".Y"),
+                yamlConfiguration.getInt(sectionName + ".Z"),
+                (float) yamlConfiguration.getDouble(sectionName + ".Yaw"),
+                (float) yamlConfiguration.getDouble(sectionName + ".Pitch"));
     }
 
     /**
@@ -156,7 +156,7 @@ public class BedWarsConfig {
     public void setLobbyWorld(@NonNull World world) {
         final String worldName = world.getName();
 
-        YAML_CONFIGURATION.set("LobbyWorld", worldName);
+        yamlConfiguration.set("LobbyWorld", worldName);
 
         saveConfig();
     }
@@ -173,9 +173,9 @@ public class BedWarsConfig {
             final String worldName = location.getWorld().getName();
             final String sectionName = "Maps." + worldName + "." + team.getTeamName() + ".Bed";
 
-            YAML_CONFIGURATION.set(sectionName + ".X", location.getBlockX());
-            YAML_CONFIGURATION.set(sectionName + ".Y", location.getBlockY());
-            YAML_CONFIGURATION.set(sectionName + ".Z", location.getBlockZ());
+            yamlConfiguration.set(sectionName + ".X", location.getBlockX());
+            yamlConfiguration.set(sectionName + ".Y", location.getBlockY());
+            yamlConfiguration.set(sectionName + ".Z", location.getBlockZ());
         });
 
         saveConfig();
@@ -193,11 +193,11 @@ public class BedWarsConfig {
             final String worldName = location.getWorld().getName();
             final String sectionName = "Maps." + worldName + "." + team.getTeamName() + ".Spawn";
 
-            YAML_CONFIGURATION.set(sectionName + ".X", location.getBlockX());
-            YAML_CONFIGURATION.set(sectionName + ".Y", location.getBlockY());
-            YAML_CONFIGURATION.set(sectionName + ".Z", location.getBlockZ());
-            YAML_CONFIGURATION.set(sectionName + ".Yaw", location.getYaw());
-            YAML_CONFIGURATION.set(sectionName + ".Pitch", location.getPitch());
+            yamlConfiguration.set(sectionName + ".X", location.getBlockX());
+            yamlConfiguration.set(sectionName + ".Y", location.getBlockY());
+            yamlConfiguration.set(sectionName + ".Z", location.getBlockZ());
+            yamlConfiguration.set(sectionName + ".Yaw", location.getYaw());
+            yamlConfiguration.set(sectionName + ".Pitch", location.getPitch());
         });
 
         saveConfig();
@@ -221,9 +221,9 @@ public class BedWarsConfig {
             final String spawnerTypeName = spawnerType.getName();
             final String sectionName = "Maps." + worldName + "." + spawnerTypeName + " spawners";
 
-            YAML_CONFIGURATION.set(sectionName + "." + currentSpawner + ".X", location.getBlockX());
-            YAML_CONFIGURATION.set(sectionName + "." + currentSpawner + ".Y", location.getBlockY());
-            YAML_CONFIGURATION.set(sectionName + "." + currentSpawner + ".Z", location.getBlockZ());
+            yamlConfiguration.set(sectionName + "." + currentSpawner + ".X", location.getBlockX());
+            yamlConfiguration.set(sectionName + "." + currentSpawner + ".Y", location.getBlockY());
+            yamlConfiguration.set(sectionName + "." + currentSpawner + ".Z", location.getBlockZ());
 
             currentSpawner++;
         }
@@ -240,11 +240,11 @@ public class BedWarsConfig {
         final String worldName = location.getWorld().getName();
         final String sectionName = "Maps." + worldName + ".Spectator";
 
-        YAML_CONFIGURATION.set(sectionName + ".X", location.getBlockX());
-        YAML_CONFIGURATION.set(sectionName + ".Y", location.getBlockY());
-        YAML_CONFIGURATION.set(sectionName + ".Z", location.getBlockZ());
-        YAML_CONFIGURATION.set(sectionName + ".Yaw", location.getYaw());
-        YAML_CONFIGURATION.set(sectionName + ".Pitch", location.getPitch());
+        yamlConfiguration.set(sectionName + ".X", location.getBlockX());
+        yamlConfiguration.set(sectionName + ".Y", location.getBlockY());
+        yamlConfiguration.set(sectionName + ".Z", location.getBlockZ());
+        yamlConfiguration.set(sectionName + ".Yaw", location.getYaw());
+        yamlConfiguration.set(sectionName + ".Pitch", location.getPitch());
 
         saveConfig();
     }
@@ -254,7 +254,7 @@ public class BedWarsConfig {
      */
     private void saveConfig() {
         try {
-            YAML_CONFIGURATION.save(BED_WARS_CONFIG);
+            yamlConfiguration.save(bedWarsConfig);
         } catch (IOException ioException) {
             ioException.printStackTrace();
         }

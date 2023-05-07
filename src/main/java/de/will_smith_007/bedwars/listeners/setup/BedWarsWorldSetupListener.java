@@ -20,26 +20,26 @@ import java.util.Map;
 
 public class BedWarsWorldSetupListener implements Listener {
 
-    private final Map<Player, BedWarsSetup> PLAYERS_IN_SETUP = BedWarsCommand.getPLAYERS_IN_SETUP();
-    private final JavaPlugin JAVA_PLUGIN;
-    private final BukkitScheduler BUKKIT_SCHEDULER = Bukkit.getScheduler();
+    private final Map<Player, BedWarsSetup> playersInSetup = BedWarsCommand.getPLAYERS_IN_SETUP();
+    private final JavaPlugin javaPlugin;
+    private final BukkitScheduler bukkitScheduler = Bukkit.getScheduler();
 
     public BedWarsWorldSetupListener(@NonNull JavaPlugin javaPlugin) {
-        JAVA_PLUGIN = javaPlugin;
+        this.javaPlugin = javaPlugin;
     }
 
     @EventHandler
     public void onAsyncChat(@NonNull AsyncChatEvent asyncChatEvent) {
         final Player player = asyncChatEvent.getPlayer();
-        if (!PLAYERS_IN_SETUP.containsKey(player)) return;
+        if (!playersInSetup.containsKey(player)) return;
 
-        final BedWarsSetup bedWarsSetup = PLAYERS_IN_SETUP.get(player);
+        final BedWarsSetup bedWarsSetup = playersInSetup.get(player);
         if (bedWarsSetup.getSetupAction() != BedWarsSetup.SetupAction.WORLD_SETUP) return;
 
         asyncChatEvent.setCancelled(true);
 
         final String message = ((TextComponent) asyncChatEvent.message()).content();
-        BUKKIT_SCHEDULER.runTask(JAVA_PLUGIN, () -> {
+        bukkitScheduler.runTask(javaPlugin, () -> {
             // Can't load worlds async
             final World world = Bukkit.createWorld(new WorldCreator(message));
 
@@ -53,7 +53,7 @@ public class BedWarsWorldSetupListener implements Listener {
             bedWarsSetup.setGameWorld(world);
             bedWarsSetup.setSetupAction(BedWarsSetup.SetupAction.BED_SETUP);
 
-            PLAYERS_IN_SETUP.put(player, bedWarsSetup);
+            playersInSetup.put(player, bedWarsSetup);
 
             player.sendPlainMessage(Message.PREFIX + "§aYou've successfully added the map §e" + message + "§a!");
             player.sendPlainMessage(Message.PREFIX + "§aNow set the team beds by using the command §e/bw setBed " +

@@ -12,10 +12,10 @@ import org.bukkit.inventory.ItemStack;
 
 public class InteractWithLobbyItemListener implements Listener {
 
-    private final IBedWarsInventory BED_WARS_INVENTORY;
+    private final IBedWarsInventory bedWarsInventory;
 
     public InteractWithLobbyItemListener(@NonNull IBedWarsInventory bedWarsInventory) {
-        BED_WARS_INVENTORY = bedWarsInventory;
+        this.bedWarsInventory = bedWarsInventory;
     }
 
     @EventHandler
@@ -32,6 +32,6 @@ public class InteractWithLobbyItemListener implements Listener {
         final Player player = playerInteractEvent.getPlayer();
         playerInteractEvent.setCancelled(true);
 
-        BED_WARS_INVENTORY.openInventory(player);
+        bedWarsInventory.openInventory(player);
     }
 }

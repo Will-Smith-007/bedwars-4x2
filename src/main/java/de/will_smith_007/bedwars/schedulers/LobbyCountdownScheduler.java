@@ -32,13 +32,13 @@ public class LobbyCountdownScheduler implements IScheduler, ICountdownOptions {
     @Getter
     private int countdown;
     private boolean isRunning = false;
-    private final JavaPlugin JAVA_PLUGIN;
-    private final ITeamHelper TEAM_HELPER;
-    private final GameAssets GAME_ASSETS;
-    private final ProtectionCountdownScheduler PROTECTION_COUNTDOWN_SCHEDULER;
-    private final SpawnerScheduler SPAWNER_SCHEDULER;
-    private final BedWarsConfig BEDWARS_CONFIG = BedWarsConfig.getInstance();
-    private final IScoreboardManager SCOREBOARD_MANAGER;
+    private final JavaPlugin javaPlugin;
+    private final ITeamHelper teamHelper;
+    private final GameAssets gameAssets;
+    private final ProtectionCountdownScheduler protectionCountdownScheduler;
+    private final SpawnerScheduler spawnerScheduler;
+    private final BedWarsConfig bedWarsConfig = BedWarsConfig.getInstance();
+    private final IScoreboardManager scoreboardManager;
 
     public LobbyCountdownScheduler(@NonNull JavaPlugin javaPlugin,
                                    @NonNull ITeamHelper teamHelper,
@@ -46,12 +46,12 @@ public class LobbyCountdownScheduler implements IScheduler, ICountdownOptions {
                                    @NonNull ProtectionCountdownScheduler protectionCountdownScheduler,
                                    @NonNull SpawnerScheduler spawnerScheduler,
                                    @NonNull IScoreboardManager scoreboardManager) {
-        JAVA_PLUGIN = javaPlugin;
-        TEAM_HELPER = teamHelper;
-        GAME_ASSETS = gameAssets;
-        PROTECTION_COUNTDOWN_SCHEDULER = protectionCountdownScheduler;
-        SPAWNER_SCHEDULER = spawnerScheduler;
-        SCOREBOARD_MANAGER = scoreboardManager;
+        this.javaPlugin = javaPlugin;
+        this.teamHelper = teamHelper;
+        this.gameAssets = gameAssets;
+        this.protectionCountdownScheduler = protectionCountdownScheduler;
+        this.spawnerScheduler = spawnerScheduler;
+        this.scoreboardManager = scoreboardManager;
     }
 
     @Override
@@ -71,7 +71,7 @@ public class LobbyCountdownScheduler implements IScheduler, ICountdownOptions {
         isRunning = true;
         countdown = 60;
 
-        taskID = BUKKIT_SCHEDULER.scheduleSyncRepeatingTask(JAVA_PLUGIN, () -> {
+        taskID = BUKKIT_SCHEDULER.scheduleSyncRepeatingTask(javaPlugin, () -> {
             final Collection<? extends Player> players = Bukkit.getOnlinePlayers();
 
             players.forEach(player -> player.setLevel(countdown));
@@ -84,9 +84,9 @@ public class LobbyCountdownScheduler implements IScheduler, ICountdownOptions {
                     }
                 }
                 case 0 -> {
-                    GAME_ASSETS.setGameState(GameState.PROTECTION);
+                    gameAssets.setGameState(GameState.PROTECTION);
 
-                    final List<String> gameWorlds = BEDWARS_CONFIG.getGameWorlds();
+                    final List<String> gameWorlds = bedWarsConfig.getGameWorlds();
                     if (gameWorlds.isEmpty()) {
                         stop();
                         return;
@@ -104,14 +104,14 @@ public class LobbyCountdownScheduler implements IScheduler, ICountdownOptions {
                     setGamerulesAndFreezeVillagers(gameWorld);
 
                     for (Player player : players) {
-                        final Optional<ITeam> optionalITeam = TEAM_HELPER.getTeam(player);
+                        final Optional<ITeam> optionalITeam = teamHelper.getTeam(player);
                         final boolean isTeamPresent = optionalITeam.isPresent();
                         final ITeam iTeam;
 
                         if (isTeamPresent) {
                             iTeam = optionalITeam.get();
                         } else {
-                            iTeam = TEAM_HELPER.selectBedWarsTeam(player);
+                            iTeam = teamHelper.selectBedWarsTeam(player);
                         }
 
                         final Location teamSpawnLocation = iTeam.getTeamSpawnLocation(gameWorld);
@@ -121,14 +121,14 @@ public class LobbyCountdownScheduler implements IScheduler, ICountdownOptions {
                         player.getInventory().clear();
                     }
 
-                    GAME_ASSETS.setGameConfiguration(new GameConfiguration(gameWorld));
+                    gameAssets.setGameConfiguration(new GameConfiguration(gameWorld));
 
                     for (Player player : players) {
-                        SCOREBOARD_MANAGER.setScoreboardAndTablist(player);
+                        scoreboardManager.setScoreboardAndTablist(player);
                     }
 
-                    PROTECTION_COUNTDOWN_SCHEDULER.start();
-                    SPAWNER_SCHEDULER.start();
+                    protectionCountdownScheduler.start();
+                    spawnerScheduler.start();
 
                     stop();
                 }

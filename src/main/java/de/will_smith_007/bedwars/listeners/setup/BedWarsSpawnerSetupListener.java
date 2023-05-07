@@ -16,17 +16,17 @@ import java.util.Map;
 
 public class BedWarsSpawnerSetupListener implements Listener {
 
-    final Map<Player, BedWarsSetup> PLAYERS_IN_SETUP = BedWarsCommand.getPLAYERS_IN_SETUP();
+    private final Map<Player, BedWarsSetup> playersInSetup = BedWarsCommand.getPLAYERS_IN_SETUP();
 
     @EventHandler
     public void onPlayerInteractEvent(@NonNull PlayerInteractEvent playerInteractEvent) {
         final Player player = playerInteractEvent.getPlayer();
 
-        if (!PLAYERS_IN_SETUP.containsKey(player)) return;
+        if (!playersInSetup.containsKey(player)) return;
         if (!playerInteractEvent.getAction().isRightClick()) return;
         if (playerInteractEvent.getHand() == EquipmentSlot.OFF_HAND) return;
 
-        final BedWarsSetup bedWarsSetup = PLAYERS_IN_SETUP.get(player);
+        final BedWarsSetup bedWarsSetup = playersInSetup.get(player);
         final BedWarsSetup.SetupAction setupAction = bedWarsSetup.getSetupAction();
         BedWarsSetup.SpawnerType spawnerType = null;
 
@@ -43,7 +43,7 @@ public class BedWarsSpawnerSetupListener implements Listener {
         final Location blockLocation = clickedBlock.getLocation();
 
         bedWarsSetup.addSpawner(spawnerType, blockLocation);
-        PLAYERS_IN_SETUP.put(player, bedWarsSetup);
+        playersInSetup.put(player, bedWarsSetup);
 
         player.sendPlainMessage(Message.PREFIX + "§aYou've added a§e spawner§a.");
     }

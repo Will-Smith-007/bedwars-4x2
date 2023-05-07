@@ -20,14 +20,14 @@ import org.bukkit.inventory.*;
 
 public class ShopListener implements Listener {
 
-    private final IBedWarsInventory BED_WARS_INVENTORY;
-    private final IShopParser SHOP_PARSER;
-    private final ShopItem[] SHOP_ITEMS = ShopItem.values();
+    private final IBedWarsInventory bedWarsInventory;
+    private final IShopParser shopParser;
+    private final ShopItem[] shopItems = ShopItem.values();
 
     public ShopListener(@NonNull IBedWarsInventory bedWarsInventory,
                         @NonNull IShopParser shopParser) {
-        BED_WARS_INVENTORY = bedWarsInventory;
-        SHOP_PARSER = shopParser;
+        this.bedWarsInventory = bedWarsInventory;
+        this.shopParser = shopParser;
     }
 
     @EventHandler
@@ -38,7 +38,7 @@ public class ShopListener implements Listener {
 
         final Player player = playerInteractAtEntityEvent.getPlayer();
 
-        BED_WARS_INVENTORY.openInventory(player);
+        bedWarsInventory.openInventory(player);
         playerInteractAtEntityEvent.setCancelled(true);
     }
 
@@ -53,7 +53,7 @@ public class ShopListener implements Listener {
 
         final String inventoryName = PlainTextComponentSerializer.plainText().serialize(inventoryView.title());
 
-        if (inventoryName.equals(BED_WARS_INVENTORY.getInventoryName())) {
+        if (inventoryName.equals(bedWarsInventory.getInventoryName())) {
             inventoryClickEvent.setCancelled(true);
 
             final ItemStack itemStack = inventoryClickEvent.getCurrentItem();
@@ -69,7 +69,7 @@ public class ShopListener implements Listener {
             if (!itemStack.hasItemMeta()) return;
 
             // Check if the clicked ItemStack is a shop item
-            SHOP_PARSER.parseShopItem(itemStack).ifPresentOrElse(shopItem -> {
+            shopParser.parseShopItem(itemStack).ifPresentOrElse(shopItem -> {
                 final ShopItem.CurrencyType currencyType = shopItem.getCurrencyType();
                 final String currencyTypeName = currencyType.getCurrencyName();
                 final int price = shopItem.getPrice();
@@ -143,7 +143,7 @@ public class ShopListener implements Listener {
                     playerInventory.addItem(shopItemStack);
                 }
             }, () -> {
-                final ShopItem.ShopCategory shopCategory = SHOP_PARSER.parseShopCategory(itemStack);
+                final ShopItem.ShopCategory shopCategory = shopParser.parseShopCategory(itemStack);
                 if (shopCategory == null) return;
 
                 for (int clearingIndex = 18; clearingIndex != 27; clearingIndex++) {
@@ -151,7 +151,7 @@ public class ShopListener implements Listener {
                 }
 
                 int currentSlot = 18;
-                for (ShopItem shopItem : SHOP_ITEMS) {
+                for (ShopItem shopItem : shopItems) {
                     if (shopItem.getShopCategory() != shopCategory) continue;
                     final int price = shopItem.getPrice();
                     final ShopItem.CurrencyType currencyType = shopItem.getCurrencyType();

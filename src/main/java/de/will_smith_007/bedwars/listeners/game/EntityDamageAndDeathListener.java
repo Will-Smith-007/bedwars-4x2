@@ -29,17 +29,17 @@ import java.util.Optional;
 
 public class EntityDamageAndDeathListener implements Listener, IDeathHandler {
 
-    private final GameAssets GAME_ASSETS;
-    private final ITeamHelper TEAM_HELPER;
-    private final BedWarsConfig BED_WARS_CONFIG = BedWarsConfig.getInstance();
-    private final IScoreboardManager SCOREBOARD_MANAGER;
+    private final GameAssets gameAssets;
+    private final ITeamHelper teamHelper;
+    private final BedWarsConfig bedWarsConfig = BedWarsConfig.getInstance();
+    private final IScoreboardManager scoreboardManager;
 
     public EntityDamageAndDeathListener(@NonNull GameAssets gameAssets,
                                         @NonNull ITeamHelper teamHelper,
                                         @NonNull IScoreboardManager scoreboardManager) {
-        GAME_ASSETS = gameAssets;
-        TEAM_HELPER = teamHelper;
-        SCOREBOARD_MANAGER = scoreboardManager;
+        this.gameAssets = gameAssets;
+        this.teamHelper = teamHelper;
+        this.scoreboardManager = scoreboardManager;
     }
 
     @EventHandler
@@ -69,7 +69,7 @@ public class EntityDamageAndDeathListener implements Listener, IDeathHandler {
     @EventHandler
     public void onEntityDamage(@NonNull EntityDamageEvent entityDamageEvent) {
         final Entity entity = entityDamageEvent.getEntity();
-        final GameState gameState = GAME_ASSETS.getGameState();
+        final GameState gameState = gameAssets.getGameState();
 
         if (!(entity instanceof final Player player)) return;
 
@@ -83,7 +83,7 @@ public class EntityDamageAndDeathListener implements Listener, IDeathHandler {
 
                 if (damage < playerHealth) return;
 
-                final Optional<ITeam> optionalITeam = TEAM_HELPER.getTeam(player);
+                final Optional<ITeam> optionalITeam = teamHelper.getTeam(player);
 
                 optionalITeam.ifPresent(iTeam -> handlePlayerDeath(player, iTeam));
             }
@@ -105,12 +105,12 @@ public class EntityDamageAndDeathListener implements Listener, IDeathHandler {
             player.teleport(teamSpawnLocation);
         } else {
             iTeam.removePlayer(player);
-            final Location spectatorLocation = BED_WARS_CONFIG.getSpectatorLocation(playerWorld);
+            final Location spectatorLocation = bedWarsConfig.getSpectatorLocation(playerWorld);
             player.setGameMode(GameMode.SPECTATOR);
             player.teleport(spectatorLocation);
-            TEAM_HELPER.handleTeamElimination(iTeam, players);
+            teamHelper.handleTeamElimination(iTeam, players);
 
-            players.forEach(SCOREBOARD_MANAGER::updateScoreboard);
+            players.forEach(scoreboardManager::updateScoreboard);
             //TODO: Hide from other game players
         }
     }

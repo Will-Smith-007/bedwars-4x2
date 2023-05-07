@@ -16,17 +16,17 @@ import java.util.Set;
 public class TeamBlue implements ITeam {
 
     private static TeamBlue instance;
-    private final Set<Player> TEAM_PLAYERS = new HashSet<>();
+    private final Set<Player> teamPlayers = new HashSet<>();
     private boolean bedExists = true;
 
     @Override
     public void addPlayer(@NonNull Player player) {
-        TEAM_PLAYERS.add(player);
+        teamPlayers.add(player);
     }
 
     @Override
     public void removePlayer(@NonNull Player player) {
-        TEAM_PLAYERS.remove(player);
+        teamPlayers.remove(player);
     }
 
     @Override
@@ -61,7 +61,7 @@ public class TeamBlue implements ITeam {
 
     @Override
     public @NonNull Set<Player> getPlayers() {
-        return TEAM_PLAYERS;
+        return teamPlayers;
     }
 
     public static @NonNull ITeam getInstance() {

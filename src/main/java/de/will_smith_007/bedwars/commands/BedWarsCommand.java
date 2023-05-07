@@ -22,11 +22,11 @@ public class BedWarsCommand implements TabExecutor {
 
     @Getter
     private static final Map<Player, BedWarsSetup> PLAYERS_IN_SETUP = new HashMap<>();
-    private final BedWarsConfig BED_WARS_CONFIG = BedWarsConfig.getInstance();
-    private final TeamParser TEAM_PARSER;
+    private final BedWarsConfig bedWarsConfig = BedWarsConfig.getInstance();
+    private final TeamParser teamParser;
 
     public BedWarsCommand(@NonNull TeamParser teamParser) {
-        TEAM_PARSER = teamParser;
+        this.teamParser = teamParser;
     }
 
     @Override
@@ -90,7 +90,7 @@ public class BedWarsCommand implements TabExecutor {
                     return true;
                 }
 
-                BED_WARS_CONFIG.setLobbyWorld(world);
+                bedWarsConfig.setLobbyWorld(world);
                 player.sendPlainMessage(Message.PREFIX + "§aYou've set the lobby world to §e" + worldName + "§a.");
             } else if (subCommand.equalsIgnoreCase("setBed")) {
                 if (!PLAYERS_IN_SETUP.containsKey(player)) {
@@ -108,7 +108,7 @@ public class BedWarsCommand implements TabExecutor {
 
                 final String teamName = args[1];
 
-                TEAM_PARSER.parseTeam(teamName).ifPresentOrElse(team -> {
+                teamParser.parseTeam(teamName).ifPresentOrElse(team -> {
                     final Block block = player.getTargetBlock(null, 5);
                     final Material material = block.getType();
 
@@ -140,7 +140,7 @@ public class BedWarsCommand implements TabExecutor {
 
                 final String teamName = args[1];
 
-                TEAM_PARSER.parseTeam(teamName).ifPresentOrElse(team -> {
+                teamParser.parseTeam(teamName).ifPresentOrElse(team -> {
                     final Location playerLocation = player.getLocation();
 
                     bedWarsSetup.setTeamSpawnLocation(team, playerLocation);
@@ -218,7 +218,8 @@ public class BedWarsCommand implements TabExecutor {
                             }
                         }
 
-                        default -> player.sendPlainMessage(Message.PREFIX + "§cYou currently can't go to the next step.");
+                        default ->
+                                player.sendPlainMessage(Message.PREFIX + "§cYou currently can't go to the next step.");
                     }
                 } else if (args[1].equalsIgnoreCase("finish")) {
                     if (!PLAYERS_IN_SETUP.containsKey(player)) {

@@ -12,10 +12,10 @@ import org.jetbrains.annotations.NotNull;
 
 public class StartCommand implements CommandExecutor {
 
-    private final ILobbyCountdownHelper LOBBY_COUNTDOWN_HELPER;
+    private final ILobbyCountdownHelper lobbyCountdownHelper;
 
     public StartCommand(@NonNull ILobbyCountdownHelper lobbyCountdownHelper) {
-        LOBBY_COUNTDOWN_HELPER = lobbyCountdownHelper;
+        this.lobbyCountdownHelper = lobbyCountdownHelper;
     }
 
     @Override
@@ -35,7 +35,7 @@ public class StartCommand implements CommandExecutor {
             return true;
         }
 
-        final boolean canShortenCountdown = LOBBY_COUNTDOWN_HELPER.shortenCountdown();
+        final boolean canShortenCountdown = lobbyCountdownHelper.shortenCountdown();
 
         if (!canShortenCountdown) {
             player.sendPlainMessage(Message.PREFIX + "§cYou can't shorten the§e lobby countdown§c.");

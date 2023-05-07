@@ -13,16 +13,16 @@ import java.util.Set;
 
 public class SpawnerProvider implements ISpawnerProvider {
 
-    private final GameAssets GAME_ASSETS;
+    private final GameAssets gameAssets;
 
     public SpawnerProvider(@NonNull GameAssets gameAssets) {
-        GAME_ASSETS = gameAssets;
+        this.gameAssets = gameAssets;
     }
 
     @Override
     public Set<Spawner> getSpawners(@NonNull BedWarsSetup.SpawnerType spawnerType) {
         final Set<Spawner> spawners = new HashSet<>();
-        final GameConfiguration gameConfiguration = GAME_ASSETS.getGameConfiguration();
+        final GameConfiguration gameConfiguration = gameAssets.getGameConfiguration();
 
         if (gameConfiguration == null) return spawners;
 

@@ -13,13 +13,13 @@ public class SpawnerScheduler implements IScheduler {
 
     private int taskID, ironCountdown, goldCountdown;
     private boolean isRunning = false;
-    private final JavaPlugin JAVA_PLUGIN;
-    private final ISpawnerProvider SPAWNER_PROVIDER;
+    private final JavaPlugin javaPlugin;
+    private final ISpawnerProvider spawnerProvider;
 
     public SpawnerScheduler(@NonNull JavaPlugin javaPlugin,
                             @NonNull ISpawnerProvider spawnerProvider) {
-        JAVA_PLUGIN = javaPlugin;
-        SPAWNER_PROVIDER = spawnerProvider;
+        this.javaPlugin = javaPlugin;
+        this.spawnerProvider = spawnerProvider;
     }
 
     @Override
@@ -30,11 +30,11 @@ public class SpawnerScheduler implements IScheduler {
         ironCountdown = 10;
         goldCountdown = 30;
 
-        final Set<Spawner> bronzeSpawners = SPAWNER_PROVIDER.getSpawners(BedWarsSetup.SpawnerType.BRONZE);
-        final Set<Spawner> ironSpawners = SPAWNER_PROVIDER.getSpawners(BedWarsSetup.SpawnerType.IRON);
-        final Set<Spawner> goldSpawners = SPAWNER_PROVIDER.getSpawners(BedWarsSetup.SpawnerType.GOLD);
+        final Set<Spawner> bronzeSpawners = spawnerProvider.getSpawners(BedWarsSetup.SpawnerType.BRONZE);
+        final Set<Spawner> ironSpawners = spawnerProvider.getSpawners(BedWarsSetup.SpawnerType.IRON);
+        final Set<Spawner> goldSpawners = spawnerProvider.getSpawners(BedWarsSetup.SpawnerType.GOLD);
 
-        taskID = BUKKIT_SCHEDULER.scheduleSyncRepeatingTask(JAVA_PLUGIN, () -> {
+        taskID = BUKKIT_SCHEDULER.scheduleSyncRepeatingTask(javaPlugin, () -> {
             ironCountdown--;
             goldCountdown--;
 

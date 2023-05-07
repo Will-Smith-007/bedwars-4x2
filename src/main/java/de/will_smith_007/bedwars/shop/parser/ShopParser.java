@@ -12,12 +12,12 @@ import java.util.Optional;
 
 public class ShopParser implements IShopParser {
 
-    private final ShopItem[] SHOP_ITEMS = ShopItem.values();
-    private final ShopItem.ShopCategory[] SHOP_CATEGORIES = ShopItem.ShopCategory.values();
+    private final ShopItem[] shopItems = ShopItem.values();
+    private final ShopItem.ShopCategory[] shopCategories = ShopItem.ShopCategory.values();
 
     @Override
     public Optional<ShopItem> parseShopItem(@NonNull ItemStack itemStack) {
-        for (ShopItem shopItem : SHOP_ITEMS) {
+        for (ShopItem shopItem : shopItems) {
             final ItemStack shopItemStack = shopItem.buildItem();
             if (itemStack.equals(shopItemStack)) return Optional.of(shopItem);
         }
@@ -33,7 +33,7 @@ public class ShopParser implements IShopParser {
 
         final String displayName = ((TextComponent) displayNameComponent).content();
 
-        for (ShopItem.ShopCategory shopCategory : SHOP_CATEGORIES) {
+        for (ShopItem.ShopCategory shopCategory : shopCategories) {
             final String categoryName = shopCategory.getCategoryName();
             if (categoryName.equals(displayName)) return shopCategory;
         }

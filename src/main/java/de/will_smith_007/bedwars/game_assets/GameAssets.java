@@ -22,5 +22,5 @@ public class GameAssets {
     @Setter
     private GameConfiguration gameConfiguration = null;
 
-    private final Set<Block> BUILDING_BLOCKS = new HashSet<>();
+    private final Set<Block> builtBlocks = new HashSet<>();
 }

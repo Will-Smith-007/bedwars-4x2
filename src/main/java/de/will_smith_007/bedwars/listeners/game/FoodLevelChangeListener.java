@@ -9,15 +9,15 @@ import org.bukkit.event.entity.FoodLevelChangeEvent;
 
 public class FoodLevelChangeListener implements Listener {
 
-    private final GameAssets GAME_ASSETS;
+    private final GameAssets gameAssets;
 
     public FoodLevelChangeListener(@NonNull GameAssets gameAssets) {
-        GAME_ASSETS = gameAssets;
+        this.gameAssets = gameAssets;
     }
 
     @EventHandler
     public void onFoodLevelChange(@NonNull FoodLevelChangeEvent foodLevelChangeEvent) {
-        final GameState gameState = GAME_ASSETS.getGameState();
+        final GameState gameState = gameAssets.getGameState();
         if (gameState == GameState.LOBBY) foodLevelChangeEvent.setCancelled(true);
     }
 }

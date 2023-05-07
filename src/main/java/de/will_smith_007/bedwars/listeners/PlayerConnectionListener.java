@@ -30,34 +30,34 @@ import java.util.Optional;
 
 public class PlayerConnectionListener implements Listener {
 
-    private final GameAssets GAME_ASSETS;
-    private final ITeamHelper TEAM_HELPER;
-    private final ILobbyCountdownHelper LOBBY_COUNTDOWN_HELPER;
-    private final IScoreboardManager SCOREBOARD_MANAGER;
-    private final BedWarsConfig BED_WARS_CONFIG = BedWarsConfig.getInstance();
+    private final GameAssets gameAssets;
+    private final ITeamHelper teamHelper;
+    private final ILobbyCountdownHelper lobbyCountdownHelper;
+    private final IScoreboardManager scoreboardManager;
+    private final BedWarsConfig bedWarsConfig = BedWarsConfig.getInstance();
 
     public PlayerConnectionListener(@NonNull GameAssets gameAssets,
                                     @NonNull ILobbyCountdownHelper lobbyCountdownHelper,
                                     @NonNull ITeamHelper teamHelper,
                                     @NonNull IScoreboardManager scoreboardManager) {
-        GAME_ASSETS = gameAssets;
-        LOBBY_COUNTDOWN_HELPER = lobbyCountdownHelper;
-        TEAM_HELPER = teamHelper;
-        SCOREBOARD_MANAGER = scoreboardManager;
+        this.gameAssets = gameAssets;
+        this.lobbyCountdownHelper = lobbyCountdownHelper;
+        this.teamHelper = teamHelper;
+        this.scoreboardManager = scoreboardManager;
     }
 
     @EventHandler
     public void onPlayerJoin(@NonNull PlayerJoinEvent playerJoinEvent) {
         final Player player = playerJoinEvent.getPlayer();
-        final GameState gameState = GAME_ASSETS.getGameState();
+        final GameState gameState = gameAssets.getGameState();
 
-        SCOREBOARD_MANAGER.setScoreboardAndTablist(player);
+        scoreboardManager.setScoreboardAndTablist(player);
 
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
             if (onlinePlayer.getName().equals(player.getName())) continue;
 
-            SCOREBOARD_MANAGER.updateScoreboard(onlinePlayer);
-            SCOREBOARD_MANAGER.setTablist(onlinePlayer);
+            scoreboardManager.updateScoreboard(onlinePlayer);
+            scoreboardManager.setTablist(onlinePlayer);
         }
 
         switch (gameState) {
@@ -66,7 +66,7 @@ public class PlayerConnectionListener implements Listener {
                         "§7 joined the game!"));
                 player.setGameMode(GameMode.ADVENTURE);
 
-                final String lobbyWorldName = BED_WARS_CONFIG.getLobbyWorld();
+                final String lobbyWorldName = bedWarsConfig.getLobbyWorld();
                 if (lobbyWorldName == null) return;
                 final World world = Bukkit.createWorld(new WorldCreator(lobbyWorldName));
                 if (world == null) return;
@@ -76,7 +76,7 @@ public class PlayerConnectionListener implements Listener {
                 final ItemStack teamSelectorItem = LobbyItem.TEAM_SELECTOR.buildItem();
                 player.getInventory().setItem(0, teamSelectorItem);
 
-                LOBBY_COUNTDOWN_HELPER.startCountdownIfEnoughPlayers();
+                lobbyCountdownHelper.startCountdownIfEnoughPlayers();
             }
             case PROTECTION, INGAME, ENDING -> {
                 playerJoinEvent.joinMessage(null);
@@ -89,7 +89,7 @@ public class PlayerConnectionListener implements Listener {
     @EventHandler
     public void onPlayerQuit(@NonNull PlayerQuitEvent playerQuitEvent) {
         final Player player = playerQuitEvent.getPlayer();
-        final GameState gameState = GAME_ASSETS.getGameState();
+        final GameState gameState = gameAssets.getGameState();
 
         switch (gameState) {
             case LOBBY -> {
@@ -99,10 +99,10 @@ public class PlayerConnectionListener implements Listener {
                 final Collection<? extends Player> players = Bukkit.getOnlinePlayers();
                 final int playerSize = (players.size() - 1);
 
-                LOBBY_COUNTDOWN_HELPER.cancelCountdownIfNotEnoughPlayers(playerSize);
-                LOBBY_COUNTDOWN_HELPER.cancelCountdownIfNotEnoughTeams();
+                lobbyCountdownHelper.cancelCountdownIfNotEnoughPlayers(playerSize);
+                lobbyCountdownHelper.cancelCountdownIfNotEnoughTeams();
 
-                final Optional<ITeam> optionalITeam = TEAM_HELPER.getTeam(player);
+                final Optional<ITeam> optionalITeam = teamHelper.getTeam(player);
                 optionalITeam.ifPresent(team -> team.removePlayer(player));
             }
             case INGAME, PROTECTION -> {
@@ -119,10 +119,10 @@ public class PlayerConnectionListener implements Listener {
                         .append(Component.text(playerName).color(textColor))
                         .append(Component.text("§7 left the game")));
 
-                final Optional<ITeam> optionalITeam = TEAM_HELPER.getTeam(player);
+                final Optional<ITeam> optionalITeam = teamHelper.getTeam(player);
                 optionalITeam.ifPresent(team -> {
                     team.removePlayer(player);
-                    TEAM_HELPER.handleTeamElimination(team, Bukkit.getOnlinePlayers());
+                    teamHelper.handleTeamElimination(team, Bukkit.getOnlinePlayers());
                 });
             }
             case ENDING -> playerQuitEvent.quitMessage(null);
@@ -131,8 +131,8 @@ public class PlayerConnectionListener implements Listener {
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
             if (onlinePlayer.getName().equals(player.getName())) continue;
 
-            SCOREBOARD_MANAGER.updateScoreboard(onlinePlayer);
-            SCOREBOARD_MANAGER.setTablist(onlinePlayer);
+            scoreboardManager.updateScoreboard(onlinePlayer);
+            scoreboardManager.setTablist(onlinePlayer);
         }
     }
 }

@@ -15,10 +15,10 @@ public class EndingCountdownScheduler implements IScheduler, ICountdownOptions {
 
     private int taskID, countdown;
     private boolean isRunning = false;
-    private final JavaPlugin JAVA_PLUGIN;
+    private final JavaPlugin javaPlugin;
 
     public EndingCountdownScheduler(@NonNull JavaPlugin javaPlugin) {
-        JAVA_PLUGIN = javaPlugin;
+        this.javaPlugin = javaPlugin;
     }
 
     @Override
@@ -38,7 +38,7 @@ public class EndingCountdownScheduler implements IScheduler, ICountdownOptions {
         isRunning = true;
         countdown = 10;
 
-        taskID = BUKKIT_SCHEDULER.scheduleSyncRepeatingTask(JAVA_PLUGIN, () -> {
+        taskID = BUKKIT_SCHEDULER.scheduleSyncRepeatingTask(javaPlugin, () -> {
 
             switch (countdown) {
                 case 10, 5, 3, 2, 1 -> {

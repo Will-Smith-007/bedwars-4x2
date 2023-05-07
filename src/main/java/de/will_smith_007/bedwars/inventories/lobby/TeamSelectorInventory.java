@@ -18,20 +18,20 @@ import java.util.Collection;
 
 public class TeamSelectorInventory implements IBedWarsInventory {
 
-    private final String INVENTORY_NAME = "Team selection";
-    private final BedWarsTeam[] BED_WARS_TEAM = BedWarsTeam.values();
+    private final String inventoryName = "Team selection";
+    private final BedWarsTeam[] bedWarsTeams = BedWarsTeam.values();
 
     @Override
     public void openInventory(@NonNull Player player) {
         final Inventory inventory = Bukkit.createInventory(null, 9,
-                Component.text(INVENTORY_NAME, NamedTextColor.AQUA));
+                Component.text(inventoryName, NamedTextColor.AQUA));
 
         int currentSlot = 0;
         final Collection<? extends Player> players = Bukkit.getOnlinePlayers();
         final int playerSize = players.size();
-        final int maxPlayersPerTeam = (int) Math.ceil((double) playerSize / BED_WARS_TEAM.length);
+        final int maxPlayersPerTeam = (int) Math.ceil((double) playerSize / bedWarsTeams.length);
 
-        for (BedWarsTeam bedWarsTeam : BED_WARS_TEAM) {
+        for (BedWarsTeam bedWarsTeam : bedWarsTeams) {
             final ITeam iTeam = bedWarsTeam.getTeam();
             final int teamPlayers = iTeam.getPlayers().size();
             final String teamName = iTeam.getTeamName();
@@ -64,6 +64,6 @@ public class TeamSelectorInventory implements IBedWarsInventory {
 
     @Override
     public @NonNull String getInventoryName() {
-        return INVENTORY_NAME;
+        return inventoryName;
     }
 }

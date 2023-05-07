@@ -15,10 +15,10 @@ public class ProtectionCountdownScheduler implements IScheduler, ICountdownOptio
 
     private int taskID, countdown;
     private boolean isRunning = false;
-    private final JavaPlugin JAVA_PLUGIN;
+    private final JavaPlugin javaPlugin;
 
     public ProtectionCountdownScheduler(@NonNull JavaPlugin javaPlugin) {
-        JAVA_PLUGIN = javaPlugin;
+        this.javaPlugin = javaPlugin;
     }
 
     @Override
@@ -38,7 +38,7 @@ public class ProtectionCountdownScheduler implements IScheduler, ICountdownOptio
         isRunning = true;
         countdown = 10;
 
-        taskID = BUKKIT_SCHEDULER.scheduleSyncRepeatingTask(JAVA_PLUGIN, () -> {
+        taskID = BUKKIT_SCHEDULER.scheduleSyncRepeatingTask(javaPlugin, () -> {
             final Collection<? extends Player> players = Bukkit.getOnlinePlayers();
 
             switch (countdown) {

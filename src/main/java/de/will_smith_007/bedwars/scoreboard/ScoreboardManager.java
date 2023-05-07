@@ -22,14 +22,14 @@ import java.util.Optional;
 
 public class ScoreboardManager implements IScoreboardManager {
 
-    private final GameAssets GAME_ASSETS;
-    private final ITeamHelper TEAM_HELPER;
-    private final BedWarsTeam[] BED_WARS_TEAM = BedWarsTeam.values();
+    private final GameAssets gameAssets;
+    private final ITeamHelper teamHelper;
+    private final BedWarsTeam[] bedWarsTeams = BedWarsTeam.values();
 
     public ScoreboardManager(@NonNull GameAssets gameAssets,
                              @NonNull ITeamHelper teamHelper) {
-        GAME_ASSETS = gameAssets;
-        TEAM_HELPER = teamHelper;
+        this.gameAssets = gameAssets;
+        this.teamHelper = teamHelper;
     }
 
     @Override
@@ -41,7 +41,7 @@ public class ScoreboardManager implements IScoreboardManager {
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
         objective.displayName(Component.text("BEDWARS", NamedTextColor.WHITE));
 
-        final GameConfiguration gameConfiguration = GAME_ASSETS.getGameConfiguration();
+        final GameConfiguration gameConfiguration = gameAssets.getGameConfiguration();
 
         {
             final Team team = scoreboard.registerNewTeam("x14");
@@ -74,7 +74,7 @@ public class ScoreboardManager implements IScoreboardManager {
             objective.getScore("§3").setScore(11);
         }
 
-        final GameState gameState = GAME_ASSETS.getGameState();
+        final GameState gameState = gameAssets.getGameState();
 
         switch (gameState) {
             case LOBBY -> {
@@ -156,8 +156,8 @@ public class ScoreboardManager implements IScoreboardManager {
     @Override
     public void updateScoreboard(@NonNull Player player) {
         final Scoreboard scoreboard = player.getScoreboard();
-        final GameConfiguration gameConfiguration = GAME_ASSETS.getGameConfiguration();
-        final GameState gameState = GAME_ASSETS.getGameState();
+        final GameConfiguration gameConfiguration = gameAssets.getGameConfiguration();
+        final GameState gameState = gameAssets.getGameState();
 
         if (scoreboard.getObjective(DisplaySlot.SIDEBAR) == null) createScoreboard(player);
 
@@ -174,7 +174,7 @@ public class ScoreboardManager implements IScoreboardManager {
 
         if (gameState == GameState.LOBBY) return;
 
-        for (BedWarsTeam bedWarsTeam : BED_WARS_TEAM) {
+        for (BedWarsTeam bedWarsTeam : bedWarsTeams) {
             final ITeam iTeam = bedWarsTeam.getTeam();
             final String bedExistsSymbol = (iTeam.bedExists() ? "§a✔ " : "§c✘ ");
             final String teamName = iTeam.getTeamName().replace("Team ", "");
@@ -218,7 +218,7 @@ public class ScoreboardManager implements IScoreboardManager {
         final Team finalPlayerTeam = playerTeam;
 
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-            final Optional<ITeam> optionalITeam = TEAM_HELPER.getTeam(onlinePlayer);
+            final Optional<ITeam> optionalITeam = teamHelper.getTeam(onlinePlayer);
             final String playerName = onlinePlayer.getName();
             optionalITeam.ifPresentOrElse(team -> {
                 if (team instanceof TeamBlue) blueTeam.addEntry(playerName);

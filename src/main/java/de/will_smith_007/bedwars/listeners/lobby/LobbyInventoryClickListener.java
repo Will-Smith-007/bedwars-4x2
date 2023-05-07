@@ -29,28 +29,28 @@ import java.util.Optional;
 
 public class LobbyInventoryClickListener implements Listener {
 
-    private final GameAssets GAME_ASSETS;
-    private final TeamParser TEAM_PARSER;
-    private final TeamSelectorInventory TEAM_SELECTOR_INVENTORY;
-    private final IScoreboardManager SCOREBOARD_MANAGER;
-    private final ITeamHelper TEAM_HELPER;
-    private final BedWarsTeam[] BED_WARS_TEAMS = BedWarsTeam.values();
+    private final GameAssets gameAssets;
+    private final TeamParser teamParser;
+    private final TeamSelectorInventory teamSelectorInventory;
+    private final IScoreboardManager scoreboardManager;
+    private final ITeamHelper teamHelper;
+    private final BedWarsTeam[] bedWarsTeams = BedWarsTeam.values();
 
     public LobbyInventoryClickListener(@NonNull GameAssets gameAssets,
                                        @NonNull TeamParser teamParser,
                                        @NonNull TeamSelectorInventory teamSelectorInventory,
                                        @NonNull IScoreboardManager scoreboardManager,
                                        @NonNull ITeamHelper teamHelper) {
-        GAME_ASSETS = gameAssets;
-        TEAM_PARSER = teamParser;
-        TEAM_SELECTOR_INVENTORY = teamSelectorInventory;
-        SCOREBOARD_MANAGER = scoreboardManager;
-        TEAM_HELPER = teamHelper;
+        this.gameAssets = gameAssets;
+        this.teamParser = teamParser;
+        this.teamSelectorInventory = teamSelectorInventory;
+        this.scoreboardManager = scoreboardManager;
+        this.teamHelper = teamHelper;
     }
 
     @EventHandler
     public void onLobbyInventoryClick(@NonNull InventoryClickEvent inventoryClickEvent) {
-        final GameState gameState = GAME_ASSETS.getGameState();
+        final GameState gameState = gameAssets.getGameState();
         if (gameState != GameState.LOBBY) return;
 
         final Player player = (Player) inventoryClickEvent.getWhoClicked();
@@ -73,7 +73,7 @@ public class LobbyInventoryClickListener implements Listener {
         final InventoryView inventoryView = inventoryClickEvent.getView();
         final String inventoryName = PlainTextComponentSerializer.plainText().serialize(inventoryView.title());
 
-        if (inventoryName.equals(TEAM_SELECTOR_INVENTORY.getInventoryName())) {
+        if (inventoryName.equals(teamSelectorInventory.getInventoryName())) {
             final ItemMeta itemMeta = currentItem.getItemMeta();
             final Component displayNameComponent = itemMeta.displayName();
 
@@ -81,14 +81,14 @@ public class LobbyInventoryClickListener implements Listener {
 
             final String displayName = PlainTextComponentSerializer.plainText().serialize(displayNameComponent);
 
-            TEAM_PARSER.parseTeam(displayName).ifPresent(bedWarsTeam -> {
+            teamParser.parseTeam(displayName).ifPresent(bedWarsTeam -> {
                 final ITeam iTeam = bedWarsTeam.getTeam();
                 final int teamPlayers = iTeam.getPlayers().size();
                 final String teamName = iTeam.getTeamName();
 
                 final Collection<? extends Player> players = Bukkit.getOnlinePlayers();
                 final int playerSize = players.size();
-                final int maxPlayersPerTeam = (int) Math.ceil((double) playerSize / BED_WARS_TEAMS.length);
+                final int maxPlayersPerTeam = (int) Math.ceil((double) playerSize / bedWarsTeams.length);
 
                 if (teamPlayers >= maxPlayersPerTeam) {
                     player.sendPlainMessage(Message.PREFIX + "§cYou can't join " + teamName + "§c, because it is full.");
@@ -96,7 +96,7 @@ public class LobbyInventoryClickListener implements Listener {
                     return;
                 }
 
-                final Optional<ITeam> optionalITeam = TEAM_HELPER.getTeam(player);
+                final Optional<ITeam> optionalITeam = teamHelper.getTeam(player);
                 optionalITeam.ifPresent(team -> team.removePlayer(player));
 
                 iTeam.addPlayer(player);
@@ -106,7 +106,7 @@ public class LobbyInventoryClickListener implements Listener {
                 player.closeInventory();
 
                 for (Player onlinePlayer : players) {
-                    SCOREBOARD_MANAGER.setTablist(onlinePlayer);
+                    scoreboardManager.setTablist(onlinePlayer);
                 }
             });
         }

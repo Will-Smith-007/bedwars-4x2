@@ -16,14 +16,14 @@ import java.util.*;
 
 public class TeamHelper implements ITeamHelper {
 
-    private final GameAssets GAME_ASSETS;
-    private final EndingCountdownScheduler ENDING_COUNTDOWN_SCHEDULER;
-    private final BedWarsConfig BED_WARS_CONFIG = BedWarsConfig.getInstance();
+    private final GameAssets gameAssets;
+    private final EndingCountdownScheduler endingCountdownScheduler;
+    private final BedWarsConfig bedWarsConfig = BedWarsConfig.getInstance();
 
     public TeamHelper(@NonNull GameAssets gameAssets,
                       @NonNull EndingCountdownScheduler endingCountdownScheduler) {
-        GAME_ASSETS = gameAssets;
-        ENDING_COUNTDOWN_SCHEDULER = endingCountdownScheduler;
+        this.gameAssets = gameAssets;
+        this.endingCountdownScheduler = endingCountdownScheduler;
     }
 
     @Override
@@ -49,7 +49,7 @@ public class TeamHelper implements ITeamHelper {
         if (aliveTeams.size() == 1) {
             final ITeam winningTeam = aliveTeams.get(0);
             final String winningTeamName = winningTeam.getTeamName();
-            final String lobbyWorldName = BED_WARS_CONFIG.getLobbyWorld();
+            final String lobbyWorldName = bedWarsConfig.getLobbyWorld();
 
             if (lobbyWorldName == null) return;
 
@@ -58,7 +58,7 @@ public class TeamHelper implements ITeamHelper {
             if (lobbyWorld == null) return;
 
             final Location lobbySpawnLocation = lobbyWorld.getSpawnLocation();
-            GAME_ASSETS.setGameState(GameState.ENDING);
+            gameAssets.setGameState(GameState.ENDING);
 
             for (Player player : players) {
                 player.teleport(lobbySpawnLocation);
@@ -71,7 +71,7 @@ public class TeamHelper implements ITeamHelper {
                 player.playSound(playerLocation, Sound.ENTITY_FIREWORK_ROCKET_LARGE_BLAST, 1.0f, 1.0f);
             }
 
-            ENDING_COUNTDOWN_SCHEDULER.start();
+            endingCountdownScheduler.start();
         }
     }
 

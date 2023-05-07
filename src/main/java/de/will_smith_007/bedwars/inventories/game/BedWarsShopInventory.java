@@ -14,18 +14,18 @@ import org.bukkit.inventory.ItemStack;
 
 public class BedWarsShopInventory implements IBedWarsInventory {
 
-    private final String INVENTORY_NAME = "Shop";
-    private final ShopItem[] SHOP_ITEMS = ShopItem.values();
-    private final ShopItem.ShopCategory[] SHOP_CATEGORIES = ShopItem.ShopCategory.values();
+    private final String inventoryName = "Shop";
+    private final ShopItem[] shopItems = ShopItem.values();
+    private final ShopItem.ShopCategory[] shopCategories = ShopItem.ShopCategory.values();
 
     @Override
     public void openInventory(@NonNull Player player) {
         final Inventory inventory = Bukkit.createInventory(null, 9 * 3,
-                Component.text(INVENTORY_NAME, NamedTextColor.YELLOW));
+                Component.text(inventoryName, NamedTextColor.YELLOW));
 
         int currentSlot = 0;
 
-        for (ShopItem.ShopCategory shopCategory : SHOP_CATEGORIES) {
+        for (ShopItem.ShopCategory shopCategory : shopCategories) {
             final Material material = shopCategory.getMaterial();
             final ItemStack itemStack = new ItemStack(material);
             final String categoryName = shopCategory.getCategoryName();
@@ -47,7 +47,7 @@ public class BedWarsShopInventory implements IBedWarsInventory {
 
         currentSlot = 18;
 
-        for (ShopItem shopItem : SHOP_ITEMS) {
+        for (ShopItem shopItem : shopItems) {
             final ShopItem.ShopCategory shopCategory = shopItem.getShopCategory();
             if (shopCategory != ShopItem.ShopCategory.BLOCKS) continue;
             final ShopItem.CurrencyType currencyType = shopItem.getCurrencyType();
@@ -69,6 +69,6 @@ public class BedWarsShopInventory implements IBedWarsInventory {
 
     @Override
     public @NonNull String getInventoryName() {
-        return INVENTORY_NAME;
+        return inventoryName;
     }
 }
