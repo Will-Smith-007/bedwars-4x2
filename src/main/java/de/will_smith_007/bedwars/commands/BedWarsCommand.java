@@ -161,7 +161,7 @@ public class BedWarsCommand implements TabExecutor {
 
                     switch (setupAction) {
                         case BED_SETUP -> {
-                            if (bedWarsSetup.getBED_LOCATIONS().size() < 4) {
+                            if (bedWarsSetup.getBedLocations().size() < 4) {
                                 player.sendPlainMessage(Message.PREFIX + "§cYou've not set all§e bed locations§c.");
                                 return true;
                             }
@@ -175,7 +175,7 @@ public class BedWarsCommand implements TabExecutor {
                         }
 
                         case TEAM_SPAWN_SETUP -> {
-                            if (bedWarsSetup.getTEAM_SPAWN_LOCATIONS().size() < 4) {
+                            if (bedWarsSetup.getTeamSpawnLocations().size() < 4) {
                                 player.sendPlainMessage(Message.PREFIX + "§cYou've not set all§e team spawn§c " +
                                         "locations.");
                                 return true;
@@ -189,7 +189,7 @@ public class BedWarsCommand implements TabExecutor {
                         }
 
                         case BRONZE_SPAWNER_SETUP, IRON_SPAWNER_SETUP, GOLD_SPAWNER_SETUP -> {
-                            if (bedWarsSetup.getSPAWNER_LOCATIONS().isEmpty()) {
+                            if (bedWarsSetup.getSpawnerLocations().isEmpty()) {
                                 player.sendPlainMessage(Message.PREFIX + "§cYou haven't set a single spawner.");
                                 return true;
                             }
