@@ -19,6 +19,11 @@ import org.bukkit.scoreboard.Team;
 
 import java.util.Set;
 
+/**
+ * This {@link Listener} handles the {@link AsyncChatEvent} to provide the possibility of chatting
+ * in the game or in the lobby with other players. There's also the possibility for the player to chat
+ * with other teams.
+ */
 public class GameChatListener implements Listener {
 
     private final GameAssets gameAssets;

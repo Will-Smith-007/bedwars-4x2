@@ -28,6 +28,10 @@ import org.bukkit.scoreboard.Team;
 import java.util.Collection;
 import java.util.Optional;
 
+/**
+ * This {@link Listener} handles the {@link PlayerDeathEvent} and the general {@link EntityDamageEvent}.
+ * Also handles the team elimination on player death.
+ */
 public class EntityDamageAndDeathListener implements Listener, IDeathHandler {
 
     private final GameAssets gameAssets;
@@ -46,6 +50,7 @@ public class EntityDamageAndDeathListener implements Listener, IDeathHandler {
         this.bedWarsConfig = bedWarsConfig;
     }
 
+    // Handles death caused only by void
     @EventHandler
     public void onPlayerDeath(@NonNull PlayerDeathEvent playerDeathEvent) {
         playerDeathEvent.setCancelled(true);

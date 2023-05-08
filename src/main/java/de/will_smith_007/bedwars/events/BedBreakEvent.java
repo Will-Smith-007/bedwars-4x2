@@ -9,6 +9,9 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * This {@link Event} is triggered whenever a team bed was destroyed.
+ */
 public class BedBreakEvent extends Event {
 
     private static final HandlerList HANDLER_LIST = new HandlerList();

@@ -7,6 +7,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntitySpawnEvent;
 
+/**
+ * This {@link Listener} handles the {@link EntitySpawnEvent} to deny almost all entity spawns
+ * except villagers, dropped items, arrows, ender pearls and fishing hooks.
+ */
 public class EntitySpawnListener implements Listener {
 
     @EventHandler

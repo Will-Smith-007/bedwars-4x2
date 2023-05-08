@@ -20,6 +20,16 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.inventory.*;
 
+/**
+ * This {@link Listener} handles the {@link PlayerInteractAtEntityEvent} and the {@link InventoryClickEvent}
+ * to provide the possibility of villager shopping in the game.
+ * <br><br>
+ * On Shift click, the player buys all possible items from the clicked {@link ItemStack} as long
+ * he has enough currency items.
+ * <br><br>
+ * On single click, the player buys only one item from the clicked {@link ItemStack} as long
+ * he has enough currency items.
+ */
 public class ShopListener implements Listener {
 
     private final IBedWarsInventory bedWarsInventory;
@@ -110,9 +120,14 @@ public class ShopListener implements Listener {
                         return;
                     }*/
 
+                    // Creates the currency ItemStack for removing with the amount of price
                     final ItemStack currencyItemStack = new ItemStack(currencyMaterial);
                     currencyItemStack.setAmount((itemsActuallyBuy * pricePerItem));
 
+                    /*
+                     Creates the ItemStack which the player wants to buy and sets the amount to the
+                     maximum of possible purchasable items. Also sets the shop lore to null.
+                     */
                     shopItemStack.setAmount(itemsActuallyBuy);
                     shopItemStack.editMeta(itemMeta -> itemMeta.lore(null));
 
@@ -137,22 +152,27 @@ public class ShopListener implements Listener {
                         return;
                     }
 
+                    // Creates the currency ItemStack with the amount of price
                     final ItemStack currencyItemStack = new ItemStack(currencyMaterial);
                     currencyItemStack.setAmount(price);
 
+                    // Sets the shop item lore to null
                     shopItemStack.editMeta(itemMeta -> itemMeta.lore(null));
 
                     playerInventory.removeItem(currencyItemStack);
                     playerInventory.addItem(shopItemStack);
                 }
             }, () -> {
+                // If the clicked ItemStack isn't a shop item, then it must be a shop category
                 final ShopItem.ShopCategory shopCategory = shopParser.parseShopCategory(itemStack);
                 if (shopCategory == null) return;
 
+                // Clears the slots of the shop item row in the shop inventory
                 for (int clearingIndex = 18; clearingIndex != 27; clearingIndex++) {
                     clickedInventory.setItem(clearingIndex, null);
                 }
 
+                // Sets all available shop categories in the inventory
                 int currentSlot = 18;
                 for (ShopItem shopItem : shopItems) {
                     if (shopItem.getShopCategory() != shopCategory) continue;
@@ -174,6 +194,16 @@ public class ShopListener implements Listener {
         }
     }
 
+    /**
+     * Gets the current free space in the {@link PlayerInventory} with available stack size
+     * from the {@link ShopItem}.
+     *
+     * @param player   Player which should be checked.
+     * @param shopItem ShopItem which the player wants to buy.
+     * @return The amount of free space in the {@link PlayerInventory}.
+     * One free slot = 64 free space added with {@link ItemStack#getMaxStackSize()} (ShopItem) subtracted
+     * by {@link ItemStack#getAmount()} (Inventory content).
+     */
     private int getFreeInventorySpace(@NonNull Player player,
                                       @NonNull ItemStack shopItem) {
         final ItemStack[] inventoryContents = player.getInventory().getStorageContents();
@@ -190,6 +220,14 @@ public class ShopListener implements Listener {
         return freeSpace;
     }
 
+    /**
+     * Gets the current amount of the currency {@link ItemStack} with the specified currency {@link Material}
+     * in a {@link PlayerInventory}.
+     *
+     * @param player           Player which should be checked.
+     * @param currencyMaterial Material of currency which is needed for a {@link ShopItem}.
+     * @return The amount of currency {@link ItemStack}s. One stack = 64 currency items.
+     */
     private int getCurrencyItems(@NonNull Player player, @NonNull Material currencyMaterial) {
         final ItemStack[] inventoryContents = player.getInventory().getContents();
         int itemCount = 0;

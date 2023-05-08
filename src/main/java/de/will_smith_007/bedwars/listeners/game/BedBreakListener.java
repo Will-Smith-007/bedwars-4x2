@@ -19,6 +19,9 @@ import org.bukkit.scoreboard.Team;
 
 import java.util.Collection;
 
+/**
+ * This {@link Listener} handles the custom event {@link BedBreakEvent}.
+ */
 public class BedBreakListener implements Listener {
 
     private final IScoreboardManager scoreboardManager;

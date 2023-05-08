@@ -49,6 +49,10 @@ public class BlockBuildingListener implements Listener {
         final GameState gameState = gameAssets.getGameState();
         final Player player = blockPlaceEvent.getPlayer();
 
+        /*
+         If the game state is ingame or protection then the block is going to be added to the built blocks set.
+         Otherwise, the event is going to be cancelled if the player isn't a server operator.
+         */
         switch (gameState) {
             case INGAME, PROTECTION -> {
                 final Block block = blockPlaceEvent.getBlockPlaced();
@@ -71,6 +75,7 @@ public class BlockBuildingListener implements Listener {
                 final Block block = blockBreakEvent.getBlock();
                 final Material material = block.getType();
 
+                // Checks if the block is a team bed, then throw a new BedBreakEvent
                 if (material.toString().endsWith("BED")) {
                     blockBreakEvent.setCancelled(false);
 
@@ -98,6 +103,10 @@ public class BlockBuildingListener implements Listener {
                     return;
                 }
 
+                /*
+                 If it's not a bed and the block isn't in the block built set, then cancel.
+                 Otherwise, remove the block from this set and allow this event.
+                 */
                 if (!builtBlocks.contains(block)) {
                     blockBreakEvent.setCancelled(true);
                     return;

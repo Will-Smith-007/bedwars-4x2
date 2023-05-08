@@ -5,6 +5,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.ExplosionPrimeEvent;
 
+/**
+ * This {@link Listener} handles the {@link ExplosionPrimeEvent} to deny all possible explosions.
+ */
 public class ExplosionPrimeListener implements Listener {
 
     @EventHandler

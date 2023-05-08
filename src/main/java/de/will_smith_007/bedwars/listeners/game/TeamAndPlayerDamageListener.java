@@ -27,6 +27,10 @@ import org.bukkit.scoreboard.Team;
 import java.util.Collection;
 import java.util.Optional;
 
+/**
+ * This {@link Listener} handles the {@link EntityDamageByEntityEvent} to handle player deaths
+ * caused by an entity such as an arrow or another player.
+ */
 public class TeamAndPlayerDamageListener implements Listener, IDeathHandler {
 
     private final GameAssets gameAssets;
@@ -50,6 +54,7 @@ public class TeamAndPlayerDamageListener implements Listener, IDeathHandler {
     public void onTeamDamage(@NonNull EntityDamageByEntityEvent entityDamageByEntityEvent) {
         final GameState gameState = gameAssets.getGameState();
 
+        // If the game state is lobby, then this event must be cancelled
         if (gameState == GameState.LOBBY) {
             entityDamageByEntityEvent.setCancelled(true);
             return;
@@ -58,19 +63,23 @@ public class TeamAndPlayerDamageListener implements Listener, IDeathHandler {
         final Entity damageEntity = entityDamageByEntityEvent.getDamager();
         final Entity victimEntity = entityDamageByEntityEvent.getEntity();
 
+        // If the victim entity is a villager, then this event must be cancelled
         if (victimEntity.getType() == EntityType.VILLAGER) {
             entityDamageByEntityEvent.setCancelled(true);
             return;
         }
 
+        // If player damages another player
         if (damageEntity instanceof final Player damagePlayer &&
                 victimEntity instanceof final Player victimPlayer) {
 
+            // If damage player is in spectator mode (dead), then cancel the event
             if (damagePlayer.getGameMode() == GameMode.SPECTATOR) {
                 entityDamageByEntityEvent.setCancelled(true);
                 return;
             }
 
+            // Gets the teams of the players which are involved in this event
             final Optional<ITeam> optionalDamagePlayerTeam = teamHelper.getTeam(damagePlayer);
             final Optional<ITeam> optionalVictimPlayerTeam = teamHelper.getTeam(victimPlayer);
 
@@ -79,12 +88,14 @@ public class TeamAndPlayerDamageListener implements Listener, IDeathHandler {
             final ITeam damagePlayerITeam = optionalDamagePlayerTeam.get();
             final ITeam victimPlayerITeam = optionalVictimPlayerTeam.get();
 
+            // If these players are in the same team, cancel the event
             if (damagePlayerITeam == victimPlayerITeam) {
                 entityDamageByEntityEvent.setCancelled(true);
             } else {
                 final double dealtDamage = entityDamageByEntityEvent.getDamage();
                 final double victimHealth = victimPlayer.getHealth();
 
+                // If damage isn't causing death, return
                 if (dealtDamage < victimHealth) return;
 
                 entityDamageByEntityEvent.setDamage(0.00d);
@@ -102,6 +113,7 @@ public class TeamAndPlayerDamageListener implements Listener, IDeathHandler {
                 final String victimPlayerName = victimPlayer.getName();
                 final String damagePlayerName = damagePlayer.getName();
 
+                // Player kill handling
                 damagePlayer.sendMessage(Component.text(Message.PREFIX + "§aYou killed ")
                         .append(Component.text(victimPlayerName).color(victimTextColor))
                         .append(Component.text("§a.")));
@@ -116,6 +128,7 @@ public class TeamAndPlayerDamageListener implements Listener, IDeathHandler {
 
                 entityDamageByEntityEvent.setCancelled(true);
             }
+            // If the damage entity is an arrow
         } else if (damageEntity instanceof final Arrow arrow) {
             handleArrowDamage(arrow, victimEntity, entityDamageByEntityEvent);
         }
@@ -146,12 +159,21 @@ public class TeamAndPlayerDamageListener implements Listener, IDeathHandler {
         }
     }
 
+    /**
+     * Handles the damage caused by an arrow entity.
+     *
+     * @param arrow                     Arrow entity which was shot.
+     * @param victimEntity              Entity which was hit by the arrow entity.
+     * @param entityDamageByEntityEvent The event which was called on entity by entity damage event.
+     */
     private void handleArrowDamage(@NonNull Arrow arrow,
                                    @NonNull Entity victimEntity,
                                    @NonNull EntityDamageByEntityEvent entityDamageByEntityEvent) {
         final ProjectileSource projectileSource = arrow.getShooter();
 
+        // If the shooter wasn't a player, return
         if (!(projectileSource instanceof final Player damagePlayer)) return;
+        // If the entity which was hit by the arrow wasn't a player, return
         if (!(victimEntity instanceof final Player victimPlayer)) {
             entityDamageByEntityEvent.setCancelled(true);
             return;
@@ -160,8 +182,10 @@ public class TeamAndPlayerDamageListener implements Listener, IDeathHandler {
         final double dealtDamage = entityDamageByEntityEvent.getDamage();
         final double victimHealth = victimPlayer.getHealth();
 
+        // If the arrow isn't causing a death, return
         if (dealtDamage < victimHealth) return;
 
+        // Gets the teams of the players which are involved in this event
         final Optional<ITeam> optionalDamagePlayerTeam = teamHelper.getTeam(damagePlayer);
         final Optional<ITeam> optionalVictimPlayerTeam = teamHelper.getTeam(victimPlayer);
 
@@ -170,11 +194,13 @@ public class TeamAndPlayerDamageListener implements Listener, IDeathHandler {
         final ITeam damagePlayerITeam = optionalDamagePlayerTeam.get();
         final ITeam victimPlayerITeam = optionalVictimPlayerTeam.get();
 
+        // If the players are in the same team, cancel the event and return
         if (damagePlayerITeam == victimPlayerITeam) {
             entityDamageByEntityEvent.setCancelled(true);
             return;
         }
 
+        // Set the damage to 0 because player can spawn with health lower than 20
         entityDamageByEntityEvent.setDamage(0.00d);
         handlePlayerDeath(victimPlayer, victimPlayerITeam);
 
@@ -190,6 +216,7 @@ public class TeamAndPlayerDamageListener implements Listener, IDeathHandler {
         final String victimPlayerName = victimPlayer.getName();
         final String damagePlayerName = damagePlayer.getName();
 
+        // Player kill handling caused by an arrow entity
         damagePlayer.sendMessage(Component.text(Message.PREFIX + "§aYou killed ")
                 .append(Component.text(victimPlayerName).color(victimTextColor))
                 .append(Component.text("§a.")));
@@ -202,6 +229,7 @@ public class TeamAndPlayerDamageListener implements Listener, IDeathHandler {
                     .append(Component.text(damagePlayerName).color(damageTextColor)));
         }
 
+        // Event must be cancelled after this, otherwise the player gets knockback after respawn
         entityDamageByEntityEvent.setCancelled(true);
     }
 }

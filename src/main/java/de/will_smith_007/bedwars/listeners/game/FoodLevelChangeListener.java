@@ -8,6 +8,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 
+/**
+ * This {@link Listener} handles the {@link FoodLevelChangeEvent} to deny food level change
+ * only if the {@link GameState} is currently set to {@link GameState#LOBBY}.
+ */
 public class FoodLevelChangeListener implements Listener {
 
     private final GameAssets gameAssets;
