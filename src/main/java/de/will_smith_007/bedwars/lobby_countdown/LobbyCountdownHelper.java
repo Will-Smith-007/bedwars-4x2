@@ -1,5 +1,7 @@
 package de.will_smith_007.bedwars.lobby_countdown;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import de.will_smith_007.bedwars.lobby_countdown.interfaces.ILobbyCountdownHelper;
 import de.will_smith_007.bedwars.schedulers.LobbyCountdownScheduler;
 import de.will_smith_007.bedwars.teams.enums.BedWarsTeam;
@@ -10,11 +12,13 @@ import org.bukkit.entity.Player;
 
 import java.util.Collection;
 
+@Singleton
 public class LobbyCountdownHelper implements ILobbyCountdownHelper {
 
     private final LobbyCountdownScheduler lobbyCountdownScheduler;
     private final BedWarsTeam[] bedWarsTeams = BedWarsTeam.values();
 
+    @Inject
     public LobbyCountdownHelper(@NonNull LobbyCountdownScheduler lobbyCountdownScheduler) {
         this.lobbyCountdownScheduler = lobbyCountdownScheduler;
     }

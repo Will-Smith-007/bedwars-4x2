@@ -1,5 +1,6 @@
 package de.will_smith_007.bedwars.listeners.game;
 
+import com.google.inject.Inject;
 import de.will_smith_007.bedwars.enums.GameState;
 import de.will_smith_007.bedwars.enums.Message;
 import de.will_smith_007.bedwars.file_config.BedWarsConfig;
@@ -31,15 +32,18 @@ public class EntityDamageAndDeathListener implements Listener, IDeathHandler {
 
     private final GameAssets gameAssets;
     private final ITeamHelper teamHelper;
-    private final BedWarsConfig bedWarsConfig = BedWarsConfig.getInstance();
+    private final BedWarsConfig bedWarsConfig;
     private final IScoreboardManager scoreboardManager;
 
+    @Inject
     public EntityDamageAndDeathListener(@NonNull GameAssets gameAssets,
                                         @NonNull ITeamHelper teamHelper,
-                                        @NonNull IScoreboardManager scoreboardManager) {
+                                        @NonNull IScoreboardManager scoreboardManager,
+                                        @NonNull BedWarsConfig bedWarsConfig) {
         this.gameAssets = gameAssets;
         this.teamHelper = teamHelper;
         this.scoreboardManager = scoreboardManager;
+        this.bedWarsConfig = bedWarsConfig;
     }
 
     @EventHandler
@@ -101,7 +105,7 @@ public class EntityDamageAndDeathListener implements Listener, IDeathHandler {
         if (bedExists) {
             player.setHealth(20.0d);
             player.setFoodLevel(20);
-            final Location teamSpawnLocation = iTeam.getTeamSpawnLocation(playerWorld);
+            final Location teamSpawnLocation = iTeam.getTeamSpawnLocation(playerWorld, bedWarsConfig);
             player.teleport(teamSpawnLocation);
         } else {
             iTeam.removePlayer(player);

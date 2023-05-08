@@ -1,5 +1,6 @@
 package de.will_smith_007.bedwars.listeners.game;
 
+import com.google.inject.Inject;
 import de.will_smith_007.bedwars.enums.GameState;
 import de.will_smith_007.bedwars.game_assets.GameAssets;
 import lombok.NonNull;
@@ -11,6 +12,7 @@ public class FoodLevelChangeListener implements Listener {
 
     private final GameAssets gameAssets;
 
+    @Inject
     public FoodLevelChangeListener(@NonNull GameAssets gameAssets) {
         this.gameAssets = gameAssets;
     }

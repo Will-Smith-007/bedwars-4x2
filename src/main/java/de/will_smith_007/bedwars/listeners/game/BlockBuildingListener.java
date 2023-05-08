@@ -1,5 +1,6 @@
 package de.will_smith_007.bedwars.listeners.game;
 
+import com.google.inject.Inject;
 import de.will_smith_007.bedwars.enums.GameState;
 import de.will_smith_007.bedwars.enums.Message;
 import de.will_smith_007.bedwars.events.BedBreakEvent;
@@ -31,13 +32,16 @@ public class BlockBuildingListener implements Listener {
     private final PluginManager pluginManager = Bukkit.getPluginManager();
     private final ITeamHelper teamHelper;
     private final BedWarsTeam[] bedWarsTeams = BedWarsTeam.values();
-    private final BedWarsConfig bedWarsConfig = BedWarsConfig.getInstance();
+    private final BedWarsConfig bedWarsConfig;
 
+    @Inject
     public BlockBuildingListener(@NonNull GameAssets gameAssets,
-                                 @NonNull ITeamHelper teamHelper) {
+                                 @NonNull ITeamHelper teamHelper,
+                                 @NonNull BedWarsConfig bedWarsConfig) {
         this.gameAssets = gameAssets;
         this.builtBlocks = gameAssets.getBuiltBlocks();
         this.teamHelper = teamHelper;
+        this.bedWarsConfig = bedWarsConfig;
     }
 
     @EventHandler

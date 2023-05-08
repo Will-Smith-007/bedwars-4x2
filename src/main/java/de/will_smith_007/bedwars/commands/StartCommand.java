@@ -1,5 +1,6 @@
 package de.will_smith_007.bedwars.commands;
 
+import com.google.inject.Inject;
 import de.will_smith_007.bedwars.enums.Message;
 import de.will_smith_007.bedwars.lobby_countdown.interfaces.ILobbyCountdownHelper;
 import lombok.NonNull;
@@ -14,6 +15,7 @@ public class StartCommand implements CommandExecutor {
 
     private final ILobbyCountdownHelper lobbyCountdownHelper;
 
+    @Inject
     public StartCommand(@NonNull ILobbyCountdownHelper lobbyCountdownHelper) {
         this.lobbyCountdownHelper = lobbyCountdownHelper;
     }

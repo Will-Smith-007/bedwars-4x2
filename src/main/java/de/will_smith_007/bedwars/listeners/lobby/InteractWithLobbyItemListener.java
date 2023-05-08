@@ -1,5 +1,7 @@
 package de.will_smith_007.bedwars.listeners.lobby;
 
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import de.will_smith_007.bedwars.inventories.interfaces.IBedWarsInventory;
 import de.will_smith_007.bedwars.lobby.enums.LobbyItem;
 import lombok.NonNull;
@@ -14,7 +16,8 @@ public class InteractWithLobbyItemListener implements Listener {
 
     private final IBedWarsInventory bedWarsInventory;
 
-    public InteractWithLobbyItemListener(@NonNull IBedWarsInventory bedWarsInventory) {
+    @Inject
+    public InteractWithLobbyItemListener(@NonNull @Named("TeamSelectorInventory") IBedWarsInventory bedWarsInventory) {
         this.bedWarsInventory = bedWarsInventory;
     }
 

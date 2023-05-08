@@ -1,5 +1,6 @@
 package de.will_smith_007.bedwars.listeners.setup;
 
+import com.google.inject.Inject;
 import de.will_smith_007.bedwars.commands.BedWarsCommand;
 import de.will_smith_007.bedwars.enums.Message;
 import de.will_smith_007.bedwars.setup.BedWarsSetup;
@@ -24,6 +25,7 @@ public class BedWarsWorldSetupListener implements Listener {
     private final JavaPlugin javaPlugin;
     private final BukkitScheduler bukkitScheduler = Bukkit.getScheduler();
 
+    @Inject
     public BedWarsWorldSetupListener(@NonNull JavaPlugin javaPlugin) {
         this.javaPlugin = javaPlugin;
     }

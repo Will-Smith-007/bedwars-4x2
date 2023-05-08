@@ -1,11 +1,10 @@
 package de.will_smith_007.bedwars;
 
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import de.will_smith_007.bedwars.commands.BedWarsCommand;
 import de.will_smith_007.bedwars.commands.StartCommand;
-import de.will_smith_007.bedwars.file_config.BedWarsConfig;
-import de.will_smith_007.bedwars.game_assets.GameAssets;
-import de.will_smith_007.bedwars.inventories.game.BedWarsShopInventory;
-import de.will_smith_007.bedwars.inventories.lobby.TeamSelectorInventory;
+import de.will_smith_007.bedwars.dependency_injection.InjectionModule;
 import de.will_smith_007.bedwars.listeners.PlayerConnectionListener;
 import de.will_smith_007.bedwars.listeners.game.*;
 import de.will_smith_007.bedwars.listeners.lobby.InteractWithLobbyItemListener;
@@ -13,16 +12,6 @@ import de.will_smith_007.bedwars.listeners.lobby.LobbyInventoryClickListener;
 import de.will_smith_007.bedwars.listeners.lobby.PlayerDropItemListener;
 import de.will_smith_007.bedwars.listeners.setup.BedWarsSpawnerSetupListener;
 import de.will_smith_007.bedwars.listeners.setup.BedWarsWorldSetupListener;
-import de.will_smith_007.bedwars.lobby_countdown.LobbyCountdownHelper;
-import de.will_smith_007.bedwars.schedulers.EndingCountdownScheduler;
-import de.will_smith_007.bedwars.schedulers.LobbyCountdownScheduler;
-import de.will_smith_007.bedwars.schedulers.ProtectionCountdownScheduler;
-import de.will_smith_007.bedwars.schedulers.SpawnerScheduler;
-import de.will_smith_007.bedwars.scoreboard.ScoreboardManager;
-import de.will_smith_007.bedwars.shop.parser.ShopParser;
-import de.will_smith_007.bedwars.spawner.provider.SpawnerProvider;
-import de.will_smith_007.bedwars.teams.helper.TeamHelper;
-import de.will_smith_007.bedwars.teams.parser.TeamParser;
 import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandExecutor;
@@ -35,55 +24,30 @@ public class BedWars extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        new BedWarsConfig(this);
-        final GameAssets gameAssets = new GameAssets();
-        final TeamParser teamParser = new TeamParser();
-        final ShopParser shopParser = new ShopParser();
-
-        final SpawnerProvider spawnerProvider = new SpawnerProvider(gameAssets);
-
-        final ProtectionCountdownScheduler protectionCountdownScheduler = new ProtectionCountdownScheduler(this);
-        final SpawnerScheduler spawnerScheduler = new SpawnerScheduler(this, spawnerProvider);
-        final EndingCountdownScheduler endingCountdownScheduler = new EndingCountdownScheduler(this);
-
-        final TeamHelper teamHelper = new TeamHelper(gameAssets, endingCountdownScheduler);
-        final ScoreboardManager scoreboardManager = new ScoreboardManager(gameAssets, teamHelper);
-
-        final LobbyCountdownScheduler lobbyCountdownScheduler = new LobbyCountdownScheduler(
-                this,
-                teamHelper,
-                gameAssets,
-                protectionCountdownScheduler,
-                spawnerScheduler,
-                scoreboardManager
-        );
-
-        final LobbyCountdownHelper lobbyCountdownHelper = new LobbyCountdownHelper(lobbyCountdownScheduler);
-        final BedWarsShopInventory bedWarsShopInventory = new BedWarsShopInventory();
-        final TeamSelectorInventory teamSelectorInventory = new TeamSelectorInventory();
+        final Injector injector = Guice.createInjector(new InjectionModule(this));
 
         // Command registration
-        registerCommand("bedwars", new BedWarsCommand(teamParser));
-        registerCommand("start", new StartCommand(lobbyCountdownHelper));
+        registerCommand("bedwars", injector.getInstance(BedWarsCommand.class));
+        registerCommand("start", injector.getInstance(StartCommand.class));
 
         // Listener registration
         registerListeners(
-                new PlayerConnectionListener(gameAssets, lobbyCountdownHelper, teamHelper, scoreboardManager),
+                injector.getInstance(PlayerConnectionListener.class),
                 new BedWarsSpawnerSetupListener(),
-                new BedWarsWorldSetupListener(this),
-                new BlockBuildingListener(gameAssets, teamHelper),
-                new TeamAndPlayerDamageListener(gameAssets, teamHelper, scoreboardManager),
+                injector.getInstance(BedWarsWorldSetupListener.class),
+                injector.getInstance(BlockBuildingListener.class),
+                injector.getInstance(TeamAndPlayerDamageListener.class),
                 new EntitySpawnListener(),
-                new BedBreakListener(scoreboardManager),
+                injector.getInstance(BedBreakListener.class),
                 new BlockSpreadAndBurnListener(),
                 new ExplosionPrimeListener(),
-                new FoodLevelChangeListener(gameAssets),
-                new EntityDamageAndDeathListener(gameAssets, teamHelper, scoreboardManager),
-                new ShopListener(bedWarsShopInventory, shopParser),
+                injector.getInstance(FoodLevelChangeListener.class),
+                injector.getInstance(EntityDamageAndDeathListener.class),
+                injector.getInstance(ShopListener.class),
                 new PlayerDropItemListener(),
-                new InteractWithLobbyItemListener(teamSelectorInventory),
-                new GameChatListener(gameAssets, teamHelper),
-                new LobbyInventoryClickListener(gameAssets, teamParser, teamSelectorInventory, scoreboardManager, teamHelper)
+                injector.getInstance(InteractWithLobbyItemListener.class),
+                injector.getInstance(GameChatListener.class),
+                injector.getInstance(LobbyInventoryClickListener.class)
         );
 
         getLogger().info("BedWars was started.");

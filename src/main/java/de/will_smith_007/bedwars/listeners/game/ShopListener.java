@@ -1,5 +1,7 @@
 package de.will_smith_007.bedwars.listeners.game;
 
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import de.will_smith_007.bedwars.enums.Message;
 import de.will_smith_007.bedwars.inventories.interfaces.IBedWarsInventory;
 import de.will_smith_007.bedwars.shop.enums.ShopItem;
@@ -24,7 +26,8 @@ public class ShopListener implements Listener {
     private final IShopParser shopParser;
     private final ShopItem[] shopItems = ShopItem.values();
 
-    public ShopListener(@NonNull IBedWarsInventory bedWarsInventory,
+    @Inject
+    public ShopListener(@NonNull @Named("ShopInventory") IBedWarsInventory bedWarsInventory,
                         @NonNull IShopParser shopParser) {
         this.bedWarsInventory = bedWarsInventory;
         this.shopParser = shopParser;

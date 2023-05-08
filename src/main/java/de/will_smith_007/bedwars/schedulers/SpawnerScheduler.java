@@ -1,5 +1,7 @@
 package de.will_smith_007.bedwars.schedulers;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import de.will_smith_007.bedwars.schedulers.interfaces.IScheduler;
 import de.will_smith_007.bedwars.setup.BedWarsSetup;
 import de.will_smith_007.bedwars.spawner.Spawner;
@@ -9,6 +11,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Set;
 
+@Singleton
 public class SpawnerScheduler implements IScheduler {
 
     private int taskID, ironCountdown, goldCountdown;
@@ -16,6 +19,7 @@ public class SpawnerScheduler implements IScheduler {
     private final JavaPlugin javaPlugin;
     private final ISpawnerProvider spawnerProvider;
 
+    @Inject
     public SpawnerScheduler(@NonNull JavaPlugin javaPlugin,
                             @NonNull ISpawnerProvider spawnerProvider) {
         this.javaPlugin = javaPlugin;

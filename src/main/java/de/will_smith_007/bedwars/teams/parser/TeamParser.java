@@ -1,10 +1,12 @@
 package de.will_smith_007.bedwars.teams.parser;
 
+import com.google.inject.Singleton;
 import de.will_smith_007.bedwars.teams.enums.BedWarsTeam;
 import lombok.NonNull;
 
 import java.util.Optional;
 
+@Singleton
 public class TeamParser {
 
     public Optional<BedWarsTeam> parseTeam(@NonNull String teamName) {

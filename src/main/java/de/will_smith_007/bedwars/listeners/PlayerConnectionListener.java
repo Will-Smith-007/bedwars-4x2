@@ -1,5 +1,6 @@
 package de.will_smith_007.bedwars.listeners;
 
+import com.google.inject.Inject;
 import de.will_smith_007.bedwars.enums.GameState;
 import de.will_smith_007.bedwars.enums.Message;
 import de.will_smith_007.bedwars.file_config.BedWarsConfig;
@@ -34,16 +35,19 @@ public class PlayerConnectionListener implements Listener {
     private final ITeamHelper teamHelper;
     private final ILobbyCountdownHelper lobbyCountdownHelper;
     private final IScoreboardManager scoreboardManager;
-    private final BedWarsConfig bedWarsConfig = BedWarsConfig.getInstance();
+    private final BedWarsConfig bedWarsConfig;
 
+    @Inject
     public PlayerConnectionListener(@NonNull GameAssets gameAssets,
                                     @NonNull ILobbyCountdownHelper lobbyCountdownHelper,
                                     @NonNull ITeamHelper teamHelper,
-                                    @NonNull IScoreboardManager scoreboardManager) {
+                                    @NonNull IScoreboardManager scoreboardManager,
+                                    @NonNull BedWarsConfig bedWarsConfig) {
         this.gameAssets = gameAssets;
         this.lobbyCountdownHelper = lobbyCountdownHelper;
         this.teamHelper = teamHelper;
         this.scoreboardManager = scoreboardManager;
+        this.bedWarsConfig = bedWarsConfig;
     }
 
     @EventHandler

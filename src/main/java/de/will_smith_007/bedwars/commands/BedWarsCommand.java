@@ -1,5 +1,6 @@
 package de.will_smith_007.bedwars.commands;
 
+import com.google.inject.Inject;
 import de.will_smith_007.bedwars.enums.Message;
 import de.will_smith_007.bedwars.file_config.BedWarsConfig;
 import de.will_smith_007.bedwars.setup.BedWarsSetup;
@@ -22,11 +23,14 @@ public class BedWarsCommand implements TabExecutor {
 
     @Getter
     private static final Map<Player, BedWarsSetup> PLAYERS_IN_SETUP = new HashMap<>();
-    private final BedWarsConfig bedWarsConfig = BedWarsConfig.getInstance();
+    private final BedWarsConfig bedWarsConfig;
     private final TeamParser teamParser;
 
-    public BedWarsCommand(@NonNull TeamParser teamParser) {
+    @Inject
+    public BedWarsCommand(@NonNull TeamParser teamParser,
+                          @NonNull BedWarsConfig bedWarsConfig) {
         this.teamParser = teamParser;
+        this.bedWarsConfig = bedWarsConfig;
     }
 
     @Override
@@ -49,7 +53,7 @@ public class BedWarsCommand implements TabExecutor {
                     return true;
                 }
 
-                final BedWarsSetup bedWarsSetup = new BedWarsSetup();
+                final BedWarsSetup bedWarsSetup = new BedWarsSetup(bedWarsConfig);
                 bedWarsSetup.setSetupAction(BedWarsSetup.SetupAction.WORLD_SETUP);
 
                 PLAYERS_IN_SETUP.put(player, bedWarsSetup);

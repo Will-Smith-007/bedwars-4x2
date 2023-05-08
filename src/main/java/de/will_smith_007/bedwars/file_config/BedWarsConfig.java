@@ -1,5 +1,7 @@
 package de.will_smith_007.bedwars.file_config;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import de.will_smith_007.bedwars.setup.BedWarsSetup;
 import de.will_smith_007.bedwars.teams.enums.BedWarsTeam;
 import lombok.NonNull;
@@ -14,15 +16,14 @@ import java.io.IOException;
 import java.util.*;
 import java.util.logging.Logger;
 
+@Singleton
 public class BedWarsConfig {
-
-    private static BedWarsConfig instance;
 
     private final File bedWarsConfig;
     private final YamlConfiguration yamlConfiguration;
 
+    @Inject
     public BedWarsConfig(@NonNull JavaPlugin javaPlugin) {
-        instance = this;
         final Logger logger = javaPlugin.getLogger();
 
         final File bedWarsConfigDirectory = new File(javaPlugin.getDataFolder().getPath());
@@ -258,15 +259,5 @@ public class BedWarsConfig {
         } catch (IOException ioException) {
             ioException.printStackTrace();
         }
-    }
-
-    /**
-     * Gets the instance of the {@link BedWarsConfig}.
-     * It should be only one instance of this class.
-     *
-     * @return The instance of {@link BedWarsConfig}.
-     */
-    public static @NonNull BedWarsConfig getInstance() {
-        return instance;
     }
 }

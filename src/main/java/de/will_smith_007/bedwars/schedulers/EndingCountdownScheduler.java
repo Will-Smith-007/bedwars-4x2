@@ -1,5 +1,7 @@
 package de.will_smith_007.bedwars.schedulers;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import de.will_smith_007.bedwars.enums.Message;
 import de.will_smith_007.bedwars.schedulers.interfaces.ICountdownOptions;
 import de.will_smith_007.bedwars.schedulers.interfaces.IScheduler;
@@ -11,12 +13,14 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Collection;
 
+@Singleton
 public class EndingCountdownScheduler implements IScheduler, ICountdownOptions {
 
     private int taskID, countdown;
     private boolean isRunning = false;
     private final JavaPlugin javaPlugin;
 
+    @Inject
     public EndingCountdownScheduler(@NonNull JavaPlugin javaPlugin) {
         this.javaPlugin = javaPlugin;
     }

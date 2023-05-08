@@ -1,5 +1,6 @@
 package de.will_smith_007.bedwars.inventories.lobby;
 
+import com.google.inject.Singleton;
 import de.will_smith_007.bedwars.inventories.interfaces.IBedWarsInventory;
 import de.will_smith_007.bedwars.teams.enums.BedWarsTeam;
 import de.will_smith_007.bedwars.teams.interfaces.ITeam;
@@ -16,6 +17,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.Arrays;
 import java.util.Collection;
 
+@Singleton
 public class TeamSelectorInventory implements IBedWarsInventory {
 
     private final String inventoryName = "Team selection";

@@ -1,5 +1,6 @@
 package de.will_smith_007.bedwars.listeners.game;
 
+import com.google.inject.Inject;
 import de.will_smith_007.bedwars.enums.GameState;
 import de.will_smith_007.bedwars.game_assets.GameAssets;
 import de.will_smith_007.bedwars.teams.helper.interfaces.ITeamHelper;
@@ -23,6 +24,7 @@ public class GameChatListener implements Listener {
     private final GameAssets gameAssets;
     private final ITeamHelper teamHelper;
 
+    @Inject
     public GameChatListener(@NonNull GameAssets gameAssets,
                             @NonNull ITeamHelper teamHelper) {
         this.gameAssets = gameAssets;

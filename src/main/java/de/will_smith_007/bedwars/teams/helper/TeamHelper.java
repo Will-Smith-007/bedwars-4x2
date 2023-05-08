@@ -1,5 +1,7 @@
 package de.will_smith_007.bedwars.teams.helper;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import de.will_smith_007.bedwars.enums.GameState;
 import de.will_smith_007.bedwars.enums.Message;
 import de.will_smith_007.bedwars.file_config.BedWarsConfig;
@@ -14,16 +16,20 @@ import org.bukkit.entity.Player;
 
 import java.util.*;
 
+@Singleton
 public class TeamHelper implements ITeamHelper {
 
     private final GameAssets gameAssets;
     private final EndingCountdownScheduler endingCountdownScheduler;
-    private final BedWarsConfig bedWarsConfig = BedWarsConfig.getInstance();
+    private final BedWarsConfig bedWarsConfig;
 
+    @Inject
     public TeamHelper(@NonNull GameAssets gameAssets,
-                      @NonNull EndingCountdownScheduler endingCountdownScheduler) {
+                      @NonNull EndingCountdownScheduler endingCountdownScheduler,
+                      @NonNull BedWarsConfig bedWarsConfig) {
         this.gameAssets = gameAssets;
         this.endingCountdownScheduler = endingCountdownScheduler;
+        this.bedWarsConfig = bedWarsConfig;
     }
 
     @Override

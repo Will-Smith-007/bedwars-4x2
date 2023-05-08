@@ -27,6 +27,12 @@ public class BedWarsSetup {
     @Setter
     private Location spectatorLocation = null;
 
+    private final BedWarsConfig bedWarsConfig;
+
+    public BedWarsSetup(@NonNull BedWarsConfig bedWarsConfig) {
+        this.bedWarsConfig = bedWarsConfig;
+    }
+
     public void setBedLocation(@NonNull BedWarsTeam bedWarsTeam, @NonNull Location bedLocation) {
         bedLocations.put(bedWarsTeam, bedLocation);
     }
@@ -41,8 +47,6 @@ public class BedWarsSetup {
     }
 
     public void saveSetup() {
-        final BedWarsConfig bedWarsConfig = BedWarsConfig.getInstance();
-
         bedWarsConfig.setBedLocations(bedLocations);
         bedWarsConfig.setTeamSpawnLocations(teamSpawnLocations);
         bedWarsConfig.setSpawnerLocations(spawnerLocations);

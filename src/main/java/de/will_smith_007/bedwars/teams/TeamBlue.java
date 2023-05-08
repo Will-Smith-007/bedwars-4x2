@@ -1,5 +1,6 @@
 package de.will_smith_007.bedwars.teams;
 
+import de.will_smith_007.bedwars.file_config.BedWarsConfig;
 import de.will_smith_007.bedwars.teams.enums.BedWarsTeam;
 import de.will_smith_007.bedwars.teams.interfaces.ITeam;
 import lombok.NonNull;
@@ -45,8 +46,8 @@ public class TeamBlue implements ITeam {
     }
 
     @Override
-    public Location getTeamSpawnLocation(@NonNull World world) {
-        return BED_WARS_CONFIG.getTeamSpawnLocation(BedWarsTeam.BLUE, world);
+    public Location getTeamSpawnLocation(@NonNull World world, @NonNull BedWarsConfig bedWarsConfig) {
+        return bedWarsConfig.getTeamSpawnLocation(BedWarsTeam.BLUE, world);
     }
 
     @Override

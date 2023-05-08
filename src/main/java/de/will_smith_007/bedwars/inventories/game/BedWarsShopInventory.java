@@ -1,5 +1,6 @@
 package de.will_smith_007.bedwars.inventories.game;
 
+import com.google.inject.Singleton;
 import de.will_smith_007.bedwars.inventories.interfaces.IBedWarsInventory;
 import de.will_smith_007.bedwars.shop.enums.ShopItem;
 import lombok.NonNull;
@@ -12,6 +13,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+@Singleton
 public class BedWarsShopInventory implements IBedWarsInventory {
 
     private final String inventoryName = "Shop";

@@ -1,5 +1,7 @@
 package de.will_smith_007.bedwars.schedulers;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import de.will_smith_007.bedwars.enums.GameState;
 import de.will_smith_007.bedwars.enums.Message;
 import de.will_smith_007.bedwars.file_config.BedWarsConfig;
@@ -25,6 +27,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+@Singleton
 public class LobbyCountdownScheduler implements IScheduler, ICountdownOptions {
 
     private int taskID;
@@ -37,21 +40,24 @@ public class LobbyCountdownScheduler implements IScheduler, ICountdownOptions {
     private final GameAssets gameAssets;
     private final ProtectionCountdownScheduler protectionCountdownScheduler;
     private final SpawnerScheduler spawnerScheduler;
-    private final BedWarsConfig bedWarsConfig = BedWarsConfig.getInstance();
+    private final BedWarsConfig bedWarsConfig;
     private final IScoreboardManager scoreboardManager;
 
+    @Inject
     public LobbyCountdownScheduler(@NonNull JavaPlugin javaPlugin,
                                    @NonNull ITeamHelper teamHelper,
                                    @NonNull GameAssets gameAssets,
                                    @NonNull ProtectionCountdownScheduler protectionCountdownScheduler,
                                    @NonNull SpawnerScheduler spawnerScheduler,
-                                   @NonNull IScoreboardManager scoreboardManager) {
+                                   @NonNull IScoreboardManager scoreboardManager,
+                                   @NonNull BedWarsConfig bedWarsConfig) {
         this.javaPlugin = javaPlugin;
         this.teamHelper = teamHelper;
         this.gameAssets = gameAssets;
         this.protectionCountdownScheduler = protectionCountdownScheduler;
         this.spawnerScheduler = spawnerScheduler;
         this.scoreboardManager = scoreboardManager;
+        this.bedWarsConfig = bedWarsConfig;
     }
 
     @Override
@@ -114,7 +120,7 @@ public class LobbyCountdownScheduler implements IScheduler, ICountdownOptions {
                             iTeam = teamHelper.selectBedWarsTeam(player);
                         }
 
-                        final Location teamSpawnLocation = iTeam.getTeamSpawnLocation(gameWorld);
+                        final Location teamSpawnLocation = iTeam.getTeamSpawnLocation(gameWorld, bedWarsConfig);
                         player.teleport(teamSpawnLocation);
                         player.setGameMode(GameMode.SURVIVAL);
 

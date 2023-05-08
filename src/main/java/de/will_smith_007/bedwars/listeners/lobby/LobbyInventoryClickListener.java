@@ -1,5 +1,6 @@
 package de.will_smith_007.bedwars.listeners.lobby;
 
+import com.google.inject.Inject;
 import de.will_smith_007.bedwars.enums.GameState;
 import de.will_smith_007.bedwars.enums.Message;
 import de.will_smith_007.bedwars.game_assets.GameAssets;
@@ -36,6 +37,7 @@ public class LobbyInventoryClickListener implements Listener {
     private final ITeamHelper teamHelper;
     private final BedWarsTeam[] bedWarsTeams = BedWarsTeam.values();
 
+    @Inject
     public LobbyInventoryClickListener(@NonNull GameAssets gameAssets,
                                        @NonNull TeamParser teamParser,
                                        @NonNull TeamSelectorInventory teamSelectorInventory,

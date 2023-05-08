@@ -1,5 +1,6 @@
 package de.will_smith_007.bedwars.shop.parser;
 
+import com.google.inject.Singleton;
 import de.will_smith_007.bedwars.shop.enums.ShopItem;
 import de.will_smith_007.bedwars.shop.parser.interfaces.IShopParser;
 import lombok.NonNull;
@@ -10,6 +11,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Optional;
 
+@Singleton
 public class ShopParser implements IShopParser {
 
     private final ShopItem[] shopItems = ShopItem.values();

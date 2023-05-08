@@ -1,5 +1,7 @@
 package de.will_smith_007.bedwars.scoreboard;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import de.will_smith_007.bedwars.enums.GameState;
 import de.will_smith_007.bedwars.game_assets.GameAssets;
 import de.will_smith_007.bedwars.game_config.GameConfiguration;
@@ -20,12 +22,14 @@ import org.bukkit.scoreboard.*;
 
 import java.util.Optional;
 
+@Singleton
 public class ScoreboardManager implements IScoreboardManager {
 
     private final GameAssets gameAssets;
     private final ITeamHelper teamHelper;
     private final BedWarsTeam[] bedWarsTeams = BedWarsTeam.values();
 
+    @Inject
     public ScoreboardManager(@NonNull GameAssets gameAssets,
                              @NonNull ITeamHelper teamHelper) {
         this.gameAssets = gameAssets;

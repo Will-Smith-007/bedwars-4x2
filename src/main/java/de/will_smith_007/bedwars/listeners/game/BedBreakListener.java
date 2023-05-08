@@ -1,5 +1,6 @@
 package de.will_smith_007.bedwars.listeners.game;
 
+import com.google.inject.Inject;
 import de.will_smith_007.bedwars.enums.Message;
 import de.will_smith_007.bedwars.events.BedBreakEvent;
 import de.will_smith_007.bedwars.scoreboard.interfaces.IScoreboardManager;
@@ -23,6 +24,7 @@ public class BedBreakListener implements Listener {
     private final IScoreboardManager scoreboardManager;
     private final String prefix = Message.PREFIX.toString();
 
+    @Inject
     public BedBreakListener(@NonNull IScoreboardManager scoreboardManager) {
         this.scoreboardManager = scoreboardManager;
     }

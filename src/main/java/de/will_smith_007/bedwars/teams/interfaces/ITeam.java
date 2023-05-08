@@ -12,8 +12,6 @@ import java.util.Set;
 
 public interface ITeam {
 
-    BedWarsConfig BED_WARS_CONFIG = BedWarsConfig.getInstance();
-
     void addPlayer(@NonNull Player player);
 
     void removePlayer(@NonNull Player player);
@@ -22,7 +20,7 @@ public interface ITeam {
 
     @NonNull Team getTeam(@NonNull Scoreboard scoreboard);
 
-    Location getTeamSpawnLocation(@NonNull World world);
+    Location getTeamSpawnLocation(@NonNull World world, @NonNull BedWarsConfig bedWarsConfig);
 
     boolean bedExists();
 

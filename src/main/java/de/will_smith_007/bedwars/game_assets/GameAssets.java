@@ -1,5 +1,6 @@
 package de.will_smith_007.bedwars.game_assets;
 
+import com.google.inject.Singleton;
 import de.will_smith_007.bedwars.enums.GameState;
 import de.will_smith_007.bedwars.game_config.GameConfiguration;
 import lombok.Getter;
@@ -14,6 +15,7 @@ import java.util.Set;
  * e.g. the current {@link GameState} and the {@link Set} of built blocks.
  */
 @Getter
+@Singleton
 public class GameAssets {
 
     @Setter
