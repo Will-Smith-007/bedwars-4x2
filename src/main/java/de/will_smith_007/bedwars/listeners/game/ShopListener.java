@@ -20,6 +20,9 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.inventory.*;
 
+import java.util.Arrays;
+import java.util.Objects;
+
 /**
  * This {@link Listener} handles the {@link PlayerInteractAtEntityEvent} and the {@link InventoryClickEvent}
  * to provide the possibility of villager shopping in the game.
@@ -85,6 +88,7 @@ public class ShopListener implements Listener {
             shopParser.parseShopItem(itemStack).ifPresentOrElse(shopItem -> {
                 final ShopItem.CurrencyType currencyType = shopItem.getCurrencyType();
                 final String currencyTypeName = currencyType.getCurrencyName();
+                // How many bricks, iron ingots or gold ingots the shop item costs
                 final int price = shopItem.getPrice();
 
                 final Material currencyMaterial;
@@ -96,39 +100,50 @@ public class ShopListener implements Listener {
                     default -> currencyMaterial = Material.BRICK;
                 }
 
-                // If player makes a shift click then the player buys so many items how he can buy
+                // If player makes a shift click then the player buys so many items how he can buy but max. the stack size
                 if (inventoryClickEvent.isShiftClick()) {
                     final ItemStack shopItemStack = shopItem.buildItem();
-                    // Available free space in the player inventory
-                    final int freeSpace = getFreeInventorySpace(player, shopItemStack);
                     // How many bricks, iron ingots or gold ingots the player have in their own inventory
                     final int currencyItemAmount = getCurrencyItems(player, currencyMaterial);
+
+                    // Available free slots in the player inventory
+                    final int freeSlots = (int) Arrays.stream(playerInventory.getStorageContents())
+                            .filter(Objects::isNull)
+                            .count();
+                    // How often the player can make this transaction
+                    final int howOftenPlayerCanBuyItem = (currencyItemAmount / price);
                     // Amount of shop items that should be added by default per transaction
                     final int defaultItems = shopItem.getDefaultItems();
-                    // How many bricks, iron ingots or gold ingots the shop item costs
-                    final int pricePerItem = shopItem.getPrice();
-                    // How often the player can make this transaction
-                    final int howOftenPlayerCanBuyItem = (currencyItemAmount / pricePerItem);
                     // Amount of items that would be added to the player inventory after transaction
                     final int resultItems = (defaultItems * howOftenPlayerCanBuyItem);
-                    final int itemsActuallyBuy = Math.min((freeSpace + currencyItemAmount), resultItems);
+                    // Amount of items which the player would buy, but it can't be higher than item stack size
+                    final int maxItemsPerClick = Math.min(shopItemStack.getMaxStackSize(), resultItems);
+                    // Calculates the price per item
+                    final double pricePerItem = (double) price / defaultItems;
+                    final int resultPrice = (int) (maxItemsPerClick * pricePerItem);
 
-                    player.sendPlainMessage("items: " + itemsActuallyBuy);
-
-                    /*if (itemsActuallyBuy < resultItems) {
+                    if (howOftenPlayerCanBuyItem == 0) {
+                        player.sendPlainMessage(Message.PREFIX + "§cYou don't have enough §e" +
+                                currencyTypeName + "§c.");
                         player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_PLACE, 1.0f, 1.0f);
                         return;
-                    }*/
+                    }
+
+                    if (freeSlots == 0) {
+                        player.sendPlainMessage(Message.PREFIX + "§cYou don't have enough§e inventory space§c left.");
+                        player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_PLACE, 1.0f, 1.0f);
+                        return;
+                    }
 
                     // Creates the currency ItemStack for removing with the amount of price
                     final ItemStack currencyItemStack = new ItemStack(currencyMaterial);
-                    currencyItemStack.setAmount((itemsActuallyBuy * pricePerItem));
+                    currencyItemStack.setAmount(resultPrice);
 
                     /*
                      Creates the ItemStack which the player wants to buy and sets the amount to the
                      maximum of possible purchasable items. Also sets the shop lore to null.
                      */
-                    shopItemStack.setAmount(itemsActuallyBuy);
+                    shopItemStack.setAmount(maxItemsPerClick);
                     shopItemStack.editMeta(itemMeta -> itemMeta.lore(null));
 
                     playerInventory.removeItem(currencyItemStack);
