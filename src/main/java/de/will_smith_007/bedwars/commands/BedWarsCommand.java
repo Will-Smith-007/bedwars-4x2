@@ -64,7 +64,7 @@ public class BedWarsCommand implements TabExecutor {
 
                 player.sendPlainMessage(Message.PREFIX + "§aYou've started the§e game setup§a, " +
                         "you can now set the game map by typing the name of world into the chat.");
-                // Sets the spectator spawn to which eliminated player should be teleported to
+            // Sets the spectator spawn to which eliminated player should be teleported to
             } else if (args[0].equalsIgnoreCase("setSpectator")) {
                 if (!PLAYERS_IN_SETUP.containsKey(player)) {
                     player.sendPlainMessage(Message.PREFIX + "§cYou're currently not in a map setup.");
@@ -102,6 +102,10 @@ public class BedWarsCommand implements TabExecutor {
 
                 bedWarsConfig.setLobbyWorld(world);
                 player.sendPlainMessage(Message.PREFIX + "§aYou've set the lobby world to §e" + worldName + "§a.");
+            } else if (subCommand.equalsIgnoreCase("removeMap")) {
+                final String worldName = args[1];
+                bedWarsConfig.removeWorld(worldName);
+                player.sendPlainMessage(Message.PREFIX + "§aYou have removed the map named §e" + worldName + "§a.");
                 // Sets a bed location for the given team
             } else if (subCommand.equalsIgnoreCase("setBed")) {
                 if (!PLAYERS_IN_SETUP.containsKey(player)) {
@@ -231,7 +235,8 @@ public class BedWarsCommand implements TabExecutor {
                             }
                         }
 
-                        default -> player.sendPlainMessage(Message.PREFIX + "§cYou currently can't go to the next step.");
+                        default ->
+                                player.sendPlainMessage(Message.PREFIX + "§cYou currently can't go to the next step.");
                     }
                     // Finish and saved the current, completed game world setup if all requirements of this setup are met
                 } else if (args[1].equalsIgnoreCase("finish")) {
@@ -274,6 +279,7 @@ public class BedWarsCommand implements TabExecutor {
 
                 player.teleport(world.getSpawnLocation());
                 player.setGameMode(GameMode.CREATIVE);
+                player.setFlying(true);
                 player.sendPlainMessage(Message.PREFIX + "§aYou've been teleported to §e" + worldName + "§a.");
             } else {
                 sendHelpDescription(player);
@@ -291,10 +297,11 @@ public class BedWarsCommand implements TabExecutor {
         final List<String> subCommands = new ArrayList<>();
 
         if (args.length == 1) {
-            return Arrays.asList("tp", "teleport", "setup", "setBed", "setSpectator", "setSpawn", "setLobby");
+            return Arrays.asList("tp", "teleport", "setup", "setBed", "setSpectator", "setSpawn", "setLobby", "removeMap");
         } else if (args.length == 2) {
             if (args[0].equalsIgnoreCase("tp")
-                    || args[0].equalsIgnoreCase("setLobby")) {
+                    || args[0].equalsIgnoreCase("setLobby")
+                    || args[0].equalsIgnoreCase("removeMap")) {
                 subCommands.add("WorldName");
             } else if (args[0].equalsIgnoreCase("setBed")
                     || args[0].equalsIgnoreCase("setSpawn")) {

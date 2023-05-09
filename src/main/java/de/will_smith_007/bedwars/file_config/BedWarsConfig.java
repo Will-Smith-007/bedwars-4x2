@@ -251,6 +251,24 @@ public class BedWarsConfig {
     }
 
     /**
+     * Removes a specified world from the map pool and deletes all its configuration.
+     *
+     * @param worldName Name of world which should be removed.
+     */
+    public void removeWorld(@NonNull String worldName) {
+        final List<String> worldNames = getGameWorlds();
+
+        if (worldNames.isEmpty()) return;
+        if (!worldNames.contains(worldName)) return;
+
+        final String sectionName = "Maps." + worldName;
+
+        yamlConfiguration.set(sectionName, null);
+
+        saveConfig();
+    }
+
+    /**
      * Saves the BedWars configuration file.
      */
     private void saveConfig() {
