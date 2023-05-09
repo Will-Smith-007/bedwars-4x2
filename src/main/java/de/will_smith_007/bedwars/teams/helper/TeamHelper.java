@@ -33,11 +33,6 @@ public class TeamHelper implements ITeamHelper {
     }
 
     @Override
-    public void removeBedWarsTeam(@NonNull Player player) {
-        getTeam(player).ifPresent(iTeam -> iTeam.removePlayer(player));
-    }
-
-    @Override
     public void handleTeamElimination(@NonNull ITeam team, @NonNull Collection<? extends Player> players) {
         final Set<Player> teamPlayers = team.getPlayers();
 
@@ -100,16 +95,6 @@ public class TeamHelper implements ITeamHelper {
 
         optionalMinITeam.ifPresent(iTeam -> iTeam.addPlayer(player));
         return (optionalMinITeam.orElse(null));
-    }
-
-    @Override
-    public boolean setBedWarsTeam(@NonNull Player player, @NonNull BedWarsTeam bedWarsTeam) {
-        if (!canTeamJoined(bedWarsTeam)) return false;
-
-        final ITeam iTeam = bedWarsTeam.getTeam();
-        iTeam.addPlayer(player);
-
-        return true;
     }
 
     @Override

@@ -10,6 +10,9 @@ import org.bukkit.inventory.ItemStack;
 public record Spawner(@NonNull Location location,
                       @NonNull BedWarsSetup.SpawnerType spawnerType) {
 
+    /**
+     * Spawns an item depending on the given {@link de.will_smith_007.bedwars.setup.BedWarsSetup.SpawnerType}.
+     */
     public void spawnItem() {
         final World world = location.getWorld();
         final Material material;

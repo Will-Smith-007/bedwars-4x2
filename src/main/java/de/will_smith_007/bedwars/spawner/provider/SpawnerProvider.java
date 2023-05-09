@@ -30,6 +30,7 @@ public class SpawnerProvider implements ISpawnerProvider {
     @Override
     public Set<Spawner> getSpawners(@NonNull BedWarsSetup.SpawnerType spawnerType) {
         final Set<Spawner> spawners = new HashSet<>();
+        // The current data of a running game
         final GameConfiguration gameConfiguration = gameAssets.getGameConfiguration();
 
         if (gameConfiguration == null) return spawners;

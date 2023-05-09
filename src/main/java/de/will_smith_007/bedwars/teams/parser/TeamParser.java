@@ -9,6 +9,15 @@ import java.util.Optional;
 @Singleton
 public class TeamParser {
 
+    /**
+     * Parses a team depending on the given team name.
+     *
+     * @param teamName The name of team from which you want to get the {@link BedWarsTeam}.
+     * @return An {@link Optional} which contains the found {@link BedWarsTeam} or empty
+     * if there couldn't be found a team for the given team name.
+     * @apiNote If the given {@link String} starts with a "§" color code, the {@link String}
+     * starts at position 2.
+     */
     public Optional<BedWarsTeam> parseTeam(@NonNull String teamName) {
         if (teamName.startsWith("§")) teamName = teamName.substring(2);
 
