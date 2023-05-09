@@ -12,6 +12,10 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
+/**
+ * This {@link Listener} handles the {@link PlayerInteractEvent} to provide the
+ * possibility of clicking an item during the lobby phase.
+ */
 public class InteractWithLobbyItemListener implements Listener {
 
     private final IBedWarsInventory bedWarsInventory;

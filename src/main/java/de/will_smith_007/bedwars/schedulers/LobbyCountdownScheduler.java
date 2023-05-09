@@ -92,21 +92,25 @@ public class LobbyCountdownScheduler implements IScheduler, ICountdownOptions {
                 case 0 -> {
                     gameAssets.setGameState(GameState.PROTECTION);
 
+                    // If there isn't any configured game world, then return and stop this scheduler
                     final List<String> gameWorlds = bedWarsConfig.getGameWorlds();
                     if (gameWorlds.isEmpty()) {
                         stop();
                         return;
                     }
 
+                    // Randomizes the list of game worlds and gets the first element of this list
                     Collections.shuffle(gameWorlds);
                     final String worldName = gameWorlds.get(0);
                     final World gameWorld = Bukkit.createWorld(new WorldCreator(worldName));
 
+                    // If this world doesn't exist anymore, then return and stop this scheduler
                     if (gameWorld == null) {
                         stop();
                         return;
                     }
 
+                    // Sets the game rules of the selected map and gives all villagers the potion effect slowness
                     setGamerulesAndFreezeVillagers(gameWorld);
 
                     for (Player player : players) {
@@ -114,12 +118,17 @@ public class LobbyCountdownScheduler implements IScheduler, ICountdownOptions {
                         final boolean isTeamPresent = optionalITeam.isPresent();
                         final ITeam iTeam;
 
+                        /*
+                         If the player have selected a team, then use it.
+                         Otherwise, select a team for the player.
+                         */
                         if (isTeamPresent) {
                             iTeam = optionalITeam.get();
                         } else {
                             iTeam = teamHelper.selectBedWarsTeam(player);
                         }
 
+                        // Teleports the player to the game world
                         final Location teamSpawnLocation = iTeam.getTeamSpawnLocation(gameWorld, bedWarsConfig);
                         player.teleport(teamSpawnLocation);
                         player.setGameMode(GameMode.SURVIVAL);

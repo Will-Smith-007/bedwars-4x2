@@ -7,6 +7,10 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.inventory.ItemStack;
 
+/**
+ * This {@link Listener} handles the {@link PlayerDropItemEvent}.
+ * Players can't drop an item which is a lobby item such as the team selector item.
+ */
 public class PlayerDropItemListener implements Listener {
 
     @EventHandler

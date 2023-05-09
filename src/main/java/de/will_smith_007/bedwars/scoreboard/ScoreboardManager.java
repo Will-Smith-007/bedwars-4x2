@@ -63,6 +63,7 @@ public class ScoreboardManager implements IScoreboardManager {
         }
 
         {
+            // Sets the name of map in this scoreboard row
             final String mapName = (gameConfiguration == null ? "Selection..." : gameConfiguration.gameWorld().getName());
             final Team team = scoreboard.registerNewTeam("x12");
             team.prefix(Component.text("§2"));
@@ -99,6 +100,11 @@ public class ScoreboardManager implements IScoreboardManager {
                 }
             }
 
+            /*
+             Sets the data of the teams in these scoreboard rows.
+             Data contains the info how many players are left in the respective team
+             and if the bed exists or not.
+             */
             case PROTECTION, INGAME, ENDING -> {
                 {
                     final ITeam iTeam = TeamBlue.getInstance();
@@ -171,6 +177,7 @@ public class ScoreboardManager implements IScoreboardManager {
         final Team greenTeam = scoreboard.getTeam("x8");
         final Team yellowTeam = scoreboard.getTeam("x7");
 
+        // Sets the name of map in this scoreboard row
         if (mapTeam != null) {
             final String mapName = (gameConfiguration == null ? "Selection..." : gameConfiguration.gameWorld().getName());
             mapTeam.suffix(Component.text(mapName, NamedTextColor.YELLOW));
@@ -178,6 +185,11 @@ public class ScoreboardManager implements IScoreboardManager {
 
         if (gameState == GameState.LOBBY) return;
 
+        /*
+        Sets the data of the teams in these scoreboard rows.
+        Data contains the info how many players are left in the respective team
+        and if the bed exists or not.
+         */
         for (BedWarsTeam bedWarsTeam : bedWarsTeams) {
             final ITeam iTeam = bedWarsTeam.getTeam();
             final String bedExistsSymbol = (iTeam.bedExists() ? "§a✔ " : "§c✘ ");
@@ -204,16 +216,19 @@ public class ScoreboardManager implements IScoreboardManager {
     public void setTablist(@NonNull Player player) {
         final Scoreboard scoreboard = player.getScoreboard();
 
+        // Gets the ITeam instances
         final ITeam iBlueTeam = TeamBlue.getInstance();
         final ITeam iRedTeam = TeamRed.getInstance();
         final ITeam iGreenTeam = TeamGreen.getInstance();
         final ITeam iYellowTeam = TeamYellow.getInstance();
 
+        // Gets the scoreboard teams from the ITeam instances
         final Team blueTeam = iBlueTeam.getTeam(scoreboard);
         final Team redTeam = iRedTeam.getTeam(scoreboard);
         final Team greenTeam = iGreenTeam.getTeam(scoreboard);
         final Team yellowTeam = iYellowTeam.getTeam(scoreboard);
 
+        // Creates the player scoreboard team or gets the team if already present
         Team playerTeam;
         if ((playerTeam = scoreboard.getTeam("player")) == null) {
             playerTeam = scoreboard.registerNewTeam("player");
@@ -224,6 +239,8 @@ public class ScoreboardManager implements IScoreboardManager {
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
             final Optional<ITeam> optionalITeam = teamHelper.getTeam(onlinePlayer);
             final String playerName = onlinePlayer.getName();
+
+            // Adds the player to the selected team, otherwise the player will be put in the player team
             optionalITeam.ifPresentOrElse(team -> {
                 if (team instanceof TeamBlue) blueTeam.addEntry(playerName);
                 else if (team instanceof TeamRed) redTeam.addEntry(playerName);

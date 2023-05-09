@@ -19,6 +19,10 @@ import org.bukkit.scheduler.BukkitScheduler;
 
 import java.util.Map;
 
+/**
+ * This {@link Listener} handles the {@link AsyncChatEvent} where
+ * players set the game world which should be setup.
+ */
 public class BedWarsWorldSetupListener implements Listener {
 
     private final Map<Player, BedWarsSetup> playersInSetup = BedWarsCommand.getPLAYERS_IN_SETUP();
@@ -42,7 +46,7 @@ public class BedWarsWorldSetupListener implements Listener {
 
         final String message = ((TextComponent) asyncChatEvent.message()).content();
         bukkitScheduler.runTask(javaPlugin, () -> {
-            // Can't load worlds async
+            // Can't load worlds async, so it has to be running as a bukkit task
             final World world = Bukkit.createWorld(new WorldCreator(message));
 
             if (world == null) {

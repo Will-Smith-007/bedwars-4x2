@@ -161,12 +161,28 @@ public enum ShopItem {
     private ItemStack itemStack;
     private ItemMeta itemMeta;
 
+    /**
+     * Initializes the {@link ItemStack} and the {@link ItemMeta}
+     * to set for e.g. an item lore before building an item.
+     *
+     * @return The value of the current shop item.
+     * @apiNote Use this method first whenever you would like to
+     * set an item lore with {@link ShopItem#setLore(String...)}.
+     */
     public ShopItem toItem() {
         itemStack = new ItemStack(material);
         itemMeta = itemStack.getItemMeta();
         return this;
     }
 
+    /**
+     * Sets the lore of an item and converts the strings into a {@link List} of {@link Component}s.
+     *
+     * @param lore String array which the lore should represent.
+     * @return The value of the current shop item.
+     * @apiNote Use this method only after initializing the {@link ItemStack} and {@link ItemMeta}
+     * with {@link ShopItem#toItem()}.
+     */
     public ShopItem setLore(String @NonNull ... lore) {
         final List<Component> components = new ArrayList<>();
         for (String loreLine : lore) {
@@ -176,6 +192,11 @@ public enum ShopItem {
         return this;
     }
 
+    /**
+     * Builds and gets the {@link ItemStack} of a shop item value.
+     *
+     * @return The built ItemStack.
+     */
     public ItemStack buildItem() {
         if (itemStack == null) itemStack = new ItemStack(material);
         if (itemMeta == null) itemMeta = itemStack.getItemMeta();
@@ -194,24 +215,6 @@ public enum ShopItem {
         }
 
         itemStack.setAmount(defaultItems);
-        itemStack.setItemMeta(itemMeta);
-        return itemStack;
-    }
-
-    public ItemStack getItemStack() {
-        if (itemStack == null) itemStack = new ItemStack(material);
-
-        itemMeta = itemStack.getItemMeta();
-
-        if (itemMeta.displayName() == null) {
-            itemMeta.displayName(Component.text(displayName, NamedTextColor.YELLOW)
-                    .decoration(TextDecoration.ITALIC, false));
-        }
-
-        if (enchantment != null) {
-            itemMeta.addEnchant(enchantment, enchantmentStrength, true);
-        }
-
         itemStack.setItemMeta(itemMeta);
         return itemStack;
     }

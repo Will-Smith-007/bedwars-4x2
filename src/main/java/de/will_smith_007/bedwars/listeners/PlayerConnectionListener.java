@@ -29,6 +29,10 @@ import org.bukkit.scoreboard.Team;
 import java.util.Collection;
 import java.util.Optional;
 
+/**
+ * This {@link Listener} handles the {@link PlayerJoinEvent} and the {@link PlayerQuitEvent}
+ * to teleport the player to the waiting lobby world on join for e.g.
+ */
 public class PlayerConnectionListener implements Listener {
 
     private final GameAssets gameAssets;
@@ -57,8 +61,9 @@ public class PlayerConnectionListener implements Listener {
 
         scoreboardManager.setScoreboardAndTablist(player);
 
+        final String playerName = player.getName();
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-            if (onlinePlayer.getName().equals(player.getName())) continue;
+            if (onlinePlayer.getName().equals(playerName)) continue;
 
             scoreboardManager.updateScoreboard(onlinePlayer);
             scoreboardManager.setTablist(onlinePlayer);
@@ -66,12 +71,13 @@ public class PlayerConnectionListener implements Listener {
 
         switch (gameState) {
             case LOBBY -> {
-                playerJoinEvent.joinMessage(Component.text(Message.PREFIX + "§e" + player.getName() +
+                playerJoinEvent.joinMessage(Component.text(Message.PREFIX + "§e" + playerName +
                         "§7 joined the game!"));
                 player.setGameMode(GameMode.ADVENTURE);
 
                 final String lobbyWorldName = bedWarsConfig.getLobbyWorld();
                 if (lobbyWorldName == null) return;
+                // The lobby world loads when the first player joins the server for saving resources
                 final World world = Bukkit.createWorld(new WorldCreator(lobbyWorldName));
                 if (world == null) return;
 
@@ -95,9 +101,10 @@ public class PlayerConnectionListener implements Listener {
         final Player player = playerQuitEvent.getPlayer();
         final GameState gameState = gameAssets.getGameState();
 
+        final String playerName = player.getName();
         switch (gameState) {
             case LOBBY -> {
-                playerQuitEvent.quitMessage(Component.text(Message.PREFIX + "§e" + player.getName() +
+                playerQuitEvent.quitMessage(Component.text(Message.PREFIX + "§e" + playerName +
                         "§7 left the game."));
 
                 final Collection<? extends Player> players = Bukkit.getOnlinePlayers();
@@ -106,6 +113,7 @@ public class PlayerConnectionListener implements Listener {
                 lobbyCountdownHelper.cancelCountdownIfNotEnoughPlayers(playerSize);
                 lobbyCountdownHelper.cancelCountdownIfNotEnoughTeams();
 
+                // Removes the player from his team on quit
                 final Optional<ITeam> optionalITeam = teamHelper.getTeam(player);
                 optionalITeam.ifPresent(team -> team.removePlayer(player));
             }
@@ -116,13 +124,16 @@ public class PlayerConnectionListener implements Listener {
                 if (playerTeam == null) return;
 
                 final TextColor textColor = playerTeam.color();
-                final String playerName = player.getName();
                 final String prefix = Message.PREFIX.toString();
 
                 playerQuitEvent.quitMessage(Component.text(prefix)
                         .append(Component.text(playerName).color(textColor))
                         .append(Component.text("§7 left the game")));
 
+                /*
+                 Removes the player from his team on quit and
+                 handles team elimination if he was the last player of his team.
+                 */
                 final Optional<ITeam> optionalITeam = teamHelper.getTeam(player);
                 optionalITeam.ifPresent(team -> {
                     team.removePlayer(player);
@@ -133,7 +144,7 @@ public class PlayerConnectionListener implements Listener {
         }
 
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-            if (onlinePlayer.getName().equals(player.getName())) continue;
+            if (onlinePlayer.getName().equals(playerName)) continue;
 
             scoreboardManager.updateScoreboard(onlinePlayer);
             scoreboardManager.setTablist(onlinePlayer);

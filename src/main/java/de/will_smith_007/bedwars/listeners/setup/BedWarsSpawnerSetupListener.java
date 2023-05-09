@@ -14,6 +14,10 @@ import org.bukkit.inventory.EquipmentSlot;
 
 import java.util.Map;
 
+/**
+ * This {@link Listener} handles the {@link PlayerInteractEvent} on
+ * item spawner setup.
+ */
 public class BedWarsSpawnerSetupListener implements Listener {
 
     private final Map<Player, BedWarsSetup> playersInSetup = BedWarsCommand.getPLAYERS_IN_SETUP();
@@ -30,6 +34,7 @@ public class BedWarsSpawnerSetupListener implements Listener {
         final BedWarsSetup.SetupAction setupAction = bedWarsSetup.getSetupAction();
         BedWarsSetup.SpawnerType spawnerType = null;
 
+        // Spawner type initialization based on the current setup action step
         switch (setupAction) {
             case BRONZE_SPAWNER_SETUP -> spawnerType = BedWarsSetup.SpawnerType.BRONZE;
             case IRON_SPAWNER_SETUP -> spawnerType = BedWarsSetup.SpawnerType.IRON;
@@ -42,6 +47,7 @@ public class BedWarsSpawnerSetupListener implements Listener {
         if (clickedBlock == null) return;
         final Location blockLocation = clickedBlock.getLocation();
 
+        // Adds the clicked block location to the map of configured spawners
         bedWarsSetup.addSpawner(spawnerType, blockLocation);
         playersInSetup.put(player, bedWarsSetup);
 

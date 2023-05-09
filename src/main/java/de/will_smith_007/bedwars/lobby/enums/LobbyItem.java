@@ -21,6 +21,12 @@ public enum LobbyItem {
     private ItemStack itemStack;
     private ItemMeta itemMeta;
 
+    /**
+     * Builds and gets the {@link ItemStack} of a lobby item value.
+     *
+     * @return The built ItemStack.
+     * @apiNote Should not be used to compare items, use {@link LobbyItem#getItemStack()} instead.
+     */
     public ItemStack buildItem() {
         if (itemStack == null) itemStack = new ItemStack(material);
         if (itemMeta == null) itemMeta = itemStack.getItemMeta();
@@ -32,6 +38,13 @@ public enum LobbyItem {
         return itemStack;
     }
 
+    /**
+     * Gets the built {@link ItemStack} but without setting
+     * the display name of the item if it's already present.
+     *
+     * @return The built ItemStack.
+     * @apiNote Should be only used to compare {@link ItemStack}s.
+     */
     public ItemStack getItemStack() {
         if (itemStack == null) itemStack = new ItemStack(material);
 
