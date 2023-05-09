@@ -19,6 +19,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
+/**
+ * This command handles the setup of worlds.
+ */
 public class BedWarsCommand implements TabExecutor {
 
     @Getter
@@ -46,6 +49,7 @@ public class BedWarsCommand implements TabExecutor {
         }
 
         if (args.length == 1) {
+            // Starting or stopping the current game world setup
             if (args[0].equalsIgnoreCase("setup")) {
                 if (PLAYERS_IN_SETUP.containsKey(player)) {
                     player.sendPlainMessage(Message.PREFIX + "§aYou've aborted the game setup.");
@@ -60,6 +64,7 @@ public class BedWarsCommand implements TabExecutor {
 
                 player.sendPlainMessage(Message.PREFIX + "§aYou've started the§e game setup§a, " +
                         "you can now set the game map by typing the name of world into the chat.");
+                // Sets the spectator spawn to which eliminated player should be teleported to
             } else if (args[0].equalsIgnoreCase("setSpectator")) {
                 if (!PLAYERS_IN_SETUP.containsKey(player)) {
                     player.sendPlainMessage(Message.PREFIX + "§cYou're currently not in a map setup.");
@@ -85,6 +90,7 @@ public class BedWarsCommand implements TabExecutor {
             }
         } else if (args.length == 2) {
             final String subCommand = args[0];
+            // Sets the waiting lobby world
             if (subCommand.equalsIgnoreCase("setLobby")) {
                 final String worldName = args[1];
                 final World world = Bukkit.createWorld(new WorldCreator(worldName));
@@ -96,6 +102,7 @@ public class BedWarsCommand implements TabExecutor {
 
                 bedWarsConfig.setLobbyWorld(world);
                 player.sendPlainMessage(Message.PREFIX + "§aYou've set the lobby world to §e" + worldName + "§a.");
+                // Sets a bed location for the given team
             } else if (subCommand.equalsIgnoreCase("setBed")) {
                 if (!PLAYERS_IN_SETUP.containsKey(player)) {
                     player.sendPlainMessage(Message.PREFIX + "§cYou're currently not in a map setup.");
@@ -128,6 +135,7 @@ public class BedWarsCommand implements TabExecutor {
 
                     PLAYERS_IN_SETUP.put(player, bedWarsSetup);
                 }, () -> player.sendPlainMessage(Message.PREFIX + "§cThere isn't a team named §e" + teamName + "§c."));
+                // Sets the team spawn location of the given team
             } else if (subCommand.equalsIgnoreCase("setSpawn")) {
                 if (!PLAYERS_IN_SETUP.containsKey(player)) {
                     player.sendPlainMessage(Message.PREFIX + "§cYou're currently not in a map setup.");
@@ -153,6 +161,7 @@ public class BedWarsCommand implements TabExecutor {
                     player.sendPlainMessage(Message.PREFIX + "§aYou've set the team spawn for team §e" +
                             team.getTeamName() + "§a.");
                 }, () -> player.sendPlainMessage(Message.PREFIX + "§cThere isn't a team named §e" + teamName + "§c."));
+                // Goes to the next BedWars setup step if all requirements of the current step are met
             } else if (subCommand.equalsIgnoreCase("setup")) {
                 if (args[1].equalsIgnoreCase("next")) {
                     if (!PLAYERS_IN_SETUP.containsKey(player)) {
@@ -222,9 +231,9 @@ public class BedWarsCommand implements TabExecutor {
                             }
                         }
 
-                        default ->
-                                player.sendPlainMessage(Message.PREFIX + "§cYou currently can't go to the next step.");
+                        default -> player.sendPlainMessage(Message.PREFIX + "§cYou currently can't go to the next step.");
                     }
+                    // Finish and saved the current, completed game world setup if all requirements of this setup are met
                 } else if (args[1].equalsIgnoreCase("finish")) {
                     if (!PLAYERS_IN_SETUP.containsKey(player)) {
                         player.sendPlainMessage(Message.PREFIX + "§cYou're currently not in a map setup.");
@@ -252,6 +261,7 @@ public class BedWarsCommand implements TabExecutor {
                 } else {
                     sendHelpDescription(player);
                 }
+                // Teleport a player to the specified world, loads the world if it isn't currently loaded
             } else if (subCommand.equalsIgnoreCase("tp")
                     || subCommand.equalsIgnoreCase("teleport")) {
                 final String worldName = args[1];
@@ -301,6 +311,12 @@ public class BedWarsCommand implements TabExecutor {
         return subCommands;
     }
 
+    /**
+     * Sends a help description the given {@link Player}.
+     * It includes all available commands.
+     *
+     * @param player The player to which the help description should be sent.
+     */
     private void sendHelpDescription(@NonNull Player player) {
         final String prefix = Message.PREFIX.toString();
 

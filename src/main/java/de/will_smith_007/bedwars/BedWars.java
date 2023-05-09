@@ -24,6 +24,7 @@ public class BedWars extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        // Creates the Injector Object to handle dependency injections
         final Injector injector = Guice.createInjector(new InjectionModule(this));
 
         // Command registration
