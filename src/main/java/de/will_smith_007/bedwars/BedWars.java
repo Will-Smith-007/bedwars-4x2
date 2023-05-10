@@ -48,7 +48,8 @@ public class BedWars extends JavaPlugin {
                 new PlayerDropItemListener(),
                 injector.getInstance(InteractWithLobbyItemListener.class),
                 injector.getInstance(GameChatListener.class),
-                injector.getInstance(LobbyInventoryClickListener.class)
+                injector.getInstance(LobbyInventoryClickListener.class),
+                injector.getInstance(PlayerInteractWithBlocksListener.class)
         );
 
         getLogger().info("BedWars was started.");
