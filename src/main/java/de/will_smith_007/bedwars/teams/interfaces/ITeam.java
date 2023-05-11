@@ -33,6 +33,8 @@ public interface ITeam {
      */
     void setBedExists(boolean bedExists);
 
+    void openTeamChest(@NonNull Player player);
+
     /**
      * Gets the {@link Scoreboard} team of this {@link ITeam}.
      *

@@ -4,10 +4,13 @@ import de.will_smith_007.bedwars.file_config.BedWarsConfig;
 import de.will_smith_007.bedwars.teams.enums.BedWarsTeam;
 import de.will_smith_007.bedwars.teams.interfaces.ITeam;
 import lombok.NonNull;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
@@ -19,6 +22,8 @@ public class TeamGreen implements ITeam {
     private static TeamGreen instance;
     private final Set<Player> teamPlayers = new HashSet<>();
     private boolean bedExists = true;
+    private final Inventory teamChest = Bukkit.createInventory(null, 9 * 3,
+            Component.text("§aTeam Green"));
 
     @Override
     public void addPlayer(@NonNull Player player) {
@@ -34,6 +39,12 @@ public class TeamGreen implements ITeam {
     public void setBedExists(boolean bedExists) {
         this.bedExists = bedExists;
     }
+
+    @Override
+    public void openTeamChest(@NonNull Player player) {
+        player.openInventory(teamChest);
+    }
+
 
     @Override
     public @NonNull Team getTeam(@NonNull Scoreboard scoreboard) {

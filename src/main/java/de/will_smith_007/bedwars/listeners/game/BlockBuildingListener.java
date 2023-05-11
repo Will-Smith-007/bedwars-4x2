@@ -6,6 +6,7 @@ import de.will_smith_007.bedwars.enums.Message;
 import de.will_smith_007.bedwars.events.BedBreakEvent;
 import de.will_smith_007.bedwars.file_config.BedWarsConfig;
 import de.will_smith_007.bedwars.game_assets.GameAssets;
+import de.will_smith_007.bedwars.shop.enums.ShopItem;
 import de.will_smith_007.bedwars.teams.enums.BedWarsTeam;
 import de.will_smith_007.bedwars.teams.helper.interfaces.ITeamHelper;
 import de.will_smith_007.bedwars.teams.interfaces.ITeam;
@@ -20,8 +21,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
 
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -57,6 +60,15 @@ public class BlockBuildingListener implements Listener {
             case INGAME, PROTECTION -> {
                 final Block block = blockPlaceEvent.getBlockPlaced();
                 builtBlocks.add(block);
+
+                // Team Chest placing handling
+                final ItemStack possibleTeamChestItemStack = player.getInventory().getItemInMainHand();
+                if (!possibleTeamChestItemStack.equals(ShopItem.TEAM_CHEST.getItemStack())) return;
+
+                teamHelper.getTeam(player).ifPresent(iTeam -> {
+                    final Map<Location, ITeam> teamChestLocations = gameAssets.getTeamChestLocations();
+                    teamChestLocations.put(block.getLocation(), iTeam);
+                });
             }
             default -> {
                 if (player.isOp()) return;
@@ -111,6 +123,10 @@ public class BlockBuildingListener implements Listener {
                     blockBreakEvent.setCancelled(true);
                     return;
                 }
+
+                // If the broken block was a team chest, remove it from team chest locations
+                final Map<Location, ITeam> teamChestLocations = gameAssets.getTeamChestLocations();
+                teamChestLocations.remove(block.getLocation());
 
                 blockBreakEvent.setCancelled(false);
 
