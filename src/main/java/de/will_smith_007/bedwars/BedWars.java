@@ -7,6 +7,7 @@ import de.will_smith_007.bedwars.commands.StartCommand;
 import de.will_smith_007.bedwars.dependency_injection.InjectionModule;
 import de.will_smith_007.bedwars.listeners.PlayerConnectionListener;
 import de.will_smith_007.bedwars.listeners.game.*;
+import de.will_smith_007.bedwars.listeners.lobby.FoodLevelChangeListener;
 import de.will_smith_007.bedwars.listeners.lobby.InteractWithLobbyItemListener;
 import de.will_smith_007.bedwars.listeners.lobby.LobbyInventoryClickListener;
 import de.will_smith_007.bedwars.listeners.lobby.PlayerDropItemListener;

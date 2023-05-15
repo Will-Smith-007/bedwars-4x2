@@ -69,7 +69,7 @@ public enum ShopItem {
     BOW_STRENGTH_THREE("Bow", Material.BOW, ShopCategory.BOWS,
             CurrencyType.GOLD, 13, 1, Enchantment.ARROW_DAMAGE, 3),
     ARROW("Arrow", Material.ARROW, ShopCategory.BOWS,
-            CurrencyType.GOLD, 1, 1),
+            CurrencyType.IRON, 1, 1),
 
     APPLE("Apple", Material.APPLE, ShopCategory.FOOD,
             CurrencyType.BRONZE, 1, 1),

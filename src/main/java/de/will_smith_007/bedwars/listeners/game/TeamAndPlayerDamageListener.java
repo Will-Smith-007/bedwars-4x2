@@ -55,7 +55,7 @@ public class TeamAndPlayerDamageListener implements Listener, IDeathHandler {
         final GameState gameState = gameAssets.getGameState();
 
         // If the game state is lobby, then this event must be cancelled
-        if (gameState == GameState.LOBBY) {
+        if (gameState == GameState.LOBBY || gameState == GameState.ENDING) {
             entityDamageByEntityEvent.setCancelled(true);
             return;
         }

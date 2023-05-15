@@ -106,10 +106,10 @@ public class EntityDamageAndDeathListener implements Listener, IDeathHandler {
         final Collection<? extends Player> players = Bukkit.getOnlinePlayers();
 
         player.getInventory().clear();
+        player.setHealth(20.0d);
+        player.setFoodLevel(20);
 
         if (bedExists) {
-            player.setHealth(20.0d);
-            player.setFoodLevel(20);
             final Location teamSpawnLocation = iTeam.getTeamSpawnLocation(playerWorld, bedWarsConfig);
             player.teleport(teamSpawnLocation);
         } else {

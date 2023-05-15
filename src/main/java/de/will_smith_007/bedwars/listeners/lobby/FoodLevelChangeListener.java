@@ -1,4 +1,4 @@
-package de.will_smith_007.bedwars.listeners.game;
+package de.will_smith_007.bedwars.listeners.lobby;
 
 import com.google.inject.Inject;
 import de.will_smith_007.bedwars.enums.GameState;
@@ -24,6 +24,6 @@ public class FoodLevelChangeListener implements Listener {
     @EventHandler
     public void onFoodLevelChange(@NonNull FoodLevelChangeEvent foodLevelChangeEvent) {
         final GameState gameState = gameAssets.getGameState();
-        if (gameState == GameState.LOBBY) foodLevelChangeEvent.setCancelled(true);
+        if (gameState == GameState.LOBBY || gameState == GameState.ENDING) foodLevelChangeEvent.setCancelled(true);
     }
 }
