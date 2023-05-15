@@ -91,7 +91,6 @@ public class PlayerConnectionListener implements Listener {
             case PROTECTION, INGAME, ENDING -> {
                 playerJoinEvent.joinMessage(null);
                 player.setGameMode(GameMode.SPECTATOR);
-                //TODO: Hide from game players
             }
         }
     }

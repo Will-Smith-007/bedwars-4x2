@@ -120,7 +120,6 @@ public class EntityDamageAndDeathListener implements Listener, IDeathHandler {
             teamHelper.handleTeamElimination(iTeam, players);
 
             players.forEach(scoreboardManager::updateScoreboard);
-            //TODO: Hide from other game players
         }
     }
 }
