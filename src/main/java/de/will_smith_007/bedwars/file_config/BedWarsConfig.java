@@ -19,7 +19,7 @@ import java.util.logging.Logger;
 @Singleton
 public class BedWarsConfig {
 
-    private final File bedWarsConfig;
+    private final File bedWarsFile;
     private final YamlConfiguration yamlConfiguration;
 
     @Inject
@@ -28,15 +28,15 @@ public class BedWarsConfig {
 
         final File bedWarsConfigDirectory = new File(javaPlugin.getDataFolder().getPath());
         final String configName = "config.yml";
-        bedWarsConfig = new File(bedWarsConfigDirectory + "/" + configName);
+        bedWarsFile = new File(bedWarsConfigDirectory, configName);
 
         if (bedWarsConfigDirectory.mkdirs()) {
             logger.info("BedWars configuration directory was created.");
         }
 
-        if (!bedWarsConfig.exists()) {
+        if (!bedWarsFile.exists()) {
             try {
-                if (bedWarsConfig.createNewFile()) {
+                if (bedWarsFile.createNewFile()) {
                     logger.info("BedWars configuration file was created.");
                 }
             } catch (IOException ioException) {
@@ -44,7 +44,7 @@ public class BedWarsConfig {
             }
         }
 
-        yamlConfiguration = YamlConfiguration.loadConfiguration(bedWarsConfig);
+        yamlConfiguration = YamlConfiguration.loadConfiguration(bedWarsFile);
     }
 
     /**
@@ -273,7 +273,7 @@ public class BedWarsConfig {
      */
     private void saveConfig() {
         try {
-            yamlConfiguration.save(bedWarsConfig);
+            yamlConfiguration.save(bedWarsFile);
         } catch (IOException ioException) {
             ioException.printStackTrace();
         }

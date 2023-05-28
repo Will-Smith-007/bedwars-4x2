@@ -54,6 +54,9 @@ public class EndingCountdownScheduler implements IScheduler, ICountdownOptions {
                     }
                 }
                 case 0 -> Bukkit.getServer().shutdown();
+                default -> {
+                    return;
+                }
             }
 
             countdown--;

@@ -9,6 +9,7 @@ import lombok.Setter;
 import org.bukkit.Location;
 import org.bukkit.World;
 
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,8 +21,8 @@ public class BedWarsSetup {
     @Setter
     private SetupAction setupAction;
 
-    private final Map<BedWarsTeam, Location> bedLocations = new HashMap<>();
-    private final Map<BedWarsTeam, Location> teamSpawnLocations = new HashMap<>();
+    private final Map<BedWarsTeam, Location> bedLocations = new EnumMap<>(BedWarsTeam.class);
+    private final Map<BedWarsTeam, Location> teamSpawnLocations = new EnumMap<>(BedWarsTeam.class);
     private final Map<Location, SpawnerType> spawnerLocations = new HashMap<>();
 
     @Setter

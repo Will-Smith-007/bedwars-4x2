@@ -58,6 +58,9 @@ public class ProtectionCountdownScheduler implements IScheduler, ICountdownOptio
                         playCountdownSound(player);
                     }
                 }
+                default -> {
+                    return;
+                }
             }
             countdown--;
         }, 0L, 20L);

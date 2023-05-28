@@ -39,9 +39,10 @@ public class BedWarsSpawnerSetupListener implements Listener {
             case BRONZE_SPAWNER_SETUP -> spawnerType = BedWarsSetup.SpawnerType.BRONZE;
             case IRON_SPAWNER_SETUP -> spawnerType = BedWarsSetup.SpawnerType.IRON;
             case GOLD_SPAWNER_SETUP -> spawnerType = BedWarsSetup.SpawnerType.GOLD;
+            default -> {
+                return;
+            }
         }
-
-        if (spawnerType == null) return;
 
         final Block clickedBlock = playerInteractEvent.getClickedBlock();
         if (clickedBlock == null) return;

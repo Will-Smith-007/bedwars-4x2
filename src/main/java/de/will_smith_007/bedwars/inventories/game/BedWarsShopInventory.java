@@ -16,14 +16,14 @@ import org.bukkit.inventory.ItemStack;
 @Singleton
 public class BedWarsShopInventory implements IBedWarsInventory {
 
-    private final String inventoryName = "Shop";
+    private static final String INVENTORY_NAME = "Shop";
     private final ShopItem[] shopItems = ShopItem.values();
     private final ShopItem.ShopCategory[] shopCategories = ShopItem.ShopCategory.values();
 
     @Override
     public void openInventory(@NonNull Player player) {
         final Inventory inventory = Bukkit.createInventory(null, 9 * 3,
-                Component.text(inventoryName, NamedTextColor.YELLOW));
+                Component.text(INVENTORY_NAME, NamedTextColor.YELLOW));
 
         int currentSlot = 0;
 
@@ -71,6 +71,6 @@ public class BedWarsShopInventory implements IBedWarsInventory {
 
     @Override
     public @NonNull String getInventoryName() {
-        return inventoryName;
+        return INVENTORY_NAME;
     }
 }

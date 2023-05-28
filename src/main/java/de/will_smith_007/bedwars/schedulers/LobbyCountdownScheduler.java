@@ -147,6 +147,9 @@ public class LobbyCountdownScheduler implements IScheduler, ICountdownOptions {
 
                     stop();
                 }
+                default -> {
+                    return;
+                }
             }
             countdown--;
         }, 0L, 20L);

@@ -20,13 +20,13 @@ import java.util.Collection;
 @Singleton
 public class TeamSelectorInventory implements IBedWarsInventory {
 
-    private final String inventoryName = "Team selection";
+    private static final String INVENTORY_NAME = "Team selection";
     private final BedWarsTeam[] bedWarsTeams = BedWarsTeam.values();
 
     @Override
     public void openInventory(@NonNull Player player) {
         final Inventory inventory = Bukkit.createInventory(null, 9,
-                Component.text(inventoryName, NamedTextColor.AQUA));
+                Component.text(INVENTORY_NAME, NamedTextColor.AQUA));
 
         int currentSlot = 0;
         final Collection<? extends Player> players = Bukkit.getOnlinePlayers();
@@ -66,6 +66,6 @@ public class TeamSelectorInventory implements IBedWarsInventory {
 
     @Override
     public @NonNull String getInventoryName() {
-        return inventoryName;
+        return INVENTORY_NAME;
     }
 }

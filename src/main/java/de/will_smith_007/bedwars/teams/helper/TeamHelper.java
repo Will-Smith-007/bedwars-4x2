@@ -36,7 +36,7 @@ public class TeamHelper implements ITeamHelper {
     public void handleTeamElimination(@NonNull ITeam team, @NonNull Collection<? extends Player> players) {
         final Set<Player> teamPlayers = team.getPlayers();
 
-        if (teamPlayers.size() > 0) return;
+        if (!teamPlayers.isEmpty()) return;
 
         for (Player player : players) {
             player.sendPlainMessage(Message.PREFIX + team.getTeamName() + "§c was§4 eliminated§c!");
@@ -44,7 +44,7 @@ public class TeamHelper implements ITeamHelper {
 
         final List<ITeam> aliveTeams = Arrays.stream(BED_WARS_TEAMS)
                 .map(BedWarsTeam::getTeam)
-                .filter(iTeam -> iTeam.getPlayers().size() > 0)
+                .filter(iTeam -> !iTeam.getPlayers().isEmpty())
                 .toList();
 
         if (aliveTeams.size() == 1) {

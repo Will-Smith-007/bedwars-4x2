@@ -79,47 +79,48 @@ public class LobbyInventoryClickListener implements Listener {
         final InventoryView inventoryView = inventoryClickEvent.getView();
         final String inventoryName = PlainTextComponentSerializer.plainText().serialize(inventoryView.title());
 
-        if (inventoryName.equals(teamSelectorInventory.getInventoryName())) {
-            final ItemMeta itemMeta = currentItem.getItemMeta();
-            final Component displayNameComponent = itemMeta.displayName();
-
-            if (displayNameComponent == null) return;
-
-            final String displayName = PlainTextComponentSerializer.plainText().serialize(displayNameComponent);
-
-            // Checks the display name of an item and tries to parse the team of it
-            teamParser.parseTeam(displayName).ifPresent(bedWarsTeam -> {
-                final ITeam iTeam = bedWarsTeam.getTeam();
-                final int teamPlayers = iTeam.getPlayers().size();
-                final String teamName = iTeam.getTeamName();
-
-                final Collection<? extends Player> players = Bukkit.getOnlinePlayers();
-                final int playerSize = players.size();
-                // Rounds the amount of max players per team to the next integer
-                final int maxPlayersPerTeam = (int) Math.ceil((double) playerSize / bedWarsTeams.length);
-
-                if (teamPlayers >= maxPlayersPerTeam) {
-                    player.sendPlainMessage(Message.PREFIX + "§cYou can't join " + teamName + "§c, because it is full.");
-                    player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_PLACE, 1.0f, 1.0f);
-                    return;
-                }
-
-                // If the player is already in a team, then remove the player first from the previous team
-                final Optional<ITeam> optionalITeam = teamHelper.getTeam(player);
-                optionalITeam.ifPresent(team -> team.removePlayer(player));
-
-                // Adds the player to the team parsed from the ItemStack display name
-                iTeam.addPlayer(player);
-                player.sendPlainMessage(Message.PREFIX + "§aYou joined " + teamName + "§a.");
-                player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 0.0f);
-
-                player.closeInventory();
-
-                // Updates the tablist of all online players
-                for (Player onlinePlayer : players) {
-                    scoreboardManager.setTablist(onlinePlayer);
-                }
-            });
+        if (!inventoryName.equals(teamSelectorInventory.getInventoryName())) {
+            return;
         }
+        final ItemMeta itemMeta = currentItem.getItemMeta();
+        final Component displayNameComponent = itemMeta.displayName();
+
+        if (displayNameComponent == null) return;
+
+        final String displayName = PlainTextComponentSerializer.plainText().serialize(displayNameComponent);
+
+        // Checks the display name of an item and tries to parse the team of it
+        teamParser.parseTeam(displayName).ifPresent(bedWarsTeam -> {
+            final ITeam iTeam = bedWarsTeam.getTeam();
+            final int teamPlayers = iTeam.getPlayers().size();
+            final String teamName = iTeam.getTeamName();
+
+            final Collection<? extends Player> players = Bukkit.getOnlinePlayers();
+            final int playerSize = players.size();
+            // Rounds the amount of max players per team to the next integer
+            final int maxPlayersPerTeam = (int) Math.ceil((double) playerSize / bedWarsTeams.length);
+
+            if (teamPlayers >= maxPlayersPerTeam) {
+                player.sendPlainMessage(Message.PREFIX + "§cYou can't join " + teamName + "§c, because it is full.");
+                player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_PLACE, 1.0f, 1.0f);
+                return;
+            }
+
+            // If the player is already in a team, then remove the player first from the previous team
+            final Optional<ITeam> optionalITeam = teamHelper.getTeam(player);
+            optionalITeam.ifPresent(team -> team.removePlayer(player));
+
+            // Adds the player to the team parsed from the ItemStack display name
+            iTeam.addPlayer(player);
+            player.sendPlainMessage(Message.PREFIX + "§aYou joined " + teamName + "§a.");
+            player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 0.0f);
+
+            player.closeInventory();
+
+            // Updates the tablist of all online players
+            for (Player onlinePlayer : players) {
+                scoreboardManager.setTablist(onlinePlayer);
+            }
+        });
     }
 }
